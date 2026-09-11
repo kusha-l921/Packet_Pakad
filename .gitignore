@@ -1,0 +1,147 @@
+# ==============================================================================
+# Person 2 XFS / Network Security Engine — Production .gitignore
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Python Bytecode & Environment
+# ------------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+.python-version
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# ------------------------------------------------------------------------------
+# 2. Testing, Coverage & Type Checker Caches
+# ------------------------------------------------------------------------------
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyright/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# ------------------------------------------------------------------------------
+# 3. Secrets, Keys & Credentials
+# ------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.secret
+*.secrets
+*.key
+*.pem
+*.crt
+*.pfx
+*.p12
+
+# ------------------------------------------------------------------------------
+# 4. OS / System Files
+# ------------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+Icon?
+
+# ------------------------------------------------------------------------------
+# 5. IDE / Editor Files
+# ------------------------------------------------------------------------------
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.swp
+*.swo
+*.swn
+*~
+*.bak
+
+# ------------------------------------------------------------------------------
+# 6. Build, Packaging & Distribution Artifacts
+# ------------------------------------------------------------------------------
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# ------------------------------------------------------------------------------
+# 7. Jupyter Notebook Checkpoints
+# ------------------------------------------------------------------------------
+.ipynb_checkpoints/
+
+# ------------------------------------------------------------------------------
+# 8. Logs, Temporary & Disposable Local Outputs
+# ------------------------------------------------------------------------------
+*.log
+logs/
+log/
+tmp/
+temp/
+*.tmp
+*.temp
+runtime_outputs/
+generated_outputs/
+
+# ------------------------------------------------------------------------------
+# 9. Local Databases & State Files
+# ------------------------------------------------------------------------------
+*.db
+*.sqlite
+*.sqlite3
+
+# ------------------------------------------------------------------------------
+# 10. PCAP & Network Captures (Allow tracked sample fixtures)
+# ------------------------------------------------------------------------------
+# Ignore all PCAP / PCAPNG files globally by default
+*.pcap
+*.pcapng
+*.cap
+
+# Explicitly preserve intentionally tracked test fixtures and dataset samples
+!sample_data/*.pcap
+!sample_data/*.pcapng
+!datasets/raw/**/*.pcap
+!datasets/raw/**/*.pcapng
+
+# ------------------------------------------------------------------------------
+# 11. Large Datasets & Compressed Archives (Allow reproducible metadata & code)
+# ------------------------------------------------------------------------------
+*.tar.gz
+*.zip
+*.7z
+*.bz2
+*.xz
+data/
+datasets/downloads/
+datasets/raw_full/
+
+# ------------------------------------------------------------------------------
+# 12. Machine Learning Model Weights & Checkpoints (Allow tracked demo models)
+# ------------------------------------------------------------------------------
+*.pkl
+*.pickle
+*.pt
+*.pth
+*.onnx
+*.h5
+*.keras
+
+# Preserve tracked model metadata and demo model artifacts required for inference
+!models/
+!models/README.md
+!models/metadata/*.json
+!models/registry/
+!models/registry/**
+!models/trained/
+!models/trained/*.joblib
