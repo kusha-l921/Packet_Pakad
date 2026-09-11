@@ -1,0 +1,320 @@
+{
+  "manifest_version": "1.0",
+  "dataset_name": "iscxvpn2016_primary",
+  "description": "UNB/CIC ISCXVPN2016 and verified raw PCAP encrypted and application traffic captures",
+  "default_source_dataset": "iscxvpn2016",
+  "captures": [
+    {
+      "scenario_id": "iscx_vpn_aim_1a",
+      "pcap_path": "datasets/raw/iscxvpn2016/interactive/vpn_aim_chat1a.pcap",
+      "canonical_label": "interactive",
+      "original_label": "vpn_aim_chat",
+      "source_dataset": "iscxvpn2016",
+      "capture_group": "vpn_aim_chat_1",
+      "metadata": {
+        "protocol_family": "openvpn_tls",
+        "application": "aim_chat",
+        "vpn_encapsulated": true
+      }
+    },
+    {
+      "scenario_id": "iscx_vpn_aim_1b",
+      "pcap_path": "datasets/raw/iscxvpn2016/interactive/vpn_aim_chat1b.pcap",
+      "canonical_label": "interactive",
+      "original_label": "vpn_aim_chat",
+      "source_dataset": "iscxvpn2016",
+      "capture_group": "vpn_aim_chat_1",
+      "metadata": {
+        "protocol_family": "openvpn_tls",
+        "application": "aim_chat",
+        "vpn_encapsulated": true
+      }
+    },
+    {
+      "scenario_id": "iscx_vpn_icq_1a",
+      "pcap_path": "datasets/raw/iscxvpn2016/interactive/vpn_icq_chat1a.pcap",
+      "canonical_label": "interactive",
+      "original_label": "vpn_icq_chat",
+      "source_dataset": "iscxvpn2016",
+      "capture_group": "vpn_icq_chat_1",
+      "metadata": {
+        "protocol_family": "openvpn_tls",
+        "application": "icq_chat",
+        "vpn_encapsulated": true
+      }
+    },
+    {
+      "scenario_id": "iscx_vpn_icq_1b",
+      "pcap_path": "datasets/raw/iscxvpn2016/interactive/vpn_icq_chat1b.pcap",
+      "canonical_label": "interactive",
+      "original_label": "vpn_icq_chat",
+      "source_dataset": "iscxvpn2016",
+      "capture_group": "vpn_icq_chat_1",
+      "metadata": {
+        "protocol_family": "openvpn_tls",
+        "application": "icq_chat",
+        "vpn_encapsulated": true
+      }
+    },
+    {
+      "scenario_id": "iscx_nonvpn_aim_3a",
+      "pcap_path": "datasets/raw/iscxvpn2016/interactive/aim_chat_3a.pcap",
+      "canonical_label": "interactive",
+      "original_label": "aim_chat",
+      "source_dataset": "iscxvpn2016",
+      "capture_group": "aim_chat_3",
+      "metadata": {
+        "protocol_family": "tls_chat",
+        "application": "aim_chat",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "iscx_nonvpn_aim_3b",
+      "pcap_path": "datasets/raw/iscxvpn2016/interactive/aim_chat_3b.pcap",
+      "canonical_label": "interactive",
+      "original_label": "aim_chat",
+      "source_dataset": "iscxvpn2016",
+      "capture_group": "aim_chat_3",
+      "metadata": {
+        "protocol_family": "tls_chat",
+        "application": "aim_chat",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "iscx_nonvpn_aim_c1",
+      "pcap_path": "datasets/raw/iscxvpn2016/interactive/AIMchat1.pcapng",
+      "canonical_label": "interactive",
+      "original_label": "aim_chat",
+      "source_dataset": "iscxvpn2016",
+      "capture_group": "aim_chat_c",
+      "metadata": {
+        "protocol_family": "tls_chat",
+        "application": "aim_chat",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "iscx_nonvpn_aim_c2",
+      "pcap_path": "datasets/raw/iscxvpn2016/interactive/AIMchat2.pcapng",
+      "canonical_label": "interactive",
+      "original_label": "aim_chat",
+      "source_dataset": "iscxvpn2016",
+      "capture_group": "aim_chat_c",
+      "metadata": {
+        "protocol_family": "tls_chat",
+        "application": "aim_chat",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "iscx_vpn_netflix_1",
+      "pcap_path": "datasets/raw/iscxvpn2016/streaming/vpn_netflix_sample.pcap",
+      "canonical_label": "streaming",
+      "original_label": "vpn_netflix",
+      "source_dataset": "iscxvpn2016",
+      "capture_group": "vpn_netflix_session_1",
+      "metadata": {
+        "protocol_family": "openvpn_tls",
+        "application": "netflix_streaming",
+        "vpn_encapsulated": true
+      }
+    },
+    {
+      "scenario_id": "iscx_nonvpn_facebook_audio",
+      "pcap_path": "datasets/raw/iscxvpn2016/voip/facebook_audio_sample.pcap",
+      "canonical_label": "voip",
+      "original_label": "facebook_audio",
+      "source_dataset": "iscxvpn2016",
+      "capture_group": "facebook_audio_session_1",
+      "metadata": {
+        "protocol_family": "rtp_audio",
+        "application": "facebook_audio",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "iscx_nonvpn_ftps_down",
+      "pcap_path": "datasets/raw/iscxvpn2016/file_transfer/ftps_down_1a_sample.pcap",
+      "canonical_label": "file_transfer",
+      "original_label": "ftps_down",
+      "source_dataset": "iscxvpn2016",
+      "capture_group": "ftps_session_1",
+      "metadata": {
+        "protocol_family": "ftps_tls",
+        "application": "ftps",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "iscx_nonvpn_scp_1",
+      "pcap_path": "datasets/raw/iscxvpn2016/file_transfer/scp1_sample.pcapng",
+      "canonical_label": "file_transfer",
+      "original_label": "scp",
+      "source_dataset": "iscxvpn2016",
+      "capture_group": "scp_session_1",
+      "metadata": {
+        "protocol_family": "ssh_scp",
+        "application": "scp",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "web_http_1",
+      "pcap_path": "datasets/raw/iscxvpn2016/web/http.pcap",
+      "canonical_label": "web",
+      "original_label": "http",
+      "source_dataset": "standard_web",
+      "capture_group": "http_session_1",
+      "metadata": {
+        "protocol_family": "http",
+        "application": "web_browsing",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "web_http_ooo",
+      "pcap_path": "datasets/raw/iscxvpn2016/web/http-ooo.pcap",
+      "canonical_label": "web",
+      "original_label": "http_ooo",
+      "source_dataset": "standard_web",
+      "capture_group": "http_session_2",
+      "metadata": {
+        "protocol_family": "http",
+        "application": "web_browsing",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "web_http2_reassembly",
+      "pcap_path": "datasets/raw/iscxvpn2016/web/http2-data-reassembly.pcap",
+      "canonical_label": "web",
+      "original_label": "http2",
+      "source_dataset": "standard_web",
+      "capture_group": "http2_session_1",
+      "metadata": {
+        "protocol_family": "http2",
+        "application": "web_browsing",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "web_http2_multistream",
+      "pcap_path": "datasets/raw/iscxvpn2016/web/http2_follow_multistream.pcapng",
+      "canonical_label": "web",
+      "original_label": "http2",
+      "source_dataset": "standard_web",
+      "capture_group": "http2_session_2",
+      "metadata": {
+        "protocol_family": "http2",
+        "application": "web_browsing",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "web_http_tab_request",
+      "pcap_path": "datasets/raw/iscxvpn2016/web/http-tab-request.pcapng",
+      "canonical_label": "web",
+      "original_label": "http",
+      "source_dataset": "standard_web",
+      "capture_group": "http_session_3",
+      "metadata": {
+        "protocol_family": "http",
+        "application": "web_browsing",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "web_packet_h2_headers",
+      "pcap_path": "datasets/raw/iscxvpn2016/web/packet-h2-14_headers.pcapng",
+      "canonical_label": "web",
+      "original_label": "http2",
+      "source_dataset": "standard_web",
+      "capture_group": "http2_session_3",
+      "metadata": {
+        "protocol_family": "http2",
+        "application": "web_browsing",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "web_quic_secrets",
+      "pcap_path": "datasets/raw/iscxvpn2016/web/quic-with-secrets.pcapng",
+      "canonical_label": "web",
+      "original_label": "http3_quic",
+      "source_dataset": "standard_web",
+      "capture_group": "quic_session_1",
+      "metadata": {
+        "protocol_family": "http3_quic",
+        "application": "web_browsing",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "web_quic_multistream",
+      "pcap_path": "datasets/raw/iscxvpn2016/web/quic_follow_multistream.pcapng",
+      "canonical_label": "web",
+      "original_label": "http3_quic",
+      "source_dataset": "standard_web",
+      "capture_group": "quic_session_2",
+      "metadata": {
+        "protocol_family": "http3_quic",
+        "application": "web_browsing",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "web_retrans_tls",
+      "pcap_path": "datasets/raw/iscxvpn2016/web/retrans-tls.pcap",
+      "canonical_label": "web",
+      "original_label": "tls",
+      "source_dataset": "standard_web",
+      "capture_group": "tls_session_1",
+      "metadata": {
+        "protocol_family": "tls",
+        "application": "web_browsing",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "web_rsasnakeoil",
+      "pcap_path": "datasets/raw/iscxvpn2016/web/rsasnakeoil2.pcap",
+      "canonical_label": "web",
+      "original_label": "tls_https",
+      "source_dataset": "standard_web",
+      "capture_group": "tls_session_2",
+      "metadata": {
+        "protocol_family": "tls",
+        "application": "web_browsing",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "web_tls12_aes128ccm",
+      "pcap_path": "datasets/raw/iscxvpn2016/web/tls12-aes128ccm.pcap",
+      "canonical_label": "web",
+      "original_label": "tls12",
+      "source_dataset": "standard_web",
+      "capture_group": "tls_session_3",
+      "metadata": {
+        "protocol_family": "tls12",
+        "application": "web_browsing",
+        "vpn_encapsulated": false
+      }
+    },
+    {
+      "scenario_id": "web_tls12_aes256gcm",
+      "pcap_path": "datasets/raw/iscxvpn2016/web/tls12-aes256gcm.pcap",
+      "canonical_label": "web",
+      "original_label": "tls12",
+      "source_dataset": "standard_web",
+      "capture_group": "tls_session_4",
+      "metadata": {
+        "protocol_family": "tls12",
+        "application": "web_browsing",
+        "vpn_encapsulated": false
+      }
+    }
+  ]
+}

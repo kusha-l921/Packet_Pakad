@@ -1,0 +1,36 @@
+{
+  "capture_info": {
+    "file_name": "sample.pcapng",
+    "file_type": "pcapng",
+    "total_packets": 8,
+    "readable": true
+  },
+  "protocol_summary": {
+    "ethernet": 8,
+    "ipv4": 6,
+    "ipv6": 2,
+    "tcp": 2,
+    "udp": 2,
+    "icmp": 1,
+    "icmpv6": 1,
+    "other": 2
+  },
+  "ipsec_analysis": {
+    "ipsec_detected": true,
+    "esp_detected": true,
+    "ah_detected": false,
+    "ike_related_traffic_detected": true,
+    "nat_traversal_related_traffic_detected": false,
+    "ike_version": "IKEv2"
+  },
+  "packet_statistics": {
+    "minimum_packet_size": 42,
+    "maximum_packet_size": 74,
+    "average_packet_size": 60.5
+  },
+  "status": {
+    "success": true,
+    "errors": [],
+    "warnings": []
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "manifest_version": "1.0",
+  "dataset_name": "person1_strongswan_ipsec",
+  "description": "Person 1 StrongSwan / IPsec gateway ground-truth captures across application categories",
+  "default_source_dataset": "person1_ipsec",
+  "captures": [
+    {
+      "scenario_id": "ipsec_web_browsing_01",
+      "pcap_path": "datasets/raw/person1_ipsec/web/strongswan_web_01.pcap",
+      "canonical_label": "web",
+      "original_label": "ipsec_web",
+      "source_dataset": "person1_ipsec",
+      "capture_group": "strongswan_session_web_1",
+      "metadata": {
+        "gateway": "strongswan_v5.9",
+        "ike_version": "IKEv2",
+        "esp_cipher": "AES_GCM_16_256",
+        "application": "firefox_web"
+      }
+    },
+    {
+      "scenario_id": "ipsec_streaming_01",
+      "pcap_path": "datasets/raw/person1_ipsec/streaming/strongswan_video_01.pcap",
+      "canonical_label": "streaming",
+      "original_label": "ipsec_streaming",
+      "source_dataset": "person1_ipsec",
+      "capture_group": "strongswan_session_video_1",
+      "metadata": {
+        "gateway": "strongswan_v5.9",
+        "ike_version": "IKEv2",
+        "esp_cipher": "AES_GCM_16_256",
+        "application": "youtube_hd"
+      }
+    },
+    {
+      "scenario_id": "ipsec_voip_01",
+      "pcap_path": "datasets/raw/person1_ipsec/voip/strongswan_voip_01.pcap",
+      "canonical_label": "voip",
+      "original_label": "ipsec_voip",
+      "source_dataset": "person1_ipsec",
+      "capture_group": "strongswan_session_voip_1",
+      "metadata": {
+        "gateway": "strongswan_v5.9",
+        "ike_version": "IKEv2",
+        "esp_cipher": "AES_GCM_16_256",
+        "application": "sip_rtp_call"
+      }
+    },
+    {
+      "scenario_id": "ipsec_file_transfer_01",
+      "pcap_path": "datasets/raw/person1_ipsec/file_transfer/strongswan_sftp_01.pcap",
+      "canonical_label": "file_transfer",
+      "original_label": "ipsec_file_transfer",
+      "source_dataset": "person1_ipsec",
+      "capture_group": "strongswan_session_ft_1",
+      "metadata": {
+        "gateway": "strongswan_v5.9",
+        "ike_version": "IKEv2",
+        "esp_cipher": "AES_GCM_16_256",
+        "application": "sftp_upload"
+      }
+    },
+    {
+      "scenario_id": "ipsec_interactive_01",
+      "pcap_path": "datasets/raw/person1_ipsec/interactive/strongswan_ssh_01.pcap",
+      "canonical_label": "interactive",
+      "original_label": "ipsec_interactive",
+      "source_dataset": "person1_ipsec",
+      "capture_group": "strongswan_session_ssh_1",
+      "metadata": {
+        "gateway": "strongswan_v5.9",
+        "ike_version": "IKEv2",
+        "esp_cipher": "AES_GCM_16_256",
+        "application": "ssh_shell"
+      }
+    }
+  ]
+}

@@ -1,0 +1,401 @@
+{
+  "capture_info": {
+    "file_name": "sample.pcapng",
+    "file_type": "pcapng",
+    "total_packets": 8,
+    "readable": true
+  },
+  "protocol_summary": {
+    "ethernet": 8,
+    "ipv4": 6,
+    "ipv6": 2,
+    "tcp": 2,
+    "udp": 2,
+    "icmp": 1,
+    "icmpv6": 1,
+    "other": 2
+  },
+  "ipsec_analysis": {
+    "ipsec_detected": true,
+    "esp_detected": true,
+    "ah_detected": false,
+    "ike_related_traffic_detected": true,
+    "nat_traversal_related_traffic_detected": false,
+    "ike_version": "IKEv2"
+  },
+  "packet_statistics": {
+    "minimum_packet_size": 42,
+    "maximum_packet_size": 74,
+    "average_packet_size": 60.5
+  },
+  "status": {
+    "success": true,
+    "errors": [],
+    "warnings": []
+  },
+  "feature_schema_version": "1.0",
+  "flow_summary": {
+    "total_flows": 7,
+    "valid_flows": 7,
+    "invalid_flows": 0
+  },
+  "flows": [
+    {
+      "flow_metadata": {
+        "flow_id": "TCP_192.168.1.10:54321_93.184.216.34:80",
+        "ip_version": 4,
+        "protocol": "TCP",
+        "endpoint_a": "192.168.1.10:54321",
+        "endpoint_b": "93.184.216.34:80",
+        "first_timestamp": 1789108303.471948,
+        "last_timestamp": 1789108303.471948
+      },
+      "ipsec_metadata": {
+        "is_ipsec_related": false,
+        "esp_detected": false,
+        "ah_detected": false,
+        "ike_related": false,
+        "nat_t_related": false,
+        "spi": null
+      },
+      "features": {
+        "total_packets": 1.0,
+        "forward_packets": 1.0,
+        "backward_packets": 0.0,
+        "total_bytes": 54.0,
+        "forward_bytes": 54.0,
+        "backward_bytes": 0.0,
+        "minimum_packet_size": 54.0,
+        "maximum_packet_size": 54.0,
+        "mean_packet_size": 54.0,
+        "standard_deviation_packet_size": 0.0,
+        "median_packet_size": 54.0,
+        "forward_mean_packet_size": 54.0,
+        "backward_mean_packet_size": 0.0,
+        "flow_duration_seconds": 0.0,
+        "packets_per_second": 0.0,
+        "bytes_per_second": 0.0,
+        "mean_inter_arrival_time": 0.0,
+        "minimum_inter_arrival_time": 0.0,
+        "maximum_inter_arrival_time": 0.0,
+        "standard_deviation_inter_arrival_time": 0.0,
+        "forward_packet_ratio": 1.0,
+        "backward_packet_ratio": 0.0,
+        "forward_byte_ratio": 1.0,
+        "backward_byte_ratio": 0.0,
+        "maximum_packets_in_one_second": 1.0
+      },
+      "validation": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "flow_metadata": {
+        "flow_id": "UDP_192.168.1.10:53210_8.8.8.8:53",
+        "ip_version": 4,
+        "protocol": "UDP",
+        "endpoint_a": "192.168.1.10:53210",
+        "endpoint_b": "8.8.8.8:53",
+        "first_timestamp": 1789108303.472188,
+        "last_timestamp": 1789108303.472188
+      },
+      "ipsec_metadata": {
+        "is_ipsec_related": false,
+        "esp_detected": false,
+        "ah_detected": false,
+        "ike_related": false,
+        "nat_t_related": false,
+        "spi": null
+      },
+      "features": {
+        "total_packets": 1.0,
+        "forward_packets": 1.0,
+        "backward_packets": 0.0,
+        "total_bytes": 51.0,
+        "forward_bytes": 51.0,
+        "backward_bytes": 0.0,
+        "minimum_packet_size": 51.0,
+        "maximum_packet_size": 51.0,
+        "mean_packet_size": 51.0,
+        "standard_deviation_packet_size": 0.0,
+        "median_packet_size": 51.0,
+        "forward_mean_packet_size": 51.0,
+        "backward_mean_packet_size": 0.0,
+        "flow_duration_seconds": 0.0,
+        "packets_per_second": 0.0,
+        "bytes_per_second": 0.0,
+        "mean_inter_arrival_time": 0.0,
+        "minimum_inter_arrival_time": 0.0,
+        "maximum_inter_arrival_time": 0.0,
+        "standard_deviation_inter_arrival_time": 0.0,
+        "forward_packet_ratio": 1.0,
+        "backward_packet_ratio": 0.0,
+        "forward_byte_ratio": 1.0,
+        "backward_byte_ratio": 0.0,
+        "maximum_packets_in_one_second": 1.0
+      },
+      "validation": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "flow_metadata": {
+        "flow_id": "ICMP_1.1.1.1_192.168.1.10",
+        "ip_version": 4,
+        "protocol": "ICMP",
+        "endpoint_a": "1.1.1.1",
+        "endpoint_b": "192.168.1.10",
+        "first_timestamp": 1789108303.472396,
+        "last_timestamp": 1789108303.472396
+      },
+      "ipsec_metadata": {
+        "is_ipsec_related": false,
+        "esp_detected": false,
+        "ah_detected": false,
+        "ike_related": false,
+        "nat_t_related": false,
+        "spi": null
+      },
+      "features": {
+        "total_packets": 1.0,
+        "forward_packets": 1.0,
+        "backward_packets": 0.0,
+        "total_bytes": 42.0,
+        "forward_bytes": 42.0,
+        "backward_bytes": 0.0,
+        "minimum_packet_size": 42.0,
+        "maximum_packet_size": 42.0,
+        "mean_packet_size": 42.0,
+        "standard_deviation_packet_size": 0.0,
+        "median_packet_size": 42.0,
+        "forward_mean_packet_size": 42.0,
+        "backward_mean_packet_size": 0.0,
+        "flow_duration_seconds": 0.0,
+        "packets_per_second": 0.0,
+        "bytes_per_second": 0.0,
+        "mean_inter_arrival_time": 0.0,
+        "minimum_inter_arrival_time": 0.0,
+        "maximum_inter_arrival_time": 0.0,
+        "standard_deviation_inter_arrival_time": 0.0,
+        "forward_packet_ratio": 1.0,
+        "backward_packet_ratio": 0.0,
+        "forward_byte_ratio": 1.0,
+        "backward_byte_ratio": 0.0,
+        "maximum_packets_in_one_second": 1.0
+      },
+      "validation": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "flow_metadata": {
+        "flow_id": "TCP_2001:db8::1:54322_2001:db8::2:443",
+        "ip_version": 6,
+        "protocol": "TCP",
+        "endpoint_a": "2001:db8::1:54322",
+        "endpoint_b": "2001:db8::2:443",
+        "first_timestamp": 1789108303.472686,
+        "last_timestamp": 1789108303.472686
+      },
+      "ipsec_metadata": {
+        "is_ipsec_related": false,
+        "esp_detected": false,
+        "ah_detected": false,
+        "ike_related": false,
+        "nat_t_related": false,
+        "spi": null
+      },
+      "features": {
+        "total_packets": 1.0,
+        "forward_packets": 1.0,
+        "backward_packets": 0.0,
+        "total_bytes": 74.0,
+        "forward_bytes": 74.0,
+        "backward_bytes": 0.0,
+        "minimum_packet_size": 74.0,
+        "maximum_packet_size": 74.0,
+        "mean_packet_size": 74.0,
+        "standard_deviation_packet_size": 0.0,
+        "median_packet_size": 74.0,
+        "forward_mean_packet_size": 74.0,
+        "backward_mean_packet_size": 0.0,
+        "flow_duration_seconds": 0.0,
+        "packets_per_second": 0.0,
+        "bytes_per_second": 0.0,
+        "mean_inter_arrival_time": 0.0,
+        "minimum_inter_arrival_time": 0.0,
+        "maximum_inter_arrival_time": 0.0,
+        "standard_deviation_inter_arrival_time": 0.0,
+        "forward_packet_ratio": 1.0,
+        "backward_packet_ratio": 0.0,
+        "forward_byte_ratio": 1.0,
+        "backward_byte_ratio": 0.0,
+        "maximum_packets_in_one_second": 1.0
+      },
+      "validation": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "flow_metadata": {
+        "flow_id": "ICMPV6_2001:db8::1_2001:db8::2",
+        "ip_version": 6,
+        "protocol": "ICMPV6",
+        "endpoint_a": "2001:db8::1",
+        "endpoint_b": "2001:db8::2",
+        "first_timestamp": 1789108303.472838,
+        "last_timestamp": 1789108303.472838
+      },
+      "ipsec_metadata": {
+        "is_ipsec_related": false,
+        "esp_detected": false,
+        "ah_detected": false,
+        "ike_related": false,
+        "nat_t_related": false,
+        "spi": null
+      },
+      "features": {
+        "total_packets": 1.0,
+        "forward_packets": 1.0,
+        "backward_packets": 0.0,
+        "total_bytes": 62.0,
+        "forward_bytes": 62.0,
+        "backward_bytes": 0.0,
+        "minimum_packet_size": 62.0,
+        "maximum_packet_size": 62.0,
+        "mean_packet_size": 62.0,
+        "standard_deviation_packet_size": 0.0,
+        "median_packet_size": 62.0,
+        "forward_mean_packet_size": 62.0,
+        "backward_mean_packet_size": 0.0,
+        "flow_duration_seconds": 0.0,
+        "packets_per_second": 0.0,
+        "bytes_per_second": 0.0,
+        "mean_inter_arrival_time": 0.0,
+        "minimum_inter_arrival_time": 0.0,
+        "maximum_inter_arrival_time": 0.0,
+        "standard_deviation_inter_arrival_time": 0.0,
+        "forward_packet_ratio": 1.0,
+        "backward_packet_ratio": 0.0,
+        "forward_byte_ratio": 1.0,
+        "backward_byte_ratio": 0.0,
+        "maximum_packets_in_one_second": 1.0
+      },
+      "validation": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "flow_metadata": {
+        "flow_id": "UDP_10.0.0.1:500_10.0.0.2:500",
+        "ip_version": 4,
+        "protocol": "UDP",
+        "endpoint_a": "10.0.0.1:500",
+        "endpoint_b": "10.0.0.2:500",
+        "first_timestamp": 1789108303.480924,
+        "last_timestamp": 1789108303.480924
+      },
+      "ipsec_metadata": {
+        "is_ipsec_related": true,
+        "esp_detected": false,
+        "ah_detected": false,
+        "ike_related": true,
+        "nat_t_related": false,
+        "spi": null
+      },
+      "features": {
+        "total_packets": 1.0,
+        "forward_packets": 1.0,
+        "backward_packets": 0.0,
+        "total_bytes": 70.0,
+        "forward_bytes": 70.0,
+        "backward_bytes": 0.0,
+        "minimum_packet_size": 70.0,
+        "maximum_packet_size": 70.0,
+        "mean_packet_size": 70.0,
+        "standard_deviation_packet_size": 0.0,
+        "median_packet_size": 70.0,
+        "forward_mean_packet_size": 70.0,
+        "backward_mean_packet_size": 0.0,
+        "flow_duration_seconds": 0.0,
+        "packets_per_second": 0.0,
+        "bytes_per_second": 0.0,
+        "mean_inter_arrival_time": 0.0,
+        "minimum_inter_arrival_time": 0.0,
+        "maximum_inter_arrival_time": 0.0,
+        "standard_deviation_inter_arrival_time": 0.0,
+        "forward_packet_ratio": 1.0,
+        "backward_packet_ratio": 0.0,
+        "forward_byte_ratio": 1.0,
+        "backward_byte_ratio": 0.0,
+        "maximum_packets_in_one_second": 1.0
+      },
+      "validation": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      }
+    },
+    {
+      "flow_metadata": {
+        "flow_id": "ESP_10.0.0.1_10.0.0.2",
+        "ip_version": 4,
+        "protocol": "ESP",
+        "endpoint_a": "10.0.0.1",
+        "endpoint_b": "10.0.0.2",
+        "first_timestamp": 1789108303.481745,
+        "last_timestamp": 1789108303.481882
+      },
+      "ipsec_metadata": {
+        "is_ipsec_related": true,
+        "esp_detected": true,
+        "ah_detected": false,
+        "ike_related": false,
+        "nat_t_related": false,
+        "spi": null
+      },
+      "features": {
+        "total_packets": 2.0,
+        "forward_packets": 1.0,
+        "backward_packets": 1.0,
+        "total_bytes": 131.0,
+        "forward_bytes": 63.0,
+        "backward_bytes": 68.0,
+        "minimum_packet_size": 63.0,
+        "maximum_packet_size": 68.0,
+        "mean_packet_size": 65.5,
+        "standard_deviation_packet_size": 3.5355,
+        "median_packet_size": 65.5,
+        "forward_mean_packet_size": 63.0,
+        "backward_mean_packet_size": 68.0,
+        "flow_duration_seconds": 0.000137,
+        "packets_per_second": 14588.8835,
+        "bytes_per_second": 955571.8678,
+        "mean_inter_arrival_time": 0.000137,
+        "minimum_inter_arrival_time": 0.000137,
+        "maximum_inter_arrival_time": 0.000137,
+        "standard_deviation_inter_arrival_time": 0.0,
+        "forward_packet_ratio": 0.5,
+        "backward_packet_ratio": 0.5,
+        "forward_byte_ratio": 0.4809,
+        "backward_byte_ratio": 0.5191,
+        "maximum_packets_in_one_second": 2.0
+      },
+      "validation": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      }
+    }
+  ]
+}

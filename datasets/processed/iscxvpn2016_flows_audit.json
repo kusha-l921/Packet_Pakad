@@ -1,0 +1,678 @@
+{
+  "dataset_name": "iscxvpn2016_primary",
+  "manifest_version": "1.0",
+  "total_pcaps": 24,
+  "total_captures_processed": 24,
+  "total_raw_flows": 1142,
+  "total_eligible_flows": 253,
+  "total_excluded_flows": 889,
+  "exclusion_reasons": {
+    "BACKGROUND_LLMNR": 603,
+    "COLLATERAL_NON_SCENARIO_TRAFFIC": 102,
+    "BACKGROUND_INFRASTRUCTURE_DNS": 96,
+    "BACKGROUND_LOCAL_DISCOVERY": 24,
+    "BACKGROUND_MDNS": 20,
+    "BACKGROUND_MULTICAST_BROADCAST": 19,
+    "BACKGROUND_NETBIOS": 18,
+    "NON_IP_LAYER2": 7
+  },
+  "exclusions_by_reason": {
+    "BACKGROUND_LLMNR": 603,
+    "COLLATERAL_NON_SCENARIO_TRAFFIC": 102,
+    "BACKGROUND_INFRASTRUCTURE_DNS": 96,
+    "BACKGROUND_LOCAL_DISCOVERY": 24,
+    "BACKGROUND_MDNS": 20,
+    "BACKGROUND_MULTICAST_BROADCAST": 19,
+    "BACKGROUND_NETBIOS": 18,
+    "NON_IP_LAYER2": 7
+  },
+  "class_distribution_raw": {
+    "interactive": 487,
+    "streaming": 62,
+    "voip": 111,
+    "file_transfer": 468,
+    "web": 14
+  },
+  "class_distribution_eligible": {
+    "interactive": 108,
+    "streaming": 58,
+    "voip": 70,
+    "file_transfer": 3,
+    "web": 14
+  },
+  "cross_label_conflicts_raw_count": 2,
+  "cross_label_conflicts_raw": [
+    {
+      "labels": [
+        "file_transfer",
+        "interactive"
+      ],
+      "count": 2,
+      "pcaps": [
+        "aim_chat_3a.pcap",
+        "scp1_sample.pcapng"
+      ],
+      "vector_prefix": [
+        2.0,
+        2.0,
+        0.0,
+        128.0,
+        128.0
+      ],
+      "flow_ids": [
+        "",
+        ""
+      ]
+    },
+    {
+      "labels": [
+        "file_transfer",
+        "interactive"
+      ],
+      "count": 2,
+      "pcaps": [
+        "aim_chat_3b.pcap",
+        "scp1_sample.pcapng"
+      ],
+      "vector_prefix": [
+        2.0,
+        2.0,
+        0.0,
+        128.0,
+        128.0
+      ],
+      "flow_ids": [
+        "",
+        ""
+      ]
+    }
+  ],
+  "cross_label_conflicts_eligible_count": 0,
+  "cross_label_conflicts_eligible": [],
+  "pcap_composition": {
+    "vpn_aim_chat1a.pcap": {
+      "scenario_id": "iscx_vpn_aim_1a",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "vpn_aim_chat_1",
+      "total_flows": 22,
+      "eligible_flows": 19,
+      "excluded_flows": 3,
+      "exclusions": {
+        "BACKGROUND_INFRASTRUCTURE_DNS": 3
+      }
+    },
+    "vpn_aim_chat1b.pcap": {
+      "scenario_id": "iscx_vpn_aim_1b",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "vpn_aim_chat_1",
+      "total_flows": 11,
+      "eligible_flows": 7,
+      "excluded_flows": 4,
+      "exclusions": {
+        "BACKGROUND_INFRASTRUCTURE_DNS": 3,
+        "BACKGROUND_LOCAL_DISCOVERY": 1
+      }
+    },
+    "vpn_icq_chat1a.pcap": {
+      "scenario_id": "iscx_vpn_icq_1a",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "vpn_icq_chat_1",
+      "total_flows": 29,
+      "eligible_flows": 25,
+      "excluded_flows": 4,
+      "exclusions": {
+        "BACKGROUND_LOCAL_DISCOVERY": 1,
+        "BACKGROUND_INFRASTRUCTURE_DNS": 3
+      }
+    },
+    "vpn_icq_chat1b.pcap": {
+      "scenario_id": "iscx_vpn_icq_1b",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "vpn_icq_chat_1",
+      "total_flows": 2,
+      "eligible_flows": 2,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "aim_chat_3a.pcap": {
+      "scenario_id": "iscx_nonvpn_aim_3a",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "aim_chat_3",
+      "total_flows": 41,
+      "eligible_flows": 15,
+      "excluded_flows": 26,
+      "exclusions": {
+        "NON_IP_LAYER2": 1,
+        "BACKGROUND_NETBIOS": 1,
+        "BACKGROUND_LLMNR": 20,
+        "BACKGROUND_INFRASTRUCTURE_DNS": 3,
+        "BACKGROUND_LOCAL_DISCOVERY": 1
+      }
+    },
+    "aim_chat_3b.pcap": {
+      "scenario_id": "iscx_nonvpn_aim_3b",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "aim_chat_3",
+      "total_flows": 321,
+      "eligible_flows": 17,
+      "excluded_flows": 304,
+      "exclusions": {
+        "BACKGROUND_NETBIOS": 1,
+        "BACKGROUND_LLMNR": 285,
+        "NON_IP_LAYER2": 1,
+        "BACKGROUND_INFRASTRUCTURE_DNS": 17
+      }
+    },
+    "AIMchat1.pcapng": {
+      "scenario_id": "iscx_nonvpn_aim_c1",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "aim_chat_c",
+      "total_flows": 28,
+      "eligible_flows": 10,
+      "excluded_flows": 18,
+      "exclusions": {
+        "BACKGROUND_NETBIOS": 1,
+        "BACKGROUND_LLMNR": 14,
+        "NON_IP_LAYER2": 1,
+        "BACKGROUND_INFRASTRUCTURE_DNS": 1,
+        "BACKGROUND_LOCAL_DISCOVERY": 1
+      }
+    },
+    "AIMchat2.pcapng": {
+      "scenario_id": "iscx_nonvpn_aim_c2",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "aim_chat_c",
+      "total_flows": 33,
+      "eligible_flows": 13,
+      "excluded_flows": 20,
+      "exclusions": {
+        "BACKGROUND_INFRASTRUCTURE_DNS": 3,
+        "BACKGROUND_LOCAL_DISCOVERY": 1,
+        "NON_IP_LAYER2": 1,
+        "BACKGROUND_NETBIOS": 1,
+        "BACKGROUND_LLMNR": 14
+      }
+    },
+    "vpn_netflix_sample.pcap": {
+      "scenario_id": "iscx_vpn_netflix_1",
+      "assigned_label": "streaming",
+      "canonical_label": "streaming",
+      "capture_group": "vpn_netflix_session_1",
+      "total_flows": 62,
+      "eligible_flows": 58,
+      "excluded_flows": 4,
+      "exclusions": {
+        "BACKGROUND_INFRASTRUCTURE_DNS": 4
+      }
+    },
+    "facebook_audio_sample.pcap": {
+      "scenario_id": "iscx_nonvpn_facebook_audio",
+      "assigned_label": "voip",
+      "canonical_label": "voip",
+      "capture_group": "facebook_audio_session_1",
+      "total_flows": 111,
+      "eligible_flows": 70,
+      "excluded_flows": 41,
+      "exclusions": {
+        "BACKGROUND_INFRASTRUCTURE_DNS": 37,
+        "NON_IP_LAYER2": 1,
+        "BACKGROUND_NETBIOS": 1,
+        "BACKGROUND_MULTICAST_BROADCAST": 1,
+        "BACKGROUND_LOCAL_DISCOVERY": 1
+      }
+    },
+    "ftps_down_1a_sample.pcap": {
+      "scenario_id": "iscx_nonvpn_ftps_down",
+      "assigned_label": "file_transfer",
+      "canonical_label": "file_transfer",
+      "capture_group": "ftps_session_1",
+      "total_flows": 5,
+      "eligible_flows": 2,
+      "excluded_flows": 3,
+      "exclusions": {
+        "NON_IP_LAYER2": 1,
+        "COLLATERAL_NON_SCENARIO_TRAFFIC": 2
+      }
+    },
+    "scp1_sample.pcapng": {
+      "scenario_id": "iscx_nonvpn_scp_1",
+      "assigned_label": "file_transfer",
+      "canonical_label": "file_transfer",
+      "capture_group": "scp_session_1",
+      "total_flows": 463,
+      "eligible_flows": 1,
+      "excluded_flows": 462,
+      "exclusions": {
+        "BACKGROUND_NETBIOS": 13,
+        "NON_IP_LAYER2": 1,
+        "BACKGROUND_LLMNR": 270,
+        "BACKGROUND_MDNS": 20,
+        "COLLATERAL_NON_SCENARIO_TRAFFIC": 100,
+        "BACKGROUND_LOCAL_DISCOVERY": 18,
+        "BACKGROUND_MULTICAST_BROADCAST": 18,
+        "BACKGROUND_INFRASTRUCTURE_DNS": 22
+      }
+    },
+    "http.pcap": {
+      "scenario_id": "web_http_1",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "http_session_1",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "http-ooo.pcap": {
+      "scenario_id": "web_http_ooo",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "http_session_2",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "http2-data-reassembly.pcap": {
+      "scenario_id": "web_http2_reassembly",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "http2_session_1",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "http2_follow_multistream.pcapng": {
+      "scenario_id": "web_http2_multistream",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "http2_session_2",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "http-tab-request.pcapng": {
+      "scenario_id": "web_http_tab_request",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "http_session_3",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "packet-h2-14_headers.pcapng": {
+      "scenario_id": "web_packet_h2_headers",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "http2_session_3",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "quic-with-secrets.pcapng": {
+      "scenario_id": "web_quic_secrets",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "quic_session_1",
+      "total_flows": 2,
+      "eligible_flows": 2,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "quic_follow_multistream.pcapng": {
+      "scenario_id": "web_quic_multistream",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "quic_session_2",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "retrans-tls.pcap": {
+      "scenario_id": "web_retrans_tls",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "tls_session_1",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "rsasnakeoil2.pcap": {
+      "scenario_id": "web_rsasnakeoil",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "tls_session_2",
+      "total_flows": 2,
+      "eligible_flows": 2,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "tls12-aes128ccm.pcap": {
+      "scenario_id": "web_tls12_aes128ccm",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "tls_session_3",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "tls12-aes256gcm.pcap": {
+      "scenario_id": "web_tls12_aes256gcm",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "tls_session_4",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    }
+  },
+  "captures": {
+    "vpn_aim_chat1a.pcap": {
+      "scenario_id": "iscx_vpn_aim_1a",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "vpn_aim_chat_1",
+      "total_flows": 22,
+      "eligible_flows": 19,
+      "excluded_flows": 3,
+      "exclusions": {
+        "BACKGROUND_INFRASTRUCTURE_DNS": 3
+      }
+    },
+    "vpn_aim_chat1b.pcap": {
+      "scenario_id": "iscx_vpn_aim_1b",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "vpn_aim_chat_1",
+      "total_flows": 11,
+      "eligible_flows": 7,
+      "excluded_flows": 4,
+      "exclusions": {
+        "BACKGROUND_INFRASTRUCTURE_DNS": 3,
+        "BACKGROUND_LOCAL_DISCOVERY": 1
+      }
+    },
+    "vpn_icq_chat1a.pcap": {
+      "scenario_id": "iscx_vpn_icq_1a",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "vpn_icq_chat_1",
+      "total_flows": 29,
+      "eligible_flows": 25,
+      "excluded_flows": 4,
+      "exclusions": {
+        "BACKGROUND_LOCAL_DISCOVERY": 1,
+        "BACKGROUND_INFRASTRUCTURE_DNS": 3
+      }
+    },
+    "vpn_icq_chat1b.pcap": {
+      "scenario_id": "iscx_vpn_icq_1b",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "vpn_icq_chat_1",
+      "total_flows": 2,
+      "eligible_flows": 2,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "aim_chat_3a.pcap": {
+      "scenario_id": "iscx_nonvpn_aim_3a",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "aim_chat_3",
+      "total_flows": 41,
+      "eligible_flows": 15,
+      "excluded_flows": 26,
+      "exclusions": {
+        "NON_IP_LAYER2": 1,
+        "BACKGROUND_NETBIOS": 1,
+        "BACKGROUND_LLMNR": 20,
+        "BACKGROUND_INFRASTRUCTURE_DNS": 3,
+        "BACKGROUND_LOCAL_DISCOVERY": 1
+      }
+    },
+    "aim_chat_3b.pcap": {
+      "scenario_id": "iscx_nonvpn_aim_3b",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "aim_chat_3",
+      "total_flows": 321,
+      "eligible_flows": 17,
+      "excluded_flows": 304,
+      "exclusions": {
+        "BACKGROUND_NETBIOS": 1,
+        "BACKGROUND_LLMNR": 285,
+        "NON_IP_LAYER2": 1,
+        "BACKGROUND_INFRASTRUCTURE_DNS": 17
+      }
+    },
+    "AIMchat1.pcapng": {
+      "scenario_id": "iscx_nonvpn_aim_c1",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "aim_chat_c",
+      "total_flows": 28,
+      "eligible_flows": 10,
+      "excluded_flows": 18,
+      "exclusions": {
+        "BACKGROUND_NETBIOS": 1,
+        "BACKGROUND_LLMNR": 14,
+        "NON_IP_LAYER2": 1,
+        "BACKGROUND_INFRASTRUCTURE_DNS": 1,
+        "BACKGROUND_LOCAL_DISCOVERY": 1
+      }
+    },
+    "AIMchat2.pcapng": {
+      "scenario_id": "iscx_nonvpn_aim_c2",
+      "assigned_label": "interactive",
+      "canonical_label": "interactive",
+      "capture_group": "aim_chat_c",
+      "total_flows": 33,
+      "eligible_flows": 13,
+      "excluded_flows": 20,
+      "exclusions": {
+        "BACKGROUND_INFRASTRUCTURE_DNS": 3,
+        "BACKGROUND_LOCAL_DISCOVERY": 1,
+        "NON_IP_LAYER2": 1,
+        "BACKGROUND_NETBIOS": 1,
+        "BACKGROUND_LLMNR": 14
+      }
+    },
+    "vpn_netflix_sample.pcap": {
+      "scenario_id": "iscx_vpn_netflix_1",
+      "assigned_label": "streaming",
+      "canonical_label": "streaming",
+      "capture_group": "vpn_netflix_session_1",
+      "total_flows": 62,
+      "eligible_flows": 58,
+      "excluded_flows": 4,
+      "exclusions": {
+        "BACKGROUND_INFRASTRUCTURE_DNS": 4
+      }
+    },
+    "facebook_audio_sample.pcap": {
+      "scenario_id": "iscx_nonvpn_facebook_audio",
+      "assigned_label": "voip",
+      "canonical_label": "voip",
+      "capture_group": "facebook_audio_session_1",
+      "total_flows": 111,
+      "eligible_flows": 70,
+      "excluded_flows": 41,
+      "exclusions": {
+        "BACKGROUND_INFRASTRUCTURE_DNS": 37,
+        "NON_IP_LAYER2": 1,
+        "BACKGROUND_NETBIOS": 1,
+        "BACKGROUND_MULTICAST_BROADCAST": 1,
+        "BACKGROUND_LOCAL_DISCOVERY": 1
+      }
+    },
+    "ftps_down_1a_sample.pcap": {
+      "scenario_id": "iscx_nonvpn_ftps_down",
+      "assigned_label": "file_transfer",
+      "canonical_label": "file_transfer",
+      "capture_group": "ftps_session_1",
+      "total_flows": 5,
+      "eligible_flows": 2,
+      "excluded_flows": 3,
+      "exclusions": {
+        "NON_IP_LAYER2": 1,
+        "COLLATERAL_NON_SCENARIO_TRAFFIC": 2
+      }
+    },
+    "scp1_sample.pcapng": {
+      "scenario_id": "iscx_nonvpn_scp_1",
+      "assigned_label": "file_transfer",
+      "canonical_label": "file_transfer",
+      "capture_group": "scp_session_1",
+      "total_flows": 463,
+      "eligible_flows": 1,
+      "excluded_flows": 462,
+      "exclusions": {
+        "BACKGROUND_NETBIOS": 13,
+        "NON_IP_LAYER2": 1,
+        "BACKGROUND_LLMNR": 270,
+        "BACKGROUND_MDNS": 20,
+        "COLLATERAL_NON_SCENARIO_TRAFFIC": 100,
+        "BACKGROUND_LOCAL_DISCOVERY": 18,
+        "BACKGROUND_MULTICAST_BROADCAST": 18,
+        "BACKGROUND_INFRASTRUCTURE_DNS": 22
+      }
+    },
+    "http.pcap": {
+      "scenario_id": "web_http_1",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "http_session_1",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "http-ooo.pcap": {
+      "scenario_id": "web_http_ooo",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "http_session_2",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "http2-data-reassembly.pcap": {
+      "scenario_id": "web_http2_reassembly",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "http2_session_1",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "http2_follow_multistream.pcapng": {
+      "scenario_id": "web_http2_multistream",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "http2_session_2",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "http-tab-request.pcapng": {
+      "scenario_id": "web_http_tab_request",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "http_session_3",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "packet-h2-14_headers.pcapng": {
+      "scenario_id": "web_packet_h2_headers",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "http2_session_3",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "quic-with-secrets.pcapng": {
+      "scenario_id": "web_quic_secrets",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "quic_session_1",
+      "total_flows": 2,
+      "eligible_flows": 2,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "quic_follow_multistream.pcapng": {
+      "scenario_id": "web_quic_multistream",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "quic_session_2",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "retrans-tls.pcap": {
+      "scenario_id": "web_retrans_tls",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "tls_session_1",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "rsasnakeoil2.pcap": {
+      "scenario_id": "web_rsasnakeoil",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "tls_session_2",
+      "total_flows": 2,
+      "eligible_flows": 2,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "tls12-aes128ccm.pcap": {
+      "scenario_id": "web_tls12_aes128ccm",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "tls_session_3",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    },
+    "tls12-aes256gcm.pcap": {
+      "scenario_id": "web_tls12_aes256gcm",
+      "assigned_label": "web",
+      "canonical_label": "web",
+      "capture_group": "tls_session_4",
+      "total_flows": 1,
+      "eligible_flows": 1,
+      "excluded_flows": 0,
+      "exclusions": {}
+    }
+  }
+}
