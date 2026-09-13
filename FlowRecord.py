@@ -1,19 +1,36 @@
 import numpy as np
-from collections import defaultdict
+from collections import defaultdict, deque
 
 
 class FlowRecord:
-
-    def __init__(self, initiator_ip):
+    def __init__(self, initiator_ip, window_size=200, stride=25):
         self.initiator_ip = initiator_ip
-        self.timestamps = []
-        self.sizes = []
-        self.is_forward = []
+        self.window_size = window_size
+        self.stride = stride
+        
+        self.timestamps = deque(maxlen=window_size)
+        self.sizes = deque(maxlen=window_size)
+        self.is_forward = deque(maxlen=window_size)
+        self.packets_since_last_predict = 0
 
     def update(self, meta):
         self.timestamps.append(meta["timestamp"])
         self.sizes.append(meta["wire_bytes"])
         self.is_forward.append(meta["src_ip"] == self.initiator_ip)
+        self.packets_since_last_predict += 1
+
+        # Only trigger inference when window is full AND stride is reached
+        if len(self.timestamps) == self.window_size and self.packets_since_last_predict >= self.stride:
+            self.packets_since_last_predict = 0
+            return True
+        return False
+
+    def is_idle(self, current_time, timeout_seconds=5.0):
+        """Trigger 2: Time-based check for inactive/paused flows."""
+        return (
+            (current_time - self.last_seen) > timeout_seconds
+            and self.packets_since_last_predict > 0
+        )
 
     def extract_features(self):
         n = len(self.timestamps)
