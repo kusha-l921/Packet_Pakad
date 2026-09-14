@@ -12,12 +12,14 @@ class FlowRecord:
         self.sizes = deque(maxlen=window_size)
         self.is_forward = deque(maxlen=window_size)
         self.packets_since_last_predict = 0
+        self.last_seen = 0.0
 
     def update(self, meta):
         self.timestamps.append(meta["timestamp"])
         self.sizes.append(meta["wire_bytes"])
         self.is_forward.append(meta["src_ip"] == self.initiator_ip)
         self.packets_since_last_predict += 1
+        self.last_seen = meta["timestamp"]
 
         # Only trigger inference when window is full AND stride is reached
         if len(self.timestamps) == self.window_size and self.packets_since_last_predict >= self.stride:

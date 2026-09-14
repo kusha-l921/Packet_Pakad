@@ -194,9 +194,15 @@ def extract_ikeV2_metadata(pkt):
         return None
 
     ike = pkt[IKEv2]
-    exchangeType = ike.exchange_type
+    exchangeType = getattr(ike, "exch_type", None)
+
+    if exchangeType is None:
+        exchangeType = getattr(ike, "exchange_type", None)
+
     has_udp = pkt.haslayer(UDP)
-    overall_metadata = {}
+    overall_metadata = {
+        "exchange_type": exchangeType
+    }
 
     common_metadata = {
         "plane": "control",
@@ -208,11 +214,11 @@ def extract_ikeV2_metadata(pkt):
         "src_port": pkt[UDP].sport if pkt.haslayer(UDP) else None,
         "dst_port": pkt[UDP].dport if pkt.haslayer(UDP) else None,
 
-        "initiator_spi": hex(ike.init_SPI),
-        "responder_spi": hex(ike.resp_SPI),
+        "initiator_spi": _format_hex_or_bytes(getattr(ike, "init_SPI", None)),
+        "responder_spi": _format_hex_or_bytes(getattr(ike, "resp_SPI", None)),
 
-        "exchange_type": getattr(ike, "exch_type", None),
-        "is_response": bool(ike.flags & 0x20),
+        "exchange_type": exchangeType,
+        "is_response": bool(getattr(ike, "flags", 0) & 0x20),
         "message_id": getattr(ike, "id", None),
     }
 
@@ -229,6 +235,7 @@ def extract_ikeV2_metadata(pkt):
             "auth_type": None,
             "signature_algorithm": None,
             "signature_hash_algorithm": None,
+            "data": None
         },
 
         "certificate": {
@@ -269,11 +276,13 @@ def extract_ikeV2_metadata(pkt):
 
             notify_metadata["present"] = True
 
+            notify_data = getattr(payload, "notify", None)
             notify_metadata["messages"].append({
                 "type": getattr(payload, "type", None),
                 "protocol_id": getattr(payload, "proto", None),
-                "spi_size": getattr(payload, "spi_size", None),
-                "spi": getattr(payload, "spi", None),
+                "spi_size": getattr(payload, "SPIsize", getattr(payload, "spi_size", None)),
+                "spi": _format_hex_or_bytes(getattr(payload, "SPI", getattr(payload, "spi", None))),
+                "data": _format_hex_or_bytes(notify_data) if notify_data else None,
             })
         
         elif isinstance(payload, IKEv2_AUTH):
@@ -282,15 +291,15 @@ def extract_ikeV2_metadata(pkt):
 
             ike_auth_metadata["authentication"]["auth_type"] = getattr(
                 payload,
-                "auth_method",
-                getattr(payload, "method", None)
+                "auth_type",
+                getattr(payload, "auth_method", getattr(payload, "method", None))
             )
+            raw_auth_load = getattr(payload, "load", None)
+            ike_auth_metadata["authentication"]["data"] = _format_hex_or_bytes(raw_auth_load)
 
             ike_auth_metadata["authentication"]["signature_algorithm"] = None
 
             ike_auth_metadata["authentication"]["signature_hash_algorithm"] = None
-
-            """ solve this cert thing check all the fields in cert, and complete elif"""
 
         elif isinstance(payload, IKEv2_CERT):
             certificate = ike_auth_metadata["certificate"]
@@ -301,11 +310,11 @@ def extract_ikeV2_metadata(pkt):
                 "cert_encoding",
                 getattr(payload, "encoding", None),
             )
-            certificate["data"] = getattr(
+            certificate["data"] = _format_hex_or_bytes(getattr(
                 payload,
                 "cert_data",
                 getattr(payload, "data", None),
-            )
+            ))
 
 
 
@@ -350,10 +359,10 @@ def extract_ikeV2_metadata(pkt):
 
                     trans = getattr(trans, "payload", None)
 
-                if exchangeType == "IKE_SA_INIT":
+                if exchangeType in (34, "IKE_SA_INIT"):
                     ike_sa_init_metadata["proposals"].append(proposal_dict)
 
-                elif exchangeType == "IKE_AUTH":
+                elif exchangeType in (35, "IKE_AUTH"):
                     ike_auth_metadata["child_sa"]["present"] = True
                     ike_auth_metadata["child_sa"]["proposals"].append(proposal_dict)
 
@@ -361,7 +370,7 @@ def extract_ikeV2_metadata(pkt):
                 prop = getattr(prop, "payload", None)
         
 
-        elif exchangeType == "IKE_AUTH" and isinstance(payload, IKEv2_TSi):
+        elif exchangeType in (35, "IKE_AUTH") and isinstance(payload, IKEv2_TSi):
             ts = payload
 
             while ts and isinstance(ts, IKEv2_TSi):
@@ -376,7 +385,7 @@ def extract_ikeV2_metadata(pkt):
 
                 ts = getattr(ts, "payload", None)
 
-        elif exchangeType == "IKE_AUTH" and isinstance(payload, IKEv2_TSr):
+        elif exchangeType in (35, "IKE_AUTH") and isinstance(payload, IKEv2_TSr):
             ts = payload
 
             while ts and isinstance(ts, IKEv2_TSr):
@@ -393,12 +402,11 @@ def extract_ikeV2_metadata(pkt):
 
         payload = getattr(payload, "payload", None)
     
-    if exchangeType == "IKE_SA_INIT":
+    if exchangeType in (34, "IKE_SA_INIT"):
         overall_metadata["IKE_SA_INIT"] = ike_sa_init_metadata
 
-    elif exchangeType == "IKE_AUTH":
+    elif exchangeType in (35, "IKE_AUTH"):
         overall_metadata["IKE_AUTH"] = ike_auth_metadata
-
 
     if notify_metadata["present"]:
         overall_metadata["notify"] = notify_metadata
@@ -811,4 +819,4 @@ def extract_esp_metadata(pkt):
         "wire_bytes": len(pkt)
     }
 
-""" complete this after ip map script and the esp metadata doesnt use ipsec module of scapy so check it. """
+""" Each certificate blueprint is diff so its possible to not get signature algo and signature hash from it for all types look on to it"""

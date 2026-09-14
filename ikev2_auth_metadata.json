@@ -1,0 +1,39 @@
+{
+  "exchange_type": 35,
+  "common": {
+    "plane": "control",
+    "timestamp": 1789415605.747436,
+    "src_ip": "192.168.1.100",
+    "dst_ip": "10.0.0.1",
+    "src_port": 500,
+    "dst_port": 500,
+    "initiator_spi": "0x1122334455667788",
+    "responder_spi": "0x8877665544332211",
+    "exchange_type": 35,
+    "is_response": false,
+    "message_id": 2
+  },
+  "IKE_AUTH": {
+    "exchange": "IKE_AUTH",
+    "authentication": {
+      "present": true,
+      "auth_type": 1,
+      "signature_algorithm": null,
+      "signature_hash_algorithm": null,
+      "data": "0x002ganpatibappamorya"
+    },
+    "certificate": {
+      "present": true,
+      "encoding": 4,
+      "data": "0x3082010a0282010100aabbcc"
+    },
+    "child_sa": {
+      "present": false,
+      "proposals": []
+    },
+    "traffic_selectors": {
+      "initiator": [],
+      "responder": []
+    }
+  }
+}

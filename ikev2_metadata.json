@@ -1,0 +1,35 @@
+{
+  "exchange_type": 34,
+  "common": {
+    "plane": "control",
+    "timestamp": 1789415605.743298,
+    "src_ip": "192.168.1.100",
+    "dst_ip": "10.0.0.1",
+    "src_port": 500,
+    "dst_port": 500,
+    "initiator_spi": "0x1122334455667788",
+    "responder_spi": "0x0000000000000000",
+    "exchange_type": 34,
+    "is_response": false,
+    "message_id": 1
+  },
+  "IKE_SA_INIT": {
+    "exchange": "IKE_SA_INIT",
+    "proposals": []
+  },
+  "notify": {
+    "present": true,
+    "notify_types": [
+      16443
+    ],
+    "messages": [
+      {
+        "type": 16443,
+        "protocol_id": 0,
+        "spi_size": null,
+        "spi": null,
+        "data": "0x001200130001"
+      }
+    ]
+  }
+}
