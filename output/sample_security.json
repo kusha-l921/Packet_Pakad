@@ -1,0 +1,402 @@
+{
+  "schema_version": "1.0",
+  "analysis_metadata": {
+    "file_name": "basic_traffic.pcap",
+    "file_path": "/home/illoir/Desktop/sih/sample_data/basic_traffic.pcap",
+    "file_type": "pcap",
+    "total_packets": 5,
+    "ipsec_traffic_detected": false,
+    "esp_detected": false,
+    "ike_detected": false,
+    "analysis_status": "SUCCESS",
+    "errors": [],
+    "warnings": []
+  },
+  "model_information": {
+    "model_id": "gradient_boosting_traffic_classifier_v1",
+    "model_version": "1.0.0",
+    "feature_schema_version": "1.0",
+    "domain_status": {
+      "ipsec_validation": "unverified",
+      "reason": "Trained on proxy encrypted application flows (HTTPS/TLS/SSH). Real StrongSwan IPsec data required for domain validation."
+    }
+  },
+  "capture_summary": {
+    "total_flows": 5,
+    "risk_distribution": {
+      "LOW": 5,
+      "MEDIUM": 0,
+      "HIGH": 0,
+      "CRITICAL": 0
+    },
+    "traffic_distribution": {
+      "interactive": 2,
+      "file_transfer": 2,
+      "voip": 1
+    },
+    "average_confidence": 0.8903,
+    "overall_risk_score": 7,
+    "overall_risk_level": "LOW",
+    "top_indicators": [
+      {
+        "indicator_id": "LOW_CLASSIFICATION_CONFIDENCE",
+        "occurrences": 1,
+        "frequency_pct": 0.2
+      }
+    ]
+  },
+  "flows": [
+    {
+      "flow_id": "TCP_192.168.1.10:54321_93.184.216.34:80",
+      "endpoints": "192.168.1.10:54321 <--> 93.184.216.34:80",
+      "protocol": "TCP",
+      "prediction": {
+        "traffic_category": "interactive",
+        "confidence": 0.9952,
+        "confidence_level": "HIGH",
+        "model_name": "gradient_boosting_traffic_classifier_v1",
+        "model_version": "1.0.0",
+        "prediction_status": "HIGH_CONFIDENCE",
+        "probabilities": {
+          "file_transfer": 0.0,
+          "interactive": 0.9952,
+          "streaming": 0.0,
+          "voip": 0.0047,
+          "web": 0.0
+        }
+      },
+      "behavior": {
+        "traffic_pattern": "Low-Volume Interactive Exchange",
+        "observations": [
+          "HIGH_DIRECTIONAL_ASYMMETRY"
+        ],
+        "metrics_summary": {
+          "total_packets": 1,
+          "total_bytes": 54,
+          "duration_seconds": 0.0,
+          "packets_per_second": 0.0,
+          "bytes_per_second": 0.0,
+          "forward_byte_ratio": 1.0,
+          "backward_byte_ratio": 0.0,
+          "max_packets_one_second": 1
+        }
+      },
+      "security_assessment": {
+        "risk_score": 0,
+        "risk_level": "LOW",
+        "indicators": [],
+        "score_contributions": []
+      },
+      "explainability": {
+        "important_features": [
+          {
+            "feature_name": "minimum_packet_size",
+            "importance": 0.2951
+          },
+          {
+            "feature_name": "mean_inter_arrival_time",
+            "importance": 0.2489
+          },
+          {
+            "feature_name": "backward_mean_packet_size",
+            "importance": 0.1193
+          },
+          {
+            "feature_name": "forward_bytes",
+            "importance": 0.0988
+          },
+          {
+            "feature_name": "maximum_packet_size",
+            "importance": 0.065
+          }
+        ],
+        "summary": "Flow statistically resembles 'interactive' traffic with high confidence (99.5%). Observable behavior aligns with 'Low-Volume Interactive Exchange', transferring 54 bytes across 1 packets over 0.00 seconds. No suspicious behavioral indicators were detected. The flow is evaluated at LOW risk (score: 0/100)."
+      }
+    },
+    {
+      "flow_id": "UDP_192.168.1.10:53210_8.8.8.8:53",
+      "endpoints": "192.168.1.10:53210 <--> 8.8.8.8:53",
+      "protocol": "UDP",
+      "prediction": {
+        "traffic_category": "file_transfer",
+        "confidence": 0.4871,
+        "confidence_level": "LOW",
+        "model_name": "gradient_boosting_traffic_classifier_v1",
+        "model_version": "1.0.0",
+        "prediction_status": "LOW_CONFIDENCE",
+        "probabilities": {
+          "file_transfer": 0.4871,
+          "interactive": 0.2242,
+          "streaming": 0.2884,
+          "voip": 0.0003,
+          "web": 0.0
+        }
+      },
+      "behavior": {
+        "traffic_pattern": "Low-Volume Interactive Exchange",
+        "observations": [
+          "HIGH_DIRECTIONAL_ASYMMETRY"
+        ],
+        "metrics_summary": {
+          "total_packets": 1,
+          "total_bytes": 51,
+          "duration_seconds": 0.0,
+          "packets_per_second": 0.0,
+          "bytes_per_second": 0.0,
+          "forward_byte_ratio": 1.0,
+          "backward_byte_ratio": 0.0,
+          "max_packets_one_second": 1
+        }
+      },
+      "security_assessment": {
+        "risk_score": 15,
+        "risk_level": "LOW",
+        "indicators": [
+          {
+            "indicator_id": "LOW_CLASSIFICATION_CONFIDENCE",
+            "severity": "LOW",
+            "reason": "The observed flow statistical profile does not strongly match categories known to the AI model (confidence=48.71%).",
+            "supporting_features": {
+              "confidence": 0.4871,
+              "confidence_level": "LOW",
+              "predicted_category": "file_transfer"
+            }
+          }
+        ],
+        "score_contributions": [
+          {
+            "indicator": "LOW_CLASSIFICATION_CONFIDENCE",
+            "points": 15,
+            "reason": "The observed flow statistical profile does not strongly match categories known to the AI model (confidence=48.71%)."
+          }
+        ]
+      },
+      "explainability": {
+        "important_features": [
+          {
+            "feature_name": "minimum_packet_size",
+            "importance": 0.2951
+          },
+          {
+            "feature_name": "mean_inter_arrival_time",
+            "importance": 0.2489
+          },
+          {
+            "feature_name": "backward_mean_packet_size",
+            "importance": 0.1193
+          },
+          {
+            "feature_name": "forward_bytes",
+            "importance": 0.0988
+          },
+          {
+            "feature_name": "maximum_packet_size",
+            "importance": 0.065
+          }
+        ],
+        "summary": "Flow does not strongly match known traffic categories (top statistical resemblance: 'file_transfer' at 48.7% confidence). Observable behavior aligns with 'Low-Volume Interactive Exchange', transferring 51 bytes across 1 packets over 0.00 seconds. Flagged 1 behavioral indicator(s) [LOW_CLASSIFICATION_CONFIDENCE]: The observed flow statistical profile does not strongly match categories known to the AI model (confidence=48.71%). Resulting security assessment is LOW risk (score: 15/100)."
+      }
+    },
+    {
+      "flow_id": "ICMP_1.1.1.1_192.168.1.10",
+      "endpoints": "1.1.1.1 <--> 192.168.1.10",
+      "protocol": "ICMP",
+      "prediction": {
+        "traffic_category": "file_transfer",
+        "confidence": 0.9765,
+        "confidence_level": "HIGH",
+        "model_name": "gradient_boosting_traffic_classifier_v1",
+        "model_version": "1.0.0",
+        "prediction_status": "HIGH_CONFIDENCE",
+        "probabilities": {
+          "file_transfer": 0.9765,
+          "interactive": 0.0051,
+          "streaming": 0.0184,
+          "voip": 0.0,
+          "web": 0.0
+        }
+      },
+      "behavior": {
+        "traffic_pattern": "Low-Volume Interactive Exchange",
+        "observations": [
+          "HIGH_DIRECTIONAL_ASYMMETRY"
+        ],
+        "metrics_summary": {
+          "total_packets": 1,
+          "total_bytes": 42,
+          "duration_seconds": 0.0,
+          "packets_per_second": 0.0,
+          "bytes_per_second": 0.0,
+          "forward_byte_ratio": 1.0,
+          "backward_byte_ratio": 0.0,
+          "max_packets_one_second": 1
+        }
+      },
+      "security_assessment": {
+        "risk_score": 0,
+        "risk_level": "LOW",
+        "indicators": [],
+        "score_contributions": []
+      },
+      "explainability": {
+        "important_features": [
+          {
+            "feature_name": "minimum_packet_size",
+            "importance": 0.2951
+          },
+          {
+            "feature_name": "mean_inter_arrival_time",
+            "importance": 0.2489
+          },
+          {
+            "feature_name": "backward_mean_packet_size",
+            "importance": 0.1193
+          },
+          {
+            "feature_name": "forward_bytes",
+            "importance": 0.0988
+          },
+          {
+            "feature_name": "maximum_packet_size",
+            "importance": 0.065
+          }
+        ],
+        "summary": "Flow statistically resembles 'file_transfer' traffic with high confidence (97.7%). Observable behavior aligns with 'Low-Volume Interactive Exchange', transferring 42 bytes across 1 packets over 0.00 seconds. No suspicious behavioral indicators were detected. The flow is evaluated at LOW risk (score: 0/100)."
+      }
+    },
+    {
+      "flow_id": "TCP_2001:db8::1:54322_2001:db8::2:443",
+      "endpoints": "2001:db8::1:54322 <--> 2001:db8::2:443",
+      "protocol": "TCP",
+      "prediction": {
+        "traffic_category": "voip",
+        "confidence": 0.9989,
+        "confidence_level": "HIGH",
+        "model_name": "gradient_boosting_traffic_classifier_v1",
+        "model_version": "1.0.0",
+        "prediction_status": "HIGH_CONFIDENCE",
+        "probabilities": {
+          "file_transfer": 0.0,
+          "interactive": 0.0011,
+          "streaming": 0.0,
+          "voip": 0.9989,
+          "web": 0.0
+        }
+      },
+      "behavior": {
+        "traffic_pattern": "Low-Volume Interactive Exchange",
+        "observations": [
+          "HIGH_DIRECTIONAL_ASYMMETRY"
+        ],
+        "metrics_summary": {
+          "total_packets": 1,
+          "total_bytes": 74,
+          "duration_seconds": 0.0,
+          "packets_per_second": 0.0,
+          "bytes_per_second": 0.0,
+          "forward_byte_ratio": 1.0,
+          "backward_byte_ratio": 0.0,
+          "max_packets_one_second": 1
+        }
+      },
+      "security_assessment": {
+        "risk_score": 0,
+        "risk_level": "LOW",
+        "indicators": [],
+        "score_contributions": []
+      },
+      "explainability": {
+        "important_features": [
+          {
+            "feature_name": "minimum_packet_size",
+            "importance": 0.2951
+          },
+          {
+            "feature_name": "mean_inter_arrival_time",
+            "importance": 0.2489
+          },
+          {
+            "feature_name": "backward_mean_packet_size",
+            "importance": 0.1193
+          },
+          {
+            "feature_name": "forward_bytes",
+            "importance": 0.0988
+          },
+          {
+            "feature_name": "maximum_packet_size",
+            "importance": 0.065
+          }
+        ],
+        "summary": "Flow statistically resembles 'voip' traffic with high confidence (99.9%). Observable behavior aligns with 'Low-Volume Interactive Exchange', transferring 74 bytes across 1 packets over 0.00 seconds. No suspicious behavioral indicators were detected. The flow is evaluated at LOW risk (score: 0/100)."
+      }
+    },
+    {
+      "flow_id": "ICMPV6_2001:db8::1_2001:db8::2",
+      "endpoints": "2001:db8::1 <--> 2001:db8::2",
+      "protocol": "ICMPV6",
+      "prediction": {
+        "traffic_category": "interactive",
+        "confidence": 0.9936,
+        "confidence_level": "HIGH",
+        "model_name": "gradient_boosting_traffic_classifier_v1",
+        "model_version": "1.0.0",
+        "prediction_status": "HIGH_CONFIDENCE",
+        "probabilities": {
+          "file_transfer": 0.0001,
+          "interactive": 0.9936,
+          "streaming": 0.0006,
+          "voip": 0.0042,
+          "web": 0.0015
+        }
+      },
+      "behavior": {
+        "traffic_pattern": "Low-Volume Interactive Exchange",
+        "observations": [
+          "HIGH_DIRECTIONAL_ASYMMETRY"
+        ],
+        "metrics_summary": {
+          "total_packets": 1,
+          "total_bytes": 62,
+          "duration_seconds": 0.0,
+          "packets_per_second": 0.0,
+          "bytes_per_second": 0.0,
+          "forward_byte_ratio": 1.0,
+          "backward_byte_ratio": 0.0,
+          "max_packets_one_second": 1
+        }
+      },
+      "security_assessment": {
+        "risk_score": 0,
+        "risk_level": "LOW",
+        "indicators": [],
+        "score_contributions": []
+      },
+      "explainability": {
+        "important_features": [
+          {
+            "feature_name": "minimum_packet_size",
+            "importance": 0.2951
+          },
+          {
+            "feature_name": "mean_inter_arrival_time",
+            "importance": 0.2489
+          },
+          {
+            "feature_name": "backward_mean_packet_size",
+            "importance": 0.1193
+          },
+          {
+            "feature_name": "forward_bytes",
+            "importance": 0.0988
+          },
+          {
+            "feature_name": "maximum_packet_size",
+            "importance": 0.065
+          }
+        ],
+        "summary": "Flow statistically resembles 'interactive' traffic with high confidence (99.4%). Observable behavior aligns with 'Low-Volume Interactive Exchange', transferring 62 bytes across 1 packets over 0.00 seconds. No suspicious behavioral indicators were detected. The flow is evaluated at LOW risk (score: 0/100)."
+      }
+    }
+  ]
+}

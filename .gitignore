@@ -1,20 +1,126 @@
-# Python cache
+# ==============================================================================
+# SIH IPsec VPN Analyzer — Combined .gitignore
+# ==============================================================================
+
+# Python bytecode & environments
 __pycache__/
 *.py[cod]
+*$py.class
+*.so
 
-# Virtual environments
-venv/
 .venv/
+venv/
 env/
+ENV/
+.python-version
 
-# macOS
+# Testing / coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyright/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Secrets / credentials
+.env
+.env.*
+!.env.example
+*.secret
+*.secrets
+*.key
+*.pem
+*.crt
+*.pfx
+*.p12
+
+# macOS / OS files
 .DS_Store
+Thumbs.db
+Desktop.ini
+ehthumbs.db
+Icon?
 
-# IDE
-.vscode/
+# IDE / editor
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.swp
+*.swo
+*.swn
+*~
+*.bak
+
+# Build / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs / temporary files
+*.log
+logs/
+log/
+tmp/
+temp/
+*.tmp
+*.temp
+runtime_outputs/
+generated_outputs/
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# PCAP / network captures
+*.pcap
+*.pcapng
+*.cap
+
+# Preserve tracked sample captures
+!sample_data/*.pcap
+!sample_data/*.pcapng
+!datasets/raw/**/*.pcap
+!datasets/raw/**/*.pcapng
+
+# Large datasets / archives
+*.tar.gz
+*.zip
+*.7z
+*.bz2
+*.xz
+data/
+datasets/downloads/
+datasets/raw_full/
+
+# ML model weights / checkpoints
+*.pkl
+*.pickle
+*.pt
+*.pth
+*.onnx
+*.h5
+*.keras
+
+# Preserve tracked model artifacts
+!models/
+!models/README.md
+!models/metadata/*.json
+!models/registry/
+!models/registry/**
+!models/trained/
+!models/trained/*.joblib
 
 # Streamlit
 .streamlit/
-
-# Python logs
-*.log

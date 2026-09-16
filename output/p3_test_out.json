@@ -1,0 +1,113 @@
+{
+  "capture_info": {
+    "file_name": "real_ikev2-decrypt-aes128ccm12.pcap",
+    "file_type": "pcap",
+    "total_packets": 6,
+    "readable": true
+  },
+  "protocol_summary": {
+    "ethernet": 6,
+    "ipv4": 6,
+    "ipv6": 0,
+    "tcp": 0,
+    "udp": 6,
+    "icmp": 0,
+    "icmpv6": 0,
+    "other": 0
+  },
+  "ipsec_analysis": {
+    "ipsec_detected": true,
+    "esp_detected": false,
+    "ah_detected": false,
+    "ike_related_traffic_detected": true,
+    "nat_traversal_related_traffic_detected": false,
+    "ike_version": "IKEv2"
+  },
+  "packet_statistics": {
+    "minimum_packet_size": 95,
+    "maximum_packet_size": 290,
+    "average_packet_size": 218.67
+  },
+  "status": {
+    "success": true,
+    "errors": [],
+    "warnings": []
+  },
+  "feature_schema_version": "1.0",
+  "flow_summary": {
+    "total_flows": 1,
+    "valid_flows": 1,
+    "invalid_flows": 0
+  },
+  "flows": [
+    {
+      "flow_metadata": {
+        "flow_id": "UDP_192.168.1.14:500_192.168.1.2:500",
+        "ip_version": 4,
+        "protocol": "UDP",
+        "endpoint_a": "192.168.1.14:500",
+        "endpoint_b": "192.168.1.2:500",
+        "first_timestamp": 1471793960.463086,
+        "last_timestamp": 1471793967.861364
+      },
+      "ipsec_metadata": {
+        "is_ipsec_related": true,
+        "esp_detected": false,
+        "ah_detected": false,
+        "ike_related": true,
+        "nat_t_related": false,
+        "spi": null
+      },
+      "features": {
+        "total_packets": 6.0,
+        "forward_packets": 3.0,
+        "backward_packets": 3.0,
+        "total_bytes": 1312.0,
+        "forward_bytes": 676.0,
+        "backward_bytes": 636.0,
+        "minimum_packet_size": 95.0,
+        "maximum_packet_size": 290.0,
+        "mean_packet_size": 218.6667,
+        "standard_deviation_packet_size": 93.3138,
+        "median_packet_size": 270.5,
+        "forward_mean_packet_size": 225.3333,
+        "backward_mean_packet_size": 212.0,
+        "flow_duration_seconds": 7.398278,
+        "packets_per_second": 0.811,
+        "bytes_per_second": 177.3386,
+        "mean_inter_arrival_time": 1.479656,
+        "minimum_inter_arrival_time": 0.000714,
+        "maximum_inter_arrival_time": 7.241076,
+        "standard_deviation_inter_arrival_time": 3.221323,
+        "forward_packet_ratio": 0.5,
+        "backward_packet_ratio": 0.5,
+        "forward_byte_ratio": 0.5152,
+        "backward_byte_ratio": 0.4848,
+        "maximum_packets_in_one_second": 4.0
+      },
+      "validation": {
+        "valid": true,
+        "errors": [],
+        "warnings": []
+      },
+      "prediction": {
+        "model_status": "MODEL_UNAVAILABLE",
+        "model_info": null,
+        "prediction": null,
+        "reason": "No verified compatible pretrained model is currently registered for feature schema 1.0 and the requested prediction task.",
+        "compatibility_errors": [],
+        "warnings": [],
+        "domain_status": {
+          "ipsec_validation": "unverified"
+        }
+      }
+    }
+  ],
+  "prediction_summary": {
+    "total_flows": 1,
+    "predictions_successful": 0,
+    "model_unavailable": 1,
+    "incompatible": 0,
+    "domain_unverified": 0
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "model_id": "dummy_test_model",
+  "model_name": "Deterministic Test-Only Model (DUMMY)",
+
+  "model_version": "1.0-test",
+  "model_type": "test_classifier",
+  "prediction_task": "application_category",
+  "input_type": "flow_features",
+  "feature_schema_version": "1.0",
+  "feature_names": [
+    "total_packets",
+    "forward_packets",
+    "backward_packets",
+    "total_bytes",
+    "forward_bytes",
+    "backward_bytes",
+    "minimum_packet_size",
+    "maximum_packet_size",
+    "mean_packet_size",
+    "standard_deviation_packet_size",
+    "median_packet_size",
+    "forward_mean_packet_size",
+    "backward_mean_packet_size",
+    "flow_duration_seconds",
+    "packets_per_second",
+    "bytes_per_second",
+    "mean_inter_arrival_time",
+    "minimum_inter_arrival_time",
+    "maximum_inter_arrival_time",
+    "standard_deviation_inter_arrival_time",
+    "forward_packet_ratio",
+    "backward_packet_ratio",
+    "forward_byte_ratio",
+    "backward_byte_ratio",
+    "maximum_packets_in_one_second"
+  ],
+  "feature_count": 25,
+  "preprocessing": {
+    "required": false,
+    "type": "identity"
+  },
+  "labels": {
+    "0": "web",
+    "1": "video",
+    "2": "voip",
+    "3": "file_transfer",
+    "4": "interactive"
+  },
+  "training_domain": {
+    "dataset": "synthetic_ci_fixtures",
+    "traffic_type": "encrypted_and_synthetic",
+    "note": "STRICTLY FOR SOFTWARE ARCHITECTURE TESTING"
+  },
+  "ipsec_compatibility": {
+    "level": "verified",
+    "reason": "Test model certified for CI test fixtures"
+  },
+  "artifact_path": null,
+  "is_test_only": true
+}

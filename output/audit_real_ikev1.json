@@ -1,0 +1,137 @@
+{
+  "integration_schema_version": "1.0",
+  "analysis_metadata": {
+    "file_name": "real_ikev1-certs.pcap",
+    "file_path": "/home/illoir/Desktop/sih/sample_data/real_ikev1-certs.pcap",
+    "file_type": "pcap",
+    "total_packets": 10,
+    "readable": true,
+    "analysis_status": "SUCCESS",
+    "errors": [],
+    "warnings": [],
+    "model_information": {
+      "model_id": "gradient_boosting_traffic_classifier_v1",
+      "model_version": "1.0.0",
+      "feature_schema_version": "1.0",
+      "domain_status": {
+        "ipsec_validation": "unverified"
+      }
+    }
+  },
+  "capture_summary": {
+    "total_flows": 1,
+    "risk_distribution": {
+      "LOW": 1,
+      "MEDIUM": 0,
+      "HIGH": 0,
+      "CRITICAL": 0
+    },
+    "traffic_distribution": {
+      "unclassified": 1
+    },
+    "average_confidence": 0.0,
+    "overall_risk_score": 0,
+    "overall_risk_level": "LOW",
+    "top_indicators": []
+  },
+  "ipsec_analysis": {
+    "ipsec_detected": true,
+    "esp_detected": false,
+    "ah_detected": false,
+    "ike_related_traffic_detected": true,
+    "nat_traversal_related_traffic_detected": false,
+    "ike_version": "IKEv1"
+  },
+  "flows": [
+    {
+      "flow_id": "UDP_172.16.1.103:500_192.168.12.118:500",
+      "flow_metadata": {
+        "flow_id": "UDP_172.16.1.103:500_192.168.12.118:500",
+        "ip_version": 4,
+        "protocol": "UDP",
+        "endpoint_a": "172.16.1.103:500",
+        "endpoint_b": "192.168.12.118:500",
+        "first_timestamp": 1351861454.5558,
+        "last_timestamp": 1351861469.1876,
+        "is_ipsec_related": true,
+        "esp_detected": false,
+        "ah_detected": false,
+        "ike_related": true,
+        "nat_t_related": false
+      },
+      "features": {
+        "total_packets": 10.0,
+        "forward_packets": 6.0,
+        "backward_packets": 4.0,
+        "total_bytes": 5831.0,
+        "forward_bytes": 2916.0,
+        "backward_bytes": 2915.0,
+        "minimum_packet_size": 94.0,
+        "maximum_packet_size": 1974.0,
+        "mean_packet_size": 583.1,
+        "standard_deviation_packet_size": 694.3253,
+        "median_packet_size": 316.0,
+        "forward_mean_packet_size": 486.0,
+        "backward_mean_packet_size": 728.75,
+        "flow_duration_seconds": 14.6318,
+        "packets_per_second": 0.6834,
+        "bytes_per_second": 398.5167,
+        "mean_inter_arrival_time": 1.6258,
+        "minimum_inter_arrival_time": 0.0164,
+        "maximum_inter_arrival_time": 10.0009,
+        "standard_deviation_inter_arrival_time": 3.3654,
+        "forward_packet_ratio": 0.6,
+        "backward_packet_ratio": 0.4,
+        "forward_byte_ratio": 0.5001,
+        "backward_byte_ratio": 0.4999,
+        "maximum_packets_in_one_second": 5.0
+      },
+      "prediction": {
+        "traffic_category": "unclassified",
+        "confidence": 0.0,
+        "confidence_level": "LOW",
+        "prediction_status": "TECHNICALLY_COMPATIBLE_DOMAIN_UNVERIFIED",
+        "probabilities": {},
+        "model_name": "gradient_boosting_traffic_classifier_v1",
+        "model_version": "1.0.0"
+      },
+      "model_uncertainty": {
+        "present": true,
+        "flags": [
+          {
+            "code": "LOW_CLASSIFICATION_CONFIDENCE",
+            "severity": "INFO",
+            "message": "The traffic does not strongly resemble any category currently known to the classification model (top resemblance: 'unclassified' at 0.00% confidence). This represents classification uncertainty and is not itself evidence of elevated behavioral risk."
+          }
+        ]
+      },
+      "behavior": {
+        "traffic_pattern": "Standard Bidirectional Traffic",
+        "observations": [
+          "HIGH_PACKET_SIZE_VARIANCE"
+        ],
+        "metrics_summary": {
+          "total_packets": 10,
+          "total_bytes": 5831,
+          "duration_seconds": 14.6318,
+          "packets_per_second": 0.68,
+          "bytes_per_second": 398.52,
+          "forward_byte_ratio": 0.5001,
+          "backward_byte_ratio": 0.4999,
+          "max_packets_one_second": 5
+        }
+      },
+      "security_assessment": {
+        "risk_score": 0,
+        "risk_level": "LOW",
+        "indicators": [],
+        "score_contributions": []
+      },
+      "explainability": {
+        "important_features": [],
+        "summary": "Flow does not strongly match known traffic categories (top statistical resemblance: 'unclassified' at 0.0% confidence). Observable behavior aligns with 'Standard Bidirectional Traffic', transferring 5,831 bytes across 10 packets over 14.63 seconds. No elevated behavioral risk indicators were observed. The flow is evaluated at LOW behavioral risk (score: 0/100)."
+      },
+      "summary": "Flow does not strongly match known traffic categories (top statistical resemblance: 'unclassified' at 0.0% confidence). Observable behavior aligns with 'Standard Bidirectional Traffic', transferring 5,831 bytes across 10 packets over 14.63 seconds. No elevated behavioral risk indicators were observed. The flow is evaluated at LOW behavioral risk (score: 0/100)."
+    }
+  ]
+}
