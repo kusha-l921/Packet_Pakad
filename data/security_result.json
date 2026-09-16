@@ -1,0 +1,61 @@
+{
+    "capture_id": "001",
+    "protocol_analysis": {
+        "ipsec_detected": true,
+        "ike_version": "IKEv2",
+        "esp_detected": true,
+        "mode": "Tunnel"
+    },
+    "security_parameters": {
+        "encryption": "AES-256",
+        "pfs": true,
+        "dh_group": 14,
+        "key_lifetime": 28800,
+        "replay_protection": true,
+        "metadata_exposure": false
+    },
+    "traffic_features": {
+        "packet_count": 10250,
+        "avg_packet_size": 1240,
+        "flow_duration": 45.2
+    },
+    "ai_prediction": {
+        "traffic_type": "Video",
+        "confidence": 0.91
+    },
+    "security_score": 100,
+    "risk_level": "LOW",
+    "findings": [
+        {
+            "parameter": "Encryption",
+            "status": "GOOD",
+            "message": "AES-256 strong encryption is being used."
+        },
+        {
+            "parameter": "PFS",
+            "status": "GOOD",
+            "message": "Perfect Forward Secrecy is enabled."
+        },
+        {
+            "parameter": "DH Group",
+            "status": "GOOD",
+            "message": "DH Group 14 provides an acceptable key exchange strength."
+        },
+        {
+            "parameter": "Key Lifetime",
+            "status": "GOOD",
+            "message": "Key lifetime is 28800 seconds."
+        },
+        {
+            "parameter": "Replay Protection",
+            "status": "GOOD",
+            "message": "Replay protection is enabled."
+        },
+        {
+            "parameter": "Metadata Exposure",
+            "status": "GOOD",
+            "message": "No significant metadata exposure detected."
+        }
+    ],
+    "recommendations": []
+}

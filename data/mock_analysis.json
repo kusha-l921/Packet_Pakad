@@ -1,0 +1,30 @@
+{
+    "capture_id": "001",
+
+    "protocol_analysis": {
+        "ipsec_detected": true,
+        "ike_version": "IKEv2",
+        "esp_detected": true,
+        "mode": "Tunnel"
+    },
+
+    "security_parameters": {
+        "encryption": "AES-256",
+        "pfs": true,
+        "dh_group": 14,
+        "key_lifetime": 28800,
+        "replay_protection": true,
+        "metadata_exposure": false
+    },
+
+    "traffic_features": {
+        "packet_count": 10250,
+        "avg_packet_size": 1240,
+        "flow_duration": 45.2
+    },
+
+    "ai_prediction": {
+        "traffic_type": "Video",
+        "confidence": 0.91
+    }
+}
