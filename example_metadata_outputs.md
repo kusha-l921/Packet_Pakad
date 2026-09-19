@@ -574,13 +574,90 @@ IKEv2 groups transforms by Transform Type (`encryption`, `prf`, `integrity`, `dh
 
 ---
 
-## 3. Structural Comparison: IKEv1 vs. IKEv2
+## 3. ESP Data-Plane Examples (`extract_esp_metadata` & `FlowRecord`)
 
-| Feature | IKEv1 (`extract_ikeV1_metadata`) | IKEv2 (`extract_ikeV2_metadata`) |
-| :--- | :--- | :--- |
-| **Cookies / SPIs** | `initiator_cookie`, `responder_cookie` (8 bytes each, formatted as `0x...`) | `initiator_spi`, `responder_spi` (formatted via `hex()`) |
-| **Exchange Types** | `MAIN_MODE`, `AGGRESSIVE_MODE`, `QUICK_MODE`, `INFORMATIONAL`, `NEW_GROUP_MODE` | `IKE_SA_INIT`, `IKE_AUTH`, `INFORMATIONAL` |
-| **Transform Structure** | `attribute_name -> [{"value": ...}]` (e.g. `encryption`, `hash`, `group_description`) | `transform_type -> [{"id": ..., "length": ...}]` (e.g. `encryption`, `prf`, `integrity`) |
-| **Child SA / Traffic Selectors** | Inside `QUICK_MODE`: Child SA in `security_association`, Selectors derived from $ID_{ci}$ and $ID_{cr}$ | Inside `IKE_AUTH`: Child SA in `child_sa`, Selectors derived from `TSi` and `TSr` |
-| **DH Group in KE** | Negotiated in Phase 1 SA transforms; `key_exchange.group` is `None` | Negotiated in KE payload header; transform ID mapped |
-| **Response Detection** | Stateless: `False` if `responder_cookie` is all zeros; checks `flags & 0x20` if non-zero | Explicit: Bit 5 of IKEv2 flags (`flags & 0x20`) |
+Data-plane processing uses **Scapy** to extract per-packet ESP metadata and aggregates sliding windows (100 packets, stride 10) into a 25-feature vector for ML traffic classification.
+
+### 3.1 Native ESP Packet (IP Protocol 50)
+
+Extracted from pure IPsec ESP packets without UDP encapsulation:
+
+```json
+{
+  "plane": "data",
+  "timestamp": 1694600020.123456,
+  "src_ip": "192.168.1.10",
+  "dst_ip": "10.0.0.1",
+  "spi": "0x1a2b3c4d",
+  "seq_num": 1,
+  "wire_bytes": 1420
+}
+```
+
+---
+
+### 3.2 NAT-T Encapsulated ESP Packet (UDP Port 4500)
+
+Extracted from ESP packets encapsulated in UDP 4500 for NAT traversal (where the first 4 bytes of UDP payload are a non-zero SPI):
+
+```json
+{
+  "plane": "data",
+  "timestamp": 1694600020.134567,
+  "src_ip": "192.168.1.10",
+  "dst_ip": "10.0.0.1",
+  "spi": "0x5e6f7a8b",
+  "seq_num": 2,
+  "wire_bytes": 1448
+}
+```
+
+---
+
+### 3.3 ESP Flow Aggregate 25-Feature Vector (`FlowRecord.extract_features()`)
+
+Computed across a sliding window of ESP packets (e.g. window=50, stride=10) and passed directly to the inference model:
+
+```json
+{
+  "total_packets": 50,
+  "forward_packets": 30,
+  "backward_packets": 20,
+  "total_bytes": 48200.0,
+  "forward_bytes": 35400.0,
+  "backward_bytes": 12800.0,
+  "minimum_packet_size": 64.0,
+  "maximum_packet_size": 1448.0,
+  "mean_packet_size": 964.0,
+  "standard_deviation_packet_size": 482.15,
+  "median_packet_size": 1120.0,
+  "forward_mean_packet_size": 1180.0,
+  "backward_mean_packet_size": 640.0,
+  "flow_duration_seconds": 2.458912,
+  "packets_per_second": 20.3342,
+  "bytes_per_second": 19602.16,
+  "mean_inter_arrival_time": 0.05018,
+  "minimum_inter_arrival_time": 0.00124,
+  "maximum_inter_arrival_time": 0.24510,
+  "standard_deviation_inter_arrival_time": 0.04128,
+  "forward_packet_ratio": 0.6,
+  "backward_packet_ratio": 0.4,
+  "forward_byte_ratio": 0.73444,
+  "backward_byte_ratio": 0.26556,
+  "maximum_packets_in_one_second": 28
+}
+```
+
+---
+
+## 4. Structural Comparison: IKEv1 vs. IKEv2 vs. ESP
+
+| Feature | IKEv1 (`extract_ikeV1_metadata`) | IKEv2 (`extract_ikeV2_metadata`) | ESP (`extract_esp_metadata` & `FlowRecord`) |
+| :--- | :--- | :--- | :--- |
+| **Plane** | `"control"` | `"control"` | `"data"` |
+| **Engine** | **PyShark** (Wireshark) | **PyShark** (Wireshark) | **Scapy** (Native Python) |
+| **Layer / Port** | UDP 500 / 4500 | UDP 500 / 4500 | IP Proto 50 / UDP 4500 |
+| **Identifiers** | `initiator_cookie`, `responder_cookie` | `initiator_spi`, `responder_spi` | `spi` (Security Parameter Index), `seq_num` |
+| **Exchanges** | Main Mode, Aggressive, Quick Mode, Informational | `IKE_SA_INIT`, `IKE_AUTH`, Informational | Continuous Packet Stream (Sliding Window) |
+| **Output Type** | Hierarchical Handshake Dictionary | Hierarchical Handshake Dictionary | Per-Packet Dict & 25-Feature ML Vector |
+| **Downstream Use**| Cryptographic & protocol parameter auditing | PQC / algorithm verification & Child SA tracking | ML inference (C2 traffic, QoS, anomaly detection) |
