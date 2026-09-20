@@ -46,6 +46,17 @@ htmlcov/
 *.pcapng
 *.cap
 
+# Markdown files
+*.md
+!README.md
+
+# JSON files & test outputs
+*.json
+
+# Test files & fixtures
+test*.py
+test_fixtures/
+
 # Environments & secrets
 .env
 .env.local
