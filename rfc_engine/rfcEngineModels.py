@@ -173,6 +173,7 @@ class EngineReport:
     pqc_classification: PqcClassification
     hybrid_classification: HybridClassification
     cryptographic_posture: SecurityPosture
+    ipsec_mode: str = "TUNNEL"
 
     critical_failures: list[RuleEvaluationResult] = field(default_factory=list)
     warnings: list[RuleEvaluationResult] = field(default_factory=list)
@@ -185,6 +186,7 @@ class EngineReport:
     def to_dict(self) -> dict[str, Any]:
         return {
             "overall_rfc_status": self.overall_rfc_status.value,
+            "ipsec_mode": self.ipsec_mode,
             "protocol_compliance": self.protocol_compliance.value,
             "cryptographic_compliance": self.cryptographic_compliance.value,
             "ipsec_esp_compliance": self.ipsec_esp_compliance.value,

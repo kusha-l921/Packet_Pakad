@@ -477,6 +477,16 @@ class SessionAggregator:
             else session.initiator_store.child_sa_proposals
         )
 
+        # Determine IPsec SA Mode (RFC 7296 §1.3.1 & §3.10.1)
+        # Notification 16391 is USE_TRANSPORT_MODE. If present -> TRANSPORT, else default TUNNEL.
+        is_transport_mode = 16391 in session.notify_types
+        ipsec_mode = "TRANSPORT" if is_transport_mode else "TUNNEL"
+        if session.auth_metadata and isinstance(session.auth_metadata, dict):
+            daemon_mode = session.auth_metadata.get("mode") or session.auth_metadata.get("ipsec_mode")
+            if isinstance(daemon_mode, str) and daemon_mode.strip():
+                ipsec_mode = daemon_mode.strip().upper()
+                is_transport_mode = (ipsec_mode == "TRANSPORT")
+
         ike_auth = {
             "exchange": "IKE_AUTH",
             "authentication": chosen_auth,
@@ -484,6 +494,8 @@ class SessionAggregator:
             "certificates": all_certs,
             "child_sa": {
                 "present": len(child_proposals) > 0,
+                "mode": ipsec_mode,
+                "is_transport_mode": is_transport_mode,
                 "proposals": child_proposals,
             },
             "traffic_selectors": {
@@ -520,6 +532,7 @@ class SessionAggregator:
 
         canon: dict[str, Any] = {
             "session_id": session.initiator_spi,
+            "ipsec_mode": ipsec_mode,
             "common": common,
             "IKE_SA_INIT": ike_sa_init,
             "IKE_INTERMEDIATE": intermediate,

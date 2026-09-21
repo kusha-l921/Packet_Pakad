@@ -114,6 +114,7 @@ class RagExporter:
                 "initiator_port": endpoints.get("initiator_port") or c.get("src_port", 500),
                 "responder_port": endpoints.get("responder_port") or c.get("dst_port", 500),
                 "ike_version": c.get("protocol_version") or c.get("ike_version", 2),
+                "ipsec_mode": canonical.get("ipsec_mode") or (rfc.get("ipsec_mode") if rfc else "TUNNEL"),
                 "handshake_duration_ms": c.get("timestamps", {}).get("handshake_duration_ms") or c.get("duration_ms", 0.0),
             }
 
@@ -132,6 +133,7 @@ class RagExporter:
         if rfc:
             rfc_summary = {
                 "overall_rfc_status": rfc.get("overall_rfc_status"),
+                "ipsec_mode": rfc.get("ipsec_mode") or (canonical.get("ipsec_mode") if canonical else "TUNNEL"),
                 "cryptographic_posture": rfc.get("cryptographic_posture"),
                 "pqc_classification": rfc.get("pqc_classification"),
                 "critical_failures_count": rfc.get("critical_failures_count", 0),

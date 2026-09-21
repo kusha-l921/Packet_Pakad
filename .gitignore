@@ -40,6 +40,10 @@ $RECYCLE.BIN/
 *.pcapng
 scratch/
 
+# Generated analytical reports and outputs
+output/
+sessions/
+
 # Specific ignored modules
 ikeV1IDs.py
 ikeV1scores.py

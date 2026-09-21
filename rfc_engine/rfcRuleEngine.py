@@ -97,6 +97,14 @@ class RfcRuleEngine:
         pqc_classification = self.control_plane_engine.evaluate_pqc_status(session_dict)
         hybrid_classification = self.control_plane_engine.evaluate_hybrid_status(session_dict)
 
+        # Determine IPsec encapsulation mode (RFC 7296 §1.3.1 & §3.10.1)
+        raw_notif = session_dict.get("notify", {})
+        notify_types = raw_notif.get("notify_types", []) if isinstance(raw_notif, dict) else []
+        if not isinstance(notify_types, (list, set, tuple)):
+            notify_types = []
+        is_transport = 16391 in notify_types or session_dict.get("ipsec_mode") == "TRANSPORT"
+        ipsec_mode = "TRANSPORT" if is_transport else "TUNNEL"
+
         return EngineReport(
             overall_rfc_status=overall_status,
             protocol_compliance=proto_comp,
@@ -106,6 +114,7 @@ class RfcRuleEngine:
             pqc_classification=pqc_classification,
             hybrid_classification=hybrid_classification,
             cryptographic_posture=security_posture,
+            ipsec_mode=ipsec_mode,
             critical_failures=critical_failures,
             warnings=warnings,
             passed_rules=passed_rules,
