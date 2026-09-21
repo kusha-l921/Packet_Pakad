@@ -14,6 +14,11 @@ from .FlowEngine import (
     RealtimePacketDispatcher,
     process_packet,
 )
+from .mlAdapter import (
+    FEATURE_NAMES,
+    MLModelAdapter,
+    TrafficClassifierProtocol,
+)
 
 __all__ = [
     "FlowRecord",
@@ -21,4 +26,7 @@ __all__ = [
     "FlowVerdict",
     "RealtimePacketDispatcher",
     "process_packet",
+    "FEATURE_NAMES",
+    "MLModelAdapter",
+    "TrafficClassifierProtocol",
 ]

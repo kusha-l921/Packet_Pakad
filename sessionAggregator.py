@@ -36,12 +36,3 @@ __all__ = [
     "DataPlaneTelemetry",
     "_normalize_spi",
 ]
-
-if __name__ == "__main__":
-    print("=" * 70)
-    print(" Session Aggregator Smoke Test")
-    print("=" * 70)
-    agg = SessionAggregator()
-    print("[*] In-memory Session Aggregator initialized successfully.")
-    print(f"[*] Active sessions: {len(agg.get_active_sessions())}")
-    print("=" * 70)

@@ -1,0 +1,17 @@
+{
+  "flow_key": [
+    "0.0.0.0",
+    "0.0.0.0"
+  ],
+  "verdict": null,
+  "trigger_type": "DATA_PLANE_TELEMETRY",
+  "features": {
+    "total_packets": 250.0,
+    "total_bytes": 185000.0,
+    "mean_packet_size": 740.0,
+    "flow_duration_seconds": 0.0,
+    "packets_per_second": 0.0
+  },
+  "packet_count": 250,
+  "duration_seconds": 0.0
+}

@@ -124,6 +124,9 @@ class SessionState:
     # Common IP/Port endpoint metadata
     common: dict[str, Any] = field(default_factory=dict)
 
+    # Ingested daemon / out-of-band X.509 authentication metadata
+    auth_metadata: dict[str, Any] | None = None
+
     # Timestamps
     created_at: float = field(default_factory=time.time)
     completed_at: float | None = None

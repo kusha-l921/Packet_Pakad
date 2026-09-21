@@ -4,6 +4,11 @@ import argparse
 from scapy.all import IP, IPv6, UDP, Raw, sniff
 import pyshark
 
+from packet_extractor.metadataExtractor import (
+    extract_esp_metadata,
+    extract_ikeV2_metadata,
+)
+
 # ─── BPF Filters ─────────────────────────────────────────────────────────────
 # Scapy captures Native ESP (proto 50) and NAT-T ESP (UDP 4500)
 DATA_PLANE_BPF = "ip proto 50 or ip6 proto 50 or (udp port 4500)"
@@ -19,6 +24,7 @@ IKE_EXCHANGE_MAP = {
 }
 
 active_pyshark_capture = None
+active_pipeline = None
 
 
 # ─── Data Plane (Scapy) ─────────────────────────────────────────────────────
@@ -62,13 +68,23 @@ def esp_packet_handler(pkt):
             f"SPI: {spi_hex} | Seq: {seq_num} | Wire: {wire_bytes}B"
         )
 
+        # Dispatch parsed ESP metadata to integrated pipeline if active
+        if active_pipeline is not None:
+            esp_meta = extract_esp_metadata(pkt)
+            if esp_meta:
+                active_pipeline.ingest_esp_packet(esp_meta)
+
     except Exception:
         # Prevent unhandled exceptions from terminating the sniffer
         pass
 
 
-def run_data_plane(interface=None, stop_event=None):
+def run_data_plane(interface=None, stop_event=None, pipeline=None):
     """Worker thread running Scapy sniffer for wire-speed ESP capture with polling."""
+    global active_pipeline
+    if pipeline is not None:
+        active_pipeline = pipeline
+
     print(f"[*] [DATA PLANE] Started Scapy sniffer on filter: \"{DATA_PLANE_BPF}\"")
 
     try:
@@ -88,7 +104,7 @@ def run_data_plane(interface=None, stop_event=None):
 
 # ─── Control Plane (PyShark) ─────────────────────────────────────────────────
 
-def run_control_plane(interface=None, stop_event=None):
+def run_control_plane(interface=None, stop_event=None, pipeline=None):
     """Worker thread running PyShark LiveCapture for IKE control exchanges."""
     global active_pyshark_capture
     print(f"[*] [CONTROL PLANE] Started PyShark sniffer on filter: \"{CONTROL_PLANE_BPF}\"")
@@ -138,6 +154,12 @@ def run_control_plane(interface=None, stop_event=None):
                     f"{src} -> {dst} | InitSPI: {init_spi} | RespSPI: {resp_spi} | Size: {wire_len}B"
                 )
 
+                # Dispatch parsed IKEv2 metadata to integrated pipeline if active
+                if pipeline is not None:
+                    ike_meta = extract_ikeV2_metadata(pkt)
+                    if ike_meta:
+                        pipeline.ingest_ike_packet(ike_meta)
+
             except Exception:
                 continue
 
@@ -154,21 +176,28 @@ def run_control_plane(interface=None, stop_event=None):
 
 # ─── Orchestrator ────────────────────────────────────────────────────────────
 
-def start_hybrid_sniffer(interface=None):
+def start_hybrid_sniffer(interface=None, enable_pipeline=False, output_dir="output"):
     """Launches dual-threaded hybrid capture engine: Scapy for ESP, PyShark for IKE."""
     global active_pyshark_capture
     print("=" * 70)
     print(" IPsec Real-Time Hybrid Sniffer")
     print(" - Data Plane: Scapy (Native ESP & NAT-T ESP) -> Wire Speed")
     print(" - Control Plane: PyShark (IKEv2 ISAKMP)     -> Deep Dissection")
+    if enable_pipeline:
+        print(f" - Pipeline: Integrated Analytics Enabled -> {output_dir}")
     print("=" * 70)
+
+    pipeline = None
+    if enable_pipeline:
+        from pipeline.integratedPipeline import IntegratedPipeline
+        pipeline = IntegratedPipeline(output_dir=output_dir)
 
     stop_event = threading.Event()
 
     # Thread 1: Data Plane (Scapy)
     data_thread = threading.Thread(
         target=run_data_plane,
-        kwargs={"interface": interface, "stop_event": stop_event},
+        kwargs={"interface": interface, "stop_event": stop_event, "pipeline": pipeline},
         name="DataPlane-Scapy",
         daemon=True
     )
@@ -176,7 +205,7 @@ def start_hybrid_sniffer(interface=None):
     # Thread 2: Control Plane (PyShark)
     control_thread = threading.Thread(
         target=run_control_plane,
-        kwargs={"interface": interface, "stop_event": stop_event},
+        kwargs={"interface": interface, "stop_event": stop_event, "pipeline": pipeline},
         name="ControlPlane-PyShark",
         daemon=True
     )
@@ -211,6 +240,8 @@ def start_hybrid_sniffer(interface=None):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="IPsec Hybrid Network Sniffer (Scapy + PyShark)")
     parser.add_argument("-i", "--interface", default=None, help="Network interface name (e.g., 'Wi-Fi', 'eth0')")
+    parser.add_argument("-p", "--pipeline", action="store_true", help="Enable integrated analytical engine pipeline")
+    parser.add_argument("-o", "--output-dir", default="output", help="Directory for JSON reports")
     args = parser.parse_args()
 
-    start_hybrid_sniffer(interface=args.interface)
+    start_hybrid_sniffer(interface=args.interface, enable_pipeline=args.pipeline, output_dir=args.output_dir)

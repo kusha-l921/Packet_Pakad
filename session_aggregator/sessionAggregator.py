@@ -14,6 +14,8 @@ and bi-directional SPI indexing occur entirely in RAM.
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 import threading
 import time
 from typing import Any, Callable
@@ -85,10 +87,121 @@ class SessionAggregator:
         if not pkt_metadata or not isinstance(pkt_metadata, dict):
             return None
 
+        # Check for pre-assembled composite full-handshake dictionary
+        if "IKE_SA_INIT" in pkt_metadata and "IKE_AUTH" in pkt_metadata:
+            return self.ingest_composite_session(pkt_metadata)
+
         plane = pkt_metadata.get("common", {}).get("plane") or pkt_metadata.get("plane")
         if plane == "data" or ("spi" in pkt_metadata and "seq_num" in pkt_metadata):
             return self.process_esp_packet(pkt_metadata)
         return self.process_ike_packet(pkt_metadata)
+
+    def ingest_composite_session(self, composite_dict: dict[str, Any]) -> SessionState | None:
+        """Ingest a pre-assembled composite session dictionary into the state machine."""
+        common = composite_dict.get("common", {})
+        init_spi = _normalize_spi(
+            common.get("initiator_spi")
+            or composite_dict.get("session_id")
+            or composite_dict.get("initiator_spi")
+        )
+        resp_spi = _normalize_spi(
+            common.get("responder_spi") or composite_dict.get("responder_spi")
+        )
+        if not init_spi:
+            return None
+
+        ts = float(common.get("timestamps", {}).get("first_seen") or time.time())
+        with self._global_lock:
+            if init_spi not in self.sessions_by_init_spi:
+                session = SessionState(initiator_spi=init_spi, created_at=ts)
+                self.sessions_by_init_spi[init_spi] = session
+            else:
+                session = self.sessions_by_init_spi[init_spi]
+
+            if resp_spi:
+                session.responder_spi = resp_spi
+                self.init_spi_by_resp_spi[resp_spi] = init_spi
+
+        with session.lock:
+            # Populate endpoints & protocol
+            endpoints = common.get("endpoints", {})
+            for k in ("src_ip", "dst_ip", "src_port", "dst_port"):
+                if k in endpoints:
+                    session.common[k] = endpoints[k]
+            if "initiator_ip" in endpoints and "src_ip" not in session.common:
+                session.common["src_ip"] = endpoints["initiator_ip"]
+            if "responder_ip" in endpoints and "dst_ip" not in session.common:
+                session.common["dst_ip"] = endpoints["responder_ip"]
+            if "protocol_version" in common:
+                session.common["ike_version"] = common["protocol_version"]
+
+            # Notifications
+            self._merge_notifications(session, composite_dict)
+
+            # IKE_SA_INIT
+            init_data = composite_dict.get("IKE_SA_INIT", {})
+            proposals = init_data.get("proposals", [])
+            if not proposals and "proposal" in init_data:
+                proposals = [init_data["proposal"]]
+            session.initiator_store.sa_init_proposals = proposals
+            session.responder_store.sa_init_proposals = proposals
+            session.initiator_store.key_exchange = init_data.get("key_exchange")
+            session.responder_store.key_exchange = init_data.get("key_exchange")
+
+            # Multi-KE / IKE_INTERMEDIATE
+            intermediates = composite_dict.get("IKE_INTERMEDIATE", [])
+            if isinstance(intermediates, list):
+                for idx, r in enumerate(intermediates, start=1):
+                    ir = IntermediateRound(
+                        round_number=r.get("round", idx),
+                        message_id=idx,
+                        direction="response",
+                        key_exchange=r.get("key_exchange"),
+                        proposals=r.get("proposals", []),
+                        notify=r.get("notify", []),
+                        timestamp=ts,
+                    )
+                    session.intermediate_rounds.append(ir)
+
+            # IKE_AUTH
+            auth_data = composite_dict.get("IKE_AUTH", {})
+            session.initiator_store.authentication = auth_data.get("initiator_auth") or auth_data.get("initiator")
+            session.responder_store.authentication = auth_data.get("responder_auth") or auth_data.get("responder")
+            session.initiator_store.traffic_selectors = auth_data.get("traffic_selectors", {}).get("initiator", [])
+            session.responder_store.traffic_selectors = auth_data.get("traffic_selectors", {}).get("responder", [])
+
+            child_props = auth_data.get("child_sa_proposals", [])
+            if not child_props and "child_sa" in auth_data:
+                child_props = auth_data["child_sa"].get("proposals", [])
+            if child_props:
+                session.initiator_store.child_sa_proposals = child_props
+                session.responder_store.child_sa_proposals = child_props
+                self._register_child_spis(session, child_props)
+
+            # ESP Data Plane Telemetry
+            dp_data = composite_dict.get("data_plane", {})
+            if dp_data:
+                dp_spi = _normalize_spi(dp_data.get("spi"))
+                if dp_spi:
+                    session.data_plane.spi = dp_spi
+                    session.child_sa_spis.add(dp_spi)
+                    with self._global_lock:
+                        self.init_spi_by_child_spi[dp_spi] = session.initiator_spi
+                session.data_plane.packet_count = int(dp_data.get("packet_count", 0))
+                session.data_plane.byte_count = int(dp_data.get("byte_count", 0))
+                session.data_plane.seq_numbers = list(dp_data.get("seq_numbers", []))
+                session.data_plane.last_seq = int(dp_data.get("last_seq", 0))
+                session.data_plane.is_natt = bool(dp_data.get("is_natt", False))
+
+            # Auth metadata
+            if "auth_metadata" in composite_dict:
+                session.auth_metadata = composite_dict["auth_metadata"]
+
+            # Mark state completed
+            session.state = SessionLifecycleState.HANDSHAKE_COMPLETED
+            session.completed_at = float(common.get("timestamps", {}).get("last_seen") or time.time())
+
+        return session
 
     def process_ike_packet(self, pkt_dict: dict[str, Any]) -> SessionState | None:
         """Ingest a parsed IKEv2 packet metadata dictionary."""
@@ -380,6 +493,12 @@ class SessionAggregator:
             "initiator_auth": session.initiator_store.authentication,
             "responder_auth": session.responder_store.authentication,
         }
+        if session.auth_metadata:
+            ike_auth["auth_metadata"] = session.auth_metadata
+            if "initiator" in session.auth_metadata and not ike_auth.get("initiator"):
+                ike_auth["initiator"] = session.auth_metadata["initiator"]
+            if "responder" in session.auth_metadata and not ike_auth.get("responder"):
+                ike_auth["responder"] = session.auth_metadata["responder"]
 
         # 5. Notifications Pool
         notify = {
@@ -399,7 +518,8 @@ class SessionAggregator:
             "last_seen": session.data_plane.last_seen,
         }
 
-        return {
+        canon: dict[str, Any] = {
+            "session_id": session.initiator_spi,
             "common": common,
             "IKE_SA_INIT": ike_sa_init,
             "IKE_INTERMEDIATE": intermediate,
@@ -418,6 +538,27 @@ class SessionAggregator:
                 for ev in session.lifecycle_events
             ],
         }
+        if session.auth_metadata:
+            canon["auth_metadata"] = session.auth_metadata
+        return canon
+
+    def attach_daemon_credentials(
+        self, initiator_spi: str, auth_metadata: dict[str, Any]
+    ) -> bool:
+        """Inject out-of-band X.509 certificates and authentication metadata from daemon."""
+        session = self.get_session(initiator_spi)
+        if not session:
+            return False
+        with session.lock:
+            session.auth_metadata = auth_metadata
+            if isinstance(auth_metadata, dict):
+                init_auth = auth_metadata.get("initiator")
+                if init_auth and not session.initiator_store.authentication:
+                    session.initiator_store.authentication = init_auth
+                resp_auth = auth_metadata.get("responder")
+                if resp_auth and not session.responder_store.authentication:
+                    session.responder_store.authentication = resp_auth
+        return True
 
     # ═══════════════════════════════════════════════════════════════════════════
     #  Downstream Engine Integrations
@@ -448,7 +589,114 @@ class SessionAggregator:
         """Run deep PKI and certificate health audit using cert_engine."""
         canonical = self.get_canonical_session_dict(initiator_spi)
         from cert_engine.certHealthEngine import evaluate_auth_health
-        return evaluate_auth_health(canonical.get("IKE_AUTH", {}))
+        target_auth = canonical.get("auth_metadata") or canonical.get("IKE_AUTH", {})
+        return evaluate_auth_health(target_auth)
+
+    def export_session_report(
+        self,
+        initiator_spi: str,
+        output_dir: str | Path = "output",
+        flow_verdict: Any | None = None,
+    ) -> dict[str, Path]:
+        """Execute all downstream analytical engines and persist intermediate JSON reports."""
+        out_path = Path(output_dir)
+        out_path.mkdir(parents=True, exist_ok=True)
+
+        canonical = self.get_canonical_session_dict(initiator_spi)
+        rfc_report = self.evaluate_compliance(initiator_spi)
+        from vector_engine.vectorEngine import DIMENSION_NAMES, build_vector
+        vector_19d = build_vector(canonical)
+        posture = self.classify_posture(initiator_spi)
+        cert_report = self.audit_certificates(initiator_spi)
+
+        # 1. Canonical Session JSON
+        canon_file = out_path / "intermediate_canonical_session.json"
+        with open(canon_file, "w", encoding="utf-8") as f:
+            json.dump(canonical, f, indent=2, default=str)
+
+        # 2. RFC Compliance Report JSON
+        rfc_dict = rfc_report.to_dict() if hasattr(rfc_report, "to_dict") else rfc_report
+        rfc_file = out_path / "rfc_compliance_report.json"
+        with open(rfc_file, "w", encoding="utf-8") as f:
+            json.dump(rfc_dict, f, indent=2, default=str)
+
+        # 3. Crypto Vector Posture JSON
+        vector_dict = {
+            "vector_19d": vector_19d,
+            "dimension_names": list(DIMENSION_NAMES),
+            "best_match": posture.get("best_match"),
+            "display_name": posture.get("display_name"),
+            "best_score": posture.get("best_score"),
+            "best_distance": posture.get("best_distance"),
+            "rankings": posture.get("rankings", []),
+        }
+        vec_file = out_path / "crypto_vector_posture.json"
+        with open(vec_file, "w", encoding="utf-8") as f:
+            json.dump(vector_dict, f, indent=2, default=str)
+
+        # 4. Certificate Health Report JSON
+        cert_dict = cert_report.to_dict() if hasattr(cert_report, "to_dict") else cert_report
+        cert_file = out_path / "certificate_health_report.json"
+        with open(cert_file, "w", encoding="utf-8") as f:
+            json.dump(cert_dict, f, indent=2, default=str)
+
+        # 5. Traffic Flow Report JSON
+        flow_dict: dict[str, Any] | None = None
+        if flow_verdict is not None and hasattr(flow_verdict, "features"):
+            flow_dict = {
+                "flow_key": list(flow_verdict.flow_key),
+                "verdict": flow_verdict.verdict,
+                "trigger_type": flow_verdict.trigger_type,
+                "features": flow_verdict.features,
+                "packet_count": flow_verdict.packet_count,
+                "duration_seconds": flow_verdict.duration_seconds,
+            }
+        elif canonical.get("data_plane", {}).get("packet_count", 0) > 0:
+            dp = canonical["data_plane"]
+            flow_dict = {
+                "flow_key": [
+                    canonical.get("common", {}).get("endpoints", {}).get("initiator_ip", "0.0.0.0"),
+                    canonical.get("common", {}).get("endpoints", {}).get("responder_ip", "0.0.0.0"),
+                ],
+                "verdict": None,
+                "trigger_type": "DATA_PLANE_TELEMETRY",
+                "features": {
+                    "total_packets": float(dp.get("packet_count", 0)),
+                    "total_bytes": float(dp.get("byte_count", 0)),
+                    "mean_packet_size": float(dp.get("byte_count", 0) / max(1, dp.get("packet_count", 1))),
+                    "flow_duration_seconds": max(0.0, float(canonical.get("common", {}).get("timestamps", {}).get("handshake_duration_ms", 0.0)) / 1000.0),
+                    "packets_per_second": 0.0,
+                },
+                "packet_count": dp.get("packet_count", 0),
+                "duration_seconds": 0.0,
+            }
+
+        flow_file = out_path / "traffic_flow_report.json"
+        if flow_dict:
+            with open(flow_file, "w", encoding="utf-8") as f:
+                json.dump(flow_dict, f, indent=2, default=str)
+
+        # 6. Unified RAG Payload JSON (invoking RAG exporter)
+        from pipeline.ragExporter import export_from_memory
+        export_from_memory(
+            canonical_dict=canonical,
+            rfc_report_dict=rfc_dict,
+            vector_posture_dict=vector_dict,
+            cert_report_dict=cert_dict,
+            flow_report_dict=flow_dict,
+            output_dir=out_path,
+        )
+
+        persisted = {
+            "canonical_session": canon_file,
+            "rfc_compliance": rfc_file,
+            "vector_posture": vec_file,
+            "cert_health": cert_file,
+            "unified_rag_payload": out_path / "unified_rag_payload.json",
+        }
+        if flow_dict:
+            persisted["traffic_flow"] = flow_file
+        return persisted
 
     # ═══════════════════════════════════════════════════════════════════════════
     #  State Query & Lifecycle Utilities

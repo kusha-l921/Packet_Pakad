@@ -140,25 +140,3 @@ def print_anchor_matrix(anchors: dict[str, baseVector] | None = None) -> None:
             row_str += f"{val:>18.4f}"
         print(row_str)
     print("=" * (28 + 18 * len(names)) + "\n")
-
-
-if __name__ == "__main__":
-    print("\n" + "=" * 65)
-    print("  IPsec Policy Centroid Vector Engine -- Cosine Similarity Demo")
-    print("=" * 65)
-
-    print_anchor_matrix()
-
-    print("  CLASSIFICATION OF CANONICAL POLICY DICTIONARIES:")
-    print("-" * 65)
-
-    for anchor_key, anchor in POLICY_ANCHORS.items():
-        if anchor.dict:
-            res = classify_session(anchor.dict)
-            best = res["best_match"]
-            score = res["best_score"]
-            status = "MATCH" if best == anchor_key else "MISMATCH"
-            print(f"  [{status}] Input: {anchor_key:<28} -> Classified: {best} ({score:.4f})")
-            for rank in res["rankings"]:
-                print(f"         - {rank['name']:<28} sim: {rank['similarity']:.4f}  dist: {rank['distance']:.4f}")
-            print()

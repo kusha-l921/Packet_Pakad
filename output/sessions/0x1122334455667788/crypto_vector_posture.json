@@ -1,0 +1,78 @@
+{
+  "vector_19d": [
+    1.0,
+    0.75,
+    1.0,
+    1.0,
+    1.0,
+    0.3333333333333333,
+    0.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    1.0
+  ],
+  "dimension_names": [
+    "INIT_KEM_CLASSICAL_ALGO",
+    "INIT_KEM_CLASSICAL_KEY_LEN",
+    "INIT_KEM_PQC_PRESENCE",
+    "INIT_KEM_PQC_KEY_LEN",
+    "INIT_KEM_PQC_HYBRID_BINDING",
+    "INIT_KEM_MULTI_KE_ROUNDS",
+    "INIT_KEM_PFS_STATUS",
+    "INIT_SA_ENCR_ALGO",
+    "INIT_SA_ENCR_KEY_LEN",
+    "INIT_SA_PRF_ALGO",
+    "INIT_SA_INTEG_ALGO",
+    "INIT_SA_ESN_CAPABILITY",
+    "AUTH_SIG_CLASSICAL_ALGO",
+    "AUTH_SIG_CLASSICAL_KEY_LEN",
+    "AUTH_SIG_PQC_ALGO",
+    "AUTH_HASH_DIGEST_ALGO",
+    "PROTO_IKE_VERSION",
+    "PROTO_NOTIFY_16443_EXPLICIT",
+    "PROTO_NAT_TRAVERSAL"
+  ],
+  "best_match": "NIST_PQC_TRANSITIONAL",
+  "display_name": "NIST PQC Transitional IPsec Profile",
+  "best_score": 0.839,
+  "best_distance": 0.161,
+  "rankings": [
+    {
+      "name": "NIST_PQC_TRANSITIONAL",
+      "display_name": "NIST PQC Transitional IPsec Profile",
+      "similarity": 0.839,
+      "similarity_percent": "83.90%",
+      "distance": 0.161
+    },
+    {
+      "name": "CNSA_2_0",
+      "display_name": "CNSA 2.0 IPsec Profile",
+      "similarity": 0.8127,
+      "similarity_percent": "81.27%",
+      "distance": 0.1873
+    },
+    {
+      "name": "RFC8247_CLASSICAL_BASELINE",
+      "display_name": "RFC 8247 Classical Baseline IPsec Profile",
+      "similarity": 0.6296,
+      "similarity_percent": "62.96%",
+      "distance": 0.3704
+    },
+    {
+      "name": "NIST_SP800_131A_DEPRECATED",
+      "display_name": "NIST SP 800-131A Deprecated IPsec Profile",
+      "similarity": 0.5146,
+      "similarity_percent": "51.46%",
+      "distance": 0.4854
+    }
+  ]
+}

@@ -1,0 +1,1816 @@
+{
+  "rag_export_metadata": {
+    "source": "in_memory",
+    "export_timestamp": 1790017870.034489,
+    "missing_files": [],
+    "errors": [],
+    "schema_version": "1.0"
+  },
+  "session_id": "0x1122334455667788",
+  "metadata": {
+    "initiator_ip": null,
+    "responder_ip": null,
+    "initiator_port": 500,
+    "responder_port": 500,
+    "ike_version": 2,
+    "handshake_duration_ms": 0.0
+  },
+  "summaries": {
+    "cryptographic_posture": {
+      "vector_19d": [
+        1.0,
+        0.75,
+        1.0,
+        1.0,
+        1.0,
+        0.3333333333333333,
+        0.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0
+      ],
+      "closest_policy_anchor": "NIST_PQC_TRANSITIONAL",
+      "similarity_score": 0.839,
+      "cosine_distance": 0.161,
+      "policy_rankings": [
+        {
+          "name": "NIST_PQC_TRANSITIONAL",
+          "display_name": "NIST PQC Transitional IPsec Profile",
+          "similarity": 0.839,
+          "similarity_percent": "83.90%",
+          "distance": 0.161
+        },
+        {
+          "name": "CNSA_2_0",
+          "display_name": "CNSA 2.0 IPsec Profile",
+          "similarity": 0.8127,
+          "similarity_percent": "81.27%",
+          "distance": 0.1873
+        },
+        {
+          "name": "RFC8247_CLASSICAL_BASELINE",
+          "display_name": "RFC 8247 Classical Baseline IPsec Profile",
+          "similarity": 0.6296,
+          "similarity_percent": "62.96%",
+          "distance": 0.3704
+        },
+        {
+          "name": "NIST_SP800_131A_DEPRECATED",
+          "display_name": "NIST SP 800-131A Deprecated IPsec Profile",
+          "similarity": 0.5146,
+          "similarity_percent": "51.46%",
+          "distance": 0.4854
+        }
+      ]
+    },
+    "rfc_compliance": {
+      "overall_rfc_status": "FAIL",
+      "cryptographic_posture": "STRONG",
+      "pqc_classification": "PQC_KEM",
+      "critical_failures_count": 0,
+      "warnings_count": 0,
+      "passed_rules_count": 0,
+      "critical_failures": [
+        {
+          "rule_id": "IKE-AUTH-MANDATORY-001",
+          "rfc": "RFC 7296",
+          "section": "\u00a73.8",
+          "category": "Identity & Authentication",
+          "condition": "AUTH payload presence in IKE_AUTH",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "FAIL",
+          "severity": "CRITICAL",
+          "reason": "AUTH payload is mandatory in IKE_AUTH exchange and is missing.",
+          "observed_value": "Missing",
+          "expected_requirement": "AUTH payload MUST be present in IKE_AUTH",
+          "spec_source": "PUBLISHED RFC"
+        }
+      ],
+      "warnings": [],
+      "category_summaries": {
+        "IKEv2 Protocol Compliance": {
+          "status": "PASS",
+          "passed": 3,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "IKEv2 Cryptographic Transforms": {
+          "status": "PASS",
+          "passed": 3,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "Encryption Rules": {
+          "status": "PASS",
+          "passed": 3,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "PRF Rules": {
+          "status": "PASS",
+          "passed": 1,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "Integrity Rules": {
+          "status": "NOT_VERIFIABLE",
+          "passed": 0,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "Diffie-Hellman / Key Exchange": {
+          "status": "PASS",
+          "passed": 2,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "Identity & Authentication": {
+          "status": "FAIL",
+          "passed": 0,
+          "failed": 1,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "ESP / IPsec Rules": {
+          "status": "PASS",
+          "passed": 2,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 1
+        },
+        "Security Association Lifecycle": {
+          "status": "PASS",
+          "passed": 1,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 2
+        },
+        "Anti-Replay / ESN": {
+          "status": "NOT_VERIFIABLE",
+          "passed": 0,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 1
+        },
+        "NAT Traversal": {
+          "status": "PASS",
+          "passed": 1,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 1
+        },
+        "IPsec Security Policy (SPD)": {
+          "status": "NOT_VERIFIABLE",
+          "passed": 0,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 1
+        }
+      }
+    },
+    "pki_certificate_health": {
+      "overall_health_status": "HEALTHY",
+      "is_compliant": true,
+      "peer_audits": {},
+      "findings": [
+        {
+          "rule_id": "CERT-HEALTH-EXPIRED-001",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "initiator:leaf",
+          "condition": "Certificate expiration status",
+          "observed": "Valid (180.0 days remaining)",
+          "expected": "Active certificate",
+          "reason": "Certificate is within active validity period.",
+          "remediation": "None required."
+        },
+        {
+          "rule_id": "CERT-IDENTITY-SAN-004",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "initiator:leaf",
+          "condition": "IKE identity to Certificate SAN/CN match",
+          "observed": "IKE ID 'client.quantum.gov' matches certificate identity",
+          "expected": "Identity match verified",
+          "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+          "remediation": "None required."
+        },
+        {
+          "rule_id": "CERT-CRYPTO-SIG-009",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "initiator:leaf",
+          "condition": "Certificate signature and key security",
+          "observed": "1.3.6.1.4.1.2.267.12.8.7 (2560b) / 1.3.6.1.4.1.2.267.12.8.7",
+          "expected": "RFC 8247 compliant cryptographic suite",
+          "reason": "Certificate public key 1.3.6.1.4.1.2.267.12.8.7 meets basic classical criteria.",
+          "remediation": "Consider upgrading to modern 128-bit (ECDSA P-256) or 256-bit PQC (ML-DSA-87) algorithms."
+        },
+        {
+          "rule_id": "CERT-HEALTH-EXPIRED-001",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "responder:leaf",
+          "condition": "Certificate expiration status",
+          "observed": "Valid (180.0 days remaining)",
+          "expected": "Active certificate",
+          "reason": "Certificate is within active validity period.",
+          "remediation": "None required."
+        },
+        {
+          "rule_id": "CERT-IDENTITY-SAN-004",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "responder:leaf",
+          "condition": "IKE identity to Certificate SAN/CN match",
+          "observed": "IKE ID 'gateway.quantum.gov' matches certificate identity",
+          "expected": "Identity match verified",
+          "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+          "remediation": "None required."
+        },
+        {
+          "rule_id": "CERT-CRYPTO-SIG-009",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "responder:leaf",
+          "condition": "Certificate signature and key security",
+          "observed": "1.3.6.1.4.1.2.267.12.8.7 (2560b) / 1.3.6.1.4.1.2.267.12.8.7",
+          "expected": "RFC 8247 compliant cryptographic suite",
+          "reason": "Certificate public key 1.3.6.1.4.1.2.267.12.8.7 meets basic classical criteria.",
+          "remediation": "Consider upgrading to modern 128-bit (ECDSA P-256) or 256-bit PQC (ML-DSA-87) algorithms."
+        }
+      ],
+      "remediation_actions": []
+    },
+    "traffic_flow_telemetry": {
+      "flow_key": [
+        "0.0.0.0",
+        "0.0.0.0"
+      ],
+      "verdict": null,
+      "trigger_type": "DATA_PLANE_TELEMETRY",
+      "packet_count": 250,
+      "duration_seconds": 0.0,
+      "features_sample": {
+        "total_packets": 250.0,
+        "total_bytes": 185000.0,
+        "mean_packet_size": 740.0,
+        "packets_per_second": 0.0,
+        "bytes_per_second": null
+      }
+    }
+  },
+  "raw_sources": {
+    "canonical_session": {
+      "session_id": "0x1122334455667788",
+      "common": {
+        "plane": "control",
+        "ike_version": 2,
+        "src_ip": "192.168.1.105",
+        "dst_ip": "10.0.0.1",
+        "src_port": 500,
+        "dst_port": 500,
+        "initiator_spi": "0x1122334455667788",
+        "responder_spi": "0x8877665544332211",
+        "completed": true,
+        "duration_ms": 184.99994277954102
+      },
+      "IKE_SA_INIT": {
+        "exchange": "IKE_SA_INIT",
+        "proposals": [
+          {
+            "proposal_num": 1,
+            "protocol_id": 1,
+            "spi": null,
+            "transforms": {
+              "encryption": [
+                {
+                  "id": 20,
+                  "name": "ENCR_AES_GCM_16",
+                  "length": 256,
+                  "key_length": 256
+                }
+              ],
+              "prf": [
+                {
+                  "id": 6,
+                  "name": "PRF_HMAC_SHA2_384"
+                }
+              ],
+              "integrity": [
+                {
+                  "id": 0,
+                  "name": "NONE"
+                }
+              ],
+              "dh_group": [
+                {
+                  "id": 20,
+                  "name": "384-bit random ECP group"
+                }
+              ],
+              "extended_sequence_numbers": [
+                {
+                  "id": 1,
+                  "name": "ESN"
+                }
+              ],
+              "additional_key_exchange_1": [
+                {
+                  "id": 37,
+                  "name": "ML-KEM-1024"
+                }
+              ]
+            }
+          }
+        ],
+        "key_exchange": {
+          "group": 20,
+          "pubkey_len": 96
+        },
+        "initiator_proposals": [
+          {
+            "proposal_num": 1,
+            "protocol_id": 1,
+            "spi": null,
+            "transforms": {
+              "encryption": [
+                {
+                  "id": 20,
+                  "name": "ENCR_AES_GCM_16",
+                  "length": 256,
+                  "key_length": 256
+                }
+              ],
+              "prf": [
+                {
+                  "id": 6,
+                  "name": "PRF_HMAC_SHA2_384"
+                }
+              ],
+              "integrity": [
+                {
+                  "id": 0,
+                  "name": "NONE"
+                }
+              ],
+              "dh_group": [
+                {
+                  "id": 20,
+                  "name": "384-bit random ECP group"
+                }
+              ],
+              "extended_sequence_numbers": [
+                {
+                  "id": 1,
+                  "name": "ESN"
+                }
+              ],
+              "additional_key_exchange_1": [
+                {
+                  "id": 37,
+                  "name": "ML-KEM-1024"
+                }
+              ]
+            }
+          }
+        ],
+        "responder_proposal": [
+          {
+            "proposal_num": 1,
+            "protocol_id": 1,
+            "spi": null,
+            "transforms": {
+              "encryption": [
+                {
+                  "id": 20,
+                  "name": "ENCR_AES_GCM_16",
+                  "length": 256,
+                  "key_length": 256
+                }
+              ],
+              "prf": [
+                {
+                  "id": 6,
+                  "name": "PRF_HMAC_SHA2_384"
+                }
+              ],
+              "integrity": [
+                {
+                  "id": 0,
+                  "name": "NONE"
+                }
+              ],
+              "dh_group": [
+                {
+                  "id": 20,
+                  "name": "384-bit random ECP group"
+                }
+              ],
+              "extended_sequence_numbers": [
+                {
+                  "id": 1,
+                  "name": "ESN"
+                }
+              ],
+              "additional_key_exchange_1": [
+                {
+                  "id": 37,
+                  "name": "ML-KEM-1024"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "IKE_INTERMEDIATE": {
+        "exchange": "IKE_INTERMEDIATE",
+        "round_count": 0,
+        "rounds": [
+          {
+            "round_number": 1,
+            "message_id": 1,
+            "direction": "response",
+            "key_exchange": {
+              "group": 37,
+              "pubkey_len": 1568
+            },
+            "notify": []
+          }
+        ]
+      },
+      "IKE_AUTH": {
+        "exchange": "IKE_AUTH",
+        "authentication": {
+          "auth_method": 14,
+          "identity": {
+            "type": 2,
+            "value": "gateway.quantum.gov"
+          }
+        },
+        "certificate": {
+          "present": false
+        },
+        "certificates": [],
+        "child_sa": {
+          "present": true,
+          "proposals": [
+            {
+              "proposal_num": 1,
+              "protocol_id": 3,
+              "spi": "0xc001beef",
+              "transforms": {
+                "encryption": [
+                  {
+                    "id": 20,
+                    "name": "ENCR_AES_GCM_16",
+                    "length": 256,
+                    "key_length": 256
+                  }
+                ],
+                "extended_sequence_numbers": [
+                  {
+                    "id": 1,
+                    "name": "ESN"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "traffic_selectors": {
+          "initiator": [
+            {
+              "ts_type": 7,
+              "ip_proto": 0,
+              "start_addr": "192.168.1.0",
+              "end_addr": "192.168.1.255"
+            }
+          ],
+          "responder": [
+            {
+              "ts_type": 7,
+              "ip_proto": 0,
+              "start_addr": "10.0.0.0",
+              "end_addr": "10.0.255.255"
+            }
+          ]
+        },
+        "initiator_auth": {
+          "auth_method": 14,
+          "identity": {
+            "type": 2,
+            "value": "client.quantum.gov"
+          }
+        },
+        "responder_auth": {
+          "auth_method": 14,
+          "identity": {
+            "type": 2,
+            "value": "gateway.quantum.gov"
+          }
+        },
+        "auth_metadata": {
+          "source": "daemon_api",
+          "daemon_type": "strongswan",
+          "initiator": {
+            "identity": {
+              "type": 2,
+              "value": "client.quantum.gov"
+            },
+            "auth_method": 14,
+            "certificates": [
+              {
+                "encoding": 4,
+                "type": "end_entity",
+                "subject": "CN=client.quantum.gov, O=Quantum Org",
+                "issuer": "CN=Quantum CA, O=Quantum Org",
+                "cert_key_type_oid": "1.3.6.1.4.1.2.267.12.8.7",
+                "cert_key_len": 2560,
+                "cert_sig_algo_oid": "1.3.6.1.4.1.2.267.12.8.7",
+                "not_before": 1790014270.0096858,
+                "not_after": 1805569870.0096858,
+                "is_ca": false,
+                "san": [
+                  "client.quantum.gov"
+                ],
+                "key_usage": [
+                  "digitalSignature"
+                ]
+              }
+            ]
+          },
+          "responder": {
+            "identity": {
+              "type": 2,
+              "value": "gateway.quantum.gov"
+            },
+            "auth_method": 14,
+            "certificates": [
+              {
+                "encoding": 4,
+                "type": "end_entity",
+                "subject": "CN=gateway.quantum.gov, O=Quantum Org",
+                "issuer": "CN=Quantum CA, O=Quantum Org",
+                "cert_key_type_oid": "1.3.6.1.4.1.2.267.12.8.7",
+                "cert_key_len": 2560,
+                "cert_sig_algo_oid": "1.3.6.1.4.1.2.267.12.8.7",
+                "not_before": 1790014270.0096858,
+                "not_after": 1805569870.0096858,
+                "is_ca": false,
+                "san": [
+                  "gateway.quantum.gov"
+                ],
+                "key_usage": [
+                  "digitalSignature"
+                ]
+              }
+            ]
+          }
+        },
+        "initiator": {
+          "identity": {
+            "type": 2,
+            "value": "client.quantum.gov"
+          },
+          "auth_method": 14,
+          "certificates": [
+            {
+              "encoding": 4,
+              "type": "end_entity",
+              "subject": "CN=client.quantum.gov, O=Quantum Org",
+              "issuer": "CN=Quantum CA, O=Quantum Org",
+              "cert_key_type_oid": "1.3.6.1.4.1.2.267.12.8.7",
+              "cert_key_len": 2560,
+              "cert_sig_algo_oid": "1.3.6.1.4.1.2.267.12.8.7",
+              "not_before": 1790014270.0096858,
+              "not_after": 1805569870.0096858,
+              "is_ca": false,
+              "san": [
+                "client.quantum.gov"
+              ],
+              "key_usage": [
+                "digitalSignature"
+              ]
+            }
+          ]
+        },
+        "responder": {
+          "identity": {
+            "type": 2,
+            "value": "gateway.quantum.gov"
+          },
+          "auth_method": 14,
+          "certificates": [
+            {
+              "encoding": 4,
+              "type": "end_entity",
+              "subject": "CN=gateway.quantum.gov, O=Quantum Org",
+              "issuer": "CN=Quantum CA, O=Quantum Org",
+              "cert_key_type_oid": "1.3.6.1.4.1.2.267.12.8.7",
+              "cert_key_len": 2560,
+              "cert_sig_algo_oid": "1.3.6.1.4.1.2.267.12.8.7",
+              "not_before": 1790014270.0096858,
+              "not_after": 1805569870.0096858,
+              "is_ca": false,
+              "san": [
+                "gateway.quantum.gov"
+              ],
+              "key_usage": [
+                "digitalSignature"
+              ]
+            }
+          ]
+        }
+      },
+      "notify": {
+        "present": false,
+        "notify_types": [],
+        "messages": []
+      },
+      "data_plane": {
+        "spi": "0xc001beef",
+        "packet_count": 250,
+        "byte_count": 185000,
+        "seq_numbers": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114,
+          115,
+          116,
+          117,
+          118,
+          119,
+          120,
+          121,
+          122,
+          123,
+          124,
+          125,
+          126,
+          127,
+          128,
+          129,
+          130,
+          131,
+          132,
+          133,
+          134,
+          135,
+          136,
+          137,
+          138,
+          139,
+          140,
+          141,
+          142,
+          143,
+          144,
+          145,
+          146,
+          147,
+          148,
+          149,
+          150,
+          151,
+          152,
+          153,
+          154,
+          155,
+          156,
+          157,
+          158,
+          159,
+          160,
+          161,
+          162,
+          163,
+          164,
+          165,
+          166,
+          167,
+          168,
+          169,
+          170,
+          171,
+          172,
+          173,
+          174,
+          175,
+          176,
+          177,
+          178,
+          179,
+          180,
+          181,
+          182,
+          183,
+          184,
+          185,
+          186,
+          187,
+          188,
+          189,
+          190,
+          191,
+          192,
+          193,
+          194,
+          195,
+          196,
+          197,
+          198,
+          199,
+          200,
+          201,
+          202,
+          203,
+          204,
+          205,
+          206,
+          207,
+          208,
+          209,
+          210,
+          211,
+          212,
+          213,
+          214,
+          215,
+          216,
+          217,
+          218,
+          219,
+          220,
+          221,
+          222,
+          223,
+          224,
+          225,
+          226,
+          227,
+          228,
+          229,
+          230,
+          231,
+          232,
+          233,
+          234,
+          235,
+          236,
+          237,
+          238,
+          239,
+          240,
+          241,
+          242,
+          243,
+          244,
+          245,
+          246,
+          247,
+          248,
+          249,
+          250
+        ],
+        "last_seq": 250,
+        "is_natt": false,
+        "last_seen": 0.0
+      },
+      "lifecycle_events": [],
+      "auth_metadata": {
+        "source": "daemon_api",
+        "daemon_type": "strongswan",
+        "initiator": {
+          "identity": {
+            "type": 2,
+            "value": "client.quantum.gov"
+          },
+          "auth_method": 14,
+          "certificates": [
+            {
+              "encoding": 4,
+              "type": "end_entity",
+              "subject": "CN=client.quantum.gov, O=Quantum Org",
+              "issuer": "CN=Quantum CA, O=Quantum Org",
+              "cert_key_type_oid": "1.3.6.1.4.1.2.267.12.8.7",
+              "cert_key_len": 2560,
+              "cert_sig_algo_oid": "1.3.6.1.4.1.2.267.12.8.7",
+              "not_before": 1790014270.0096858,
+              "not_after": 1805569870.0096858,
+              "is_ca": false,
+              "san": [
+                "client.quantum.gov"
+              ],
+              "key_usage": [
+                "digitalSignature"
+              ]
+            }
+          ]
+        },
+        "responder": {
+          "identity": {
+            "type": 2,
+            "value": "gateway.quantum.gov"
+          },
+          "auth_method": 14,
+          "certificates": [
+            {
+              "encoding": 4,
+              "type": "end_entity",
+              "subject": "CN=gateway.quantum.gov, O=Quantum Org",
+              "issuer": "CN=Quantum CA, O=Quantum Org",
+              "cert_key_type_oid": "1.3.6.1.4.1.2.267.12.8.7",
+              "cert_key_len": 2560,
+              "cert_sig_algo_oid": "1.3.6.1.4.1.2.267.12.8.7",
+              "not_before": 1790014270.0096858,
+              "not_after": 1805569870.0096858,
+              "is_ca": false,
+              "san": [
+                "gateway.quantum.gov"
+              ],
+              "key_usage": [
+                "digitalSignature"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "rfc_compliance": {
+      "overall_rfc_status": "FAIL",
+      "protocol_compliance": "PASS",
+      "cryptographic_compliance": "PASS",
+      "ipsec_esp_compliance": "PASS",
+      "authentication_compliance": "FAIL",
+      "pqc_classification": "PQC_KEM",
+      "hybrid_classification": "HYBRID",
+      "cryptographic_posture": "STRONG",
+      "counts": {
+        "critical_failures": 1,
+        "warnings": 0,
+        "passed_rules": 16,
+        "not_verifiable_rules": 6,
+        "not_applicable_rules": 0,
+        "total_evaluated": 23
+      },
+      "category_summaries": {
+        "IKEv2 Protocol Compliance": {
+          "status": "PASS",
+          "passed": 3,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "IKEv2 Cryptographic Transforms": {
+          "status": "PASS",
+          "passed": 3,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "Encryption Rules": {
+          "status": "PASS",
+          "passed": 3,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "PRF Rules": {
+          "status": "PASS",
+          "passed": 1,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "Integrity Rules": {
+          "status": "NOT_VERIFIABLE",
+          "passed": 0,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "Diffie-Hellman / Key Exchange": {
+          "status": "PASS",
+          "passed": 2,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "Identity & Authentication": {
+          "status": "FAIL",
+          "passed": 0,
+          "failed": 1,
+          "warnings": 0,
+          "not_verifiable": 0
+        },
+        "ESP / IPsec Rules": {
+          "status": "PASS",
+          "passed": 2,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 1
+        },
+        "Security Association Lifecycle": {
+          "status": "PASS",
+          "passed": 1,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 2
+        },
+        "Anti-Replay / ESN": {
+          "status": "NOT_VERIFIABLE",
+          "passed": 0,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 1
+        },
+        "NAT Traversal": {
+          "status": "PASS",
+          "passed": 1,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 1
+        },
+        "IPsec Security Policy (SPD)": {
+          "status": "NOT_VERIFIABLE",
+          "passed": 0,
+          "failed": 0,
+          "warnings": 0,
+          "not_verifiable": 1
+        }
+      },
+      "critical_failures": [
+        {
+          "rule_id": "IKE-AUTH-MANDATORY-001",
+          "rfc": "RFC 7296",
+          "section": "\u00a73.8",
+          "category": "Identity & Authentication",
+          "condition": "AUTH payload presence in IKE_AUTH",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "FAIL",
+          "severity": "CRITICAL",
+          "reason": "AUTH payload is mandatory in IKE_AUTH exchange and is missing.",
+          "observed_value": "Missing",
+          "expected_requirement": "AUTH payload MUST be present in IKE_AUTH",
+          "spec_source": "PUBLISHED RFC"
+        }
+      ],
+      "warnings": [],
+      "passed_rules": [
+        {
+          "rule_id": "IKE-PROTO-VER-001",
+          "rfc": "RFC 7296",
+          "section": "\u00a73.1",
+          "category": "IKEv2 Protocol Compliance",
+          "condition": "Major version validation",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "IKE major version is 2 as required by RFC 7296.",
+          "observed_value": "Major Version 2",
+          "expected_requirement": "Major version MUST be 2",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-PROTO-ORDER-001",
+          "rfc": "RFC 7296",
+          "section": "\u00a71.2",
+          "category": "IKEv2 Protocol Compliance",
+          "condition": "State machine sequence validation",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "Both IKE_SA_INIT and IKE_AUTH exchange contexts present in valid state machine order.",
+          "observed_value": "IKE_SA_INIT -> IKE_AUTH",
+          "expected_requirement": "IKE_SA_INIT -> IKE_AUTH state progression",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-PROTO-INIT-PL-001",
+          "rfc": "RFC 7296",
+          "section": "\u00a71.2",
+          "category": "IKEv2 Protocol Compliance",
+          "condition": "IKE_SA_INIT mandatory payload presence (SA, KE)",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "IKE_SA_INIT contains mandatory SA and KE payloads.",
+          "observed_value": "1 proposal(s), KE present",
+          "expected_requirement": "SA and KE payloads MUST be present",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-TRANS-ENCR-001",
+          "rfc": "RFC 8247",
+          "section": "\u00a72.1",
+          "category": "IKEv2 Cryptographic Transforms",
+          "condition": "ENCR transform requirement status (ENCR_AES_GCM_16)",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "AES-GCM with 16-octet ICV is MUST with 128/256-bit keys; 192-bit is SHOULD NOT.",
+          "observed_value": "ENCR_AES_GCM_16 (ID 20)",
+          "expected_requirement": "Requirement level: MUST",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-TRANS-PRF-001",
+          "rfc": "RFC 8247",
+          "section": "\u00a72.2",
+          "category": "IKEv2 Cryptographic Transforms",
+          "condition": "PRF transform requirement status (PRF_HMAC_SHA2_384)",
+          "requirement_level": "SHOULD",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "HMAC-SHA2-384 PRF is SHOULD.",
+          "observed_value": "PRF_HMAC_SHA2_384 (ID 6)",
+          "expected_requirement": "Requirement level: SHOULD",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-TRANS-DH-001",
+          "rfc": "RFC 8247",
+          "section": "\u00a72.4",
+          "category": "IKEv2 Cryptographic Transforms",
+          "condition": "DH Group requirement status (384-bit random ECP group (P-384))",
+          "requirement_level": "SHOULD",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "384-bit random ECP (NIST P-384) is SHOULD.",
+          "observed_value": "384-bit random ECP group (P-384) (ID 20)",
+          "expected_requirement": "Requirement level: SHOULD",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-ENCR-PROHIBIT-001",
+          "rfc": "RFC 8247",
+          "section": "\u00a72.1",
+          "category": "Encryption Rules",
+          "condition": "Encryption algorithm legitimacy",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "Encryption algorithm is not prohibited.",
+          "observed_value": "ID 20",
+          "expected_requirement": "Permitted encryption algorithm",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-ENCR-KEYLEN-001",
+          "rfc": "RFC 8247",
+          "section": "\u00a72.1",
+          "category": "Encryption Rules",
+          "condition": "AES key size compliance",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "Key length conforms to RFC 8247 requirements.",
+          "observed_value": "256 bits",
+          "expected_requirement": "128 or 256 bits",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-ENCR-AEAD-PAIRING-001",
+          "rfc": "RFC 8247",
+          "section": "\u00a72.1",
+          "category": "Encryption Rules",
+          "condition": "AEAD cipher integrity pairing",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "AEAD cipher is correctly paired with Transform ID 0 (NONE).",
+          "observed_value": "ENCR=20, INTEG=0",
+          "expected_requirement": "INTEG MUST be NONE (0) with AEAD",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-PRF-STATUS-001",
+          "rfc": "RFC 8247",
+          "section": "\u00a72.2",
+          "category": "PRF Rules",
+          "condition": "Compliant PRF algorithm (PRF_HMAC_SHA2_384)",
+          "requirement_level": "SHOULD",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "PRF_HMAC_SHA2_384 satisfies RFC 8247 PRF requirements.",
+          "observed_value": "PRF_HMAC_SHA2_384",
+          "expected_requirement": "Requirement level: SHOULD",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-DH-STATUS-001",
+          "rfc": "RFC 8247",
+          "section": "\u00a72.4",
+          "category": "Diffie-Hellman / Key Exchange",
+          "condition": "Compliant Key Exchange (384-bit random ECP group (P-384))",
+          "requirement_level": "SHOULD",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "384-bit random ECP group (P-384) satisfies RFC implementation requirements.",
+          "observed_value": "384-bit random ECP group (P-384)",
+          "expected_requirement": "Requirement level: SHOULD",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-DH-MULTIKE-VALID-001",
+          "rfc": "RFC 9370",
+          "section": "\u00a72.1",
+          "category": "Diffie-Hellman / Key Exchange",
+          "condition": "RFC 9370 multiple key exchange negotiation",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "Multiple Key Exchange negotiated with 1 additional round(s).",
+          "observed_value": "1 additional KE round(s)",
+          "expected_requirement": "Valid RFC 9370 negotiation",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-SA-TS-001",
+          "rfc": "RFC 7296",
+          "section": "\u00a73.10",
+          "category": "Security Association Lifecycle",
+          "condition": "Traffic Selectors presence and format",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "Traffic Selectors (TSi/TSr) present with valid range specifications.",
+          "observed_value": "1 TSi, 1 TSr",
+          "expected_requirement": "Valid TSi and TSr payloads",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-NATT-PORTFLOAT-001",
+          "rfc": "RFC 7296",
+          "section": "\u00a72.23",
+          "category": "NAT Traversal",
+          "condition": "Standard UDP 500 operation (no NAT)",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "Peers operating over standard UDP 500 (native mode).",
+          "observed_value": "UDP 500",
+          "expected_requirement": "UDP 500 or 4500",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "ESP-STATIC-ENCR-001",
+          "rfc": "RFC 8221",
+          "section": "\u00a72.1",
+          "category": "ESP / IPsec Rules",
+          "condition": "Compliant ESP encryption algorithm (ENCR_AES_GCM_16)",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "ENCR_AES_GCM_16 satisfies RFC 8221 ESP requirements.",
+          "observed_value": "ENCR_AES_GCM_16",
+          "expected_requirement": "Requirement level: MUST",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "ESP-STATIC-AEAD-001",
+          "rfc": "RFC 8221",
+          "section": "\u00a72.1",
+          "category": "ESP / IPsec Rules",
+          "condition": "ESP AEAD integrity pairing",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "reason": "ESP AEAD algorithm correctly paired with INTEG NONE (0).",
+          "observed_value": "ENCR=20, INTEG=0",
+          "expected_requirement": "INTEG NONE (0)",
+          "spec_source": "PUBLISHED RFC"
+        }
+      ],
+      "not_verifiable_rules": [
+        {
+          "rule_id": "IKE-SA-REKEY-001",
+          "rfc": "RFC 7296",
+          "section": "\u00a71.3.3",
+          "category": "Security Association Lifecycle",
+          "condition": "Child SA Rekeying verification",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "NOT_VERIFIABLE",
+          "severity": "LOW",
+          "reason": "No CREATE_CHILD_SA rekey events observed in the supplied trace.",
+          "observed_value": null,
+          "expected_requirement": "Observable rekey event",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-SA-DELETE-001",
+          "rfc": "RFC 7296",
+          "section": "\u00a71.4.1",
+          "category": "Security Association Lifecycle",
+          "condition": "SA Deletion verification",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "NOT_VERIFIABLE",
+          "severity": "LOW",
+          "reason": "No SA deletion events observed in the supplied trace.",
+          "observed_value": null,
+          "expected_requirement": "Observable delete event",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "IKE-NATT-DETECT-001",
+          "rfc": "RFC 7296",
+          "section": "\u00a72.23",
+          "category": "NAT Traversal",
+          "condition": "NAT detection notifications presence",
+          "requirement_level": "MUST",
+          "applicable_context": "HANDSHAKE",
+          "status": "NOT_VERIFIABLE",
+          "severity": "LOW",
+          "reason": "No NAT-D notifications observed.",
+          "observed_value": null,
+          "expected_requirement": "NAT detection notifications",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "ESP-RUNTIME-TELEMETRY-001",
+          "rfc": "RFC 4303",
+          "section": "\u00a73.3",
+          "category": "ESP / IPsec Rules",
+          "condition": "ESP runtime telemetry ingestion",
+          "requirement_level": "MUST",
+          "applicable_context": "RUNTIME",
+          "status": "NOT_VERIFIABLE",
+          "severity": "LOW",
+          "reason": "Data plane container contains zero observed packets.",
+          "observed_value": "None",
+          "expected_requirement": "Observed data-plane ESP packets",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "ESP-ANTI-REPLAY-001",
+          "rfc": "RFC 4303",
+          "section": "\u00a73.4.3",
+          "category": "Anti-Replay / ESN",
+          "condition": "Anti-replay sliding window simulation",
+          "requirement_level": "MUST",
+          "applicable_context": "RUNTIME",
+          "status": "NOT_VERIFIABLE",
+          "severity": "LOW",
+          "reason": "Data plane container contains zero observed packets.",
+          "observed_value": "None",
+          "expected_requirement": "Observed sequence numbers",
+          "spec_source": "PUBLISHED RFC"
+        },
+        {
+          "rule_id": "SPD-POLICY-TS-MAPPING-001",
+          "rfc": "RFC 4301",
+          "section": "\u00a74.4.1",
+          "category": "IPsec Security Policy (SPD)",
+          "condition": "Security Policy Database (SPD) verification",
+          "requirement_level": "MUST",
+          "applicable_context": "RUNTIME",
+          "status": "NOT_VERIFIABLE",
+          "severity": "LOW",
+          "reason": "Data plane container contains zero observed packets.",
+          "observed_value": "None",
+          "expected_requirement": "Observed traffic vs negotiated SPD/TS",
+          "spec_source": "PUBLISHED RFC"
+        }
+      ]
+    },
+    "vector_posture": {
+      "vector_19d": [
+        1.0,
+        0.75,
+        1.0,
+        1.0,
+        1.0,
+        0.3333333333333333,
+        0.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0
+      ],
+      "dimension_names": [
+        "INIT_KEM_CLASSICAL_ALGO",
+        "INIT_KEM_CLASSICAL_KEY_LEN",
+        "INIT_KEM_PQC_PRESENCE",
+        "INIT_KEM_PQC_KEY_LEN",
+        "INIT_KEM_PQC_HYBRID_BINDING",
+        "INIT_KEM_MULTI_KE_ROUNDS",
+        "INIT_KEM_PFS_STATUS",
+        "INIT_SA_ENCR_ALGO",
+        "INIT_SA_ENCR_KEY_LEN",
+        "INIT_SA_PRF_ALGO",
+        "INIT_SA_INTEG_ALGO",
+        "INIT_SA_ESN_CAPABILITY",
+        "AUTH_SIG_CLASSICAL_ALGO",
+        "AUTH_SIG_CLASSICAL_KEY_LEN",
+        "AUTH_SIG_PQC_ALGO",
+        "AUTH_HASH_DIGEST_ALGO",
+        "PROTO_IKE_VERSION",
+        "PROTO_NOTIFY_16443_EXPLICIT",
+        "PROTO_NAT_TRAVERSAL"
+      ],
+      "best_match": "NIST_PQC_TRANSITIONAL",
+      "display_name": "NIST PQC Transitional IPsec Profile",
+      "best_score": 0.839,
+      "best_distance": 0.161,
+      "rankings": [
+        {
+          "name": "NIST_PQC_TRANSITIONAL",
+          "display_name": "NIST PQC Transitional IPsec Profile",
+          "similarity": 0.839,
+          "similarity_percent": "83.90%",
+          "distance": 0.161
+        },
+        {
+          "name": "CNSA_2_0",
+          "display_name": "CNSA 2.0 IPsec Profile",
+          "similarity": 0.8127,
+          "similarity_percent": "81.27%",
+          "distance": 0.1873
+        },
+        {
+          "name": "RFC8247_CLASSICAL_BASELINE",
+          "display_name": "RFC 8247 Classical Baseline IPsec Profile",
+          "similarity": 0.6296,
+          "similarity_percent": "62.96%",
+          "distance": 0.3704
+        },
+        {
+          "name": "NIST_SP800_131A_DEPRECATED",
+          "display_name": "NIST SP 800-131A Deprecated IPsec Profile",
+          "similarity": 0.5146,
+          "similarity_percent": "51.46%",
+          "distance": 0.4854
+        }
+      ]
+    },
+    "cert_health": {
+      "overall_health_status": "HEALTHY",
+      "is_compliant": true,
+      "reference_time": 1790017870.0308132,
+      "summary": {
+        "total_certificates_audited": 2,
+        "critical_failures_count": 0,
+        "warnings_count": 0,
+        "passed_count": 6
+      },
+      "peers": {
+        "initiator": {
+          "peer": "initiator",
+          "identity": {
+            "type": 2,
+            "value": "client.quantum.gov"
+          },
+          "auth_method": 14,
+          "peer_status": "HEALTHY",
+          "chain_length": 1,
+          "leaf_certificate": {
+            "index": 0,
+            "cert_type": "end_entity",
+            "subject": "CN=client.quantum.gov, O=Quantum Org",
+            "issuer": "CN=Quantum CA, O=Quantum Org",
+            "serial_number": null,
+            "is_ca": false,
+            "key_type_oid": "1.3.6.1.4.1.2.267.12.8.7",
+            "key_type_name": "1.3.6.1.4.1.2.267.12.8.7",
+            "key_bits": 2560,
+            "sig_algo_oid": "1.3.6.1.4.1.2.267.12.8.7",
+            "sig_algo_name": "1.3.6.1.4.1.2.267.12.8.7",
+            "not_before": 1790014270.0096858,
+            "not_after": 1805569870.0096858,
+            "days_until_expiration": 180.0,
+            "health_status": "HEALTHY",
+            "rating": {
+              "tier": "RFC8247_ACCEPTABLE",
+              "score": 0.5,
+              "security_bits": 112,
+              "cnsa_2_0_compliant": false,
+              "nist_modern_compliant": false,
+              "rfc8247_compliant": true,
+              "reason": "Certificate public key 1.3.6.1.4.1.2.267.12.8.7 meets basic classical criteria.",
+              "recommendation": "Consider upgrading to modern 128-bit (ECDSA P-256) or 256-bit PQC (ML-DSA-87) algorithms."
+            },
+            "findings": [
+              {
+                "rule_id": "CERT-HEALTH-EXPIRED-001",
+                "status": "PASS",
+                "severity": "INFORMATIONAL",
+                "target": "initiator:leaf",
+                "condition": "Certificate expiration status",
+                "observed": "Valid (180.0 days remaining)",
+                "expected": "Active certificate",
+                "reason": "Certificate is within active validity period.",
+                "remediation": "None required."
+              },
+              {
+                "rule_id": "CERT-IDENTITY-SAN-004",
+                "status": "PASS",
+                "severity": "INFORMATIONAL",
+                "target": "initiator:leaf",
+                "condition": "IKE identity to Certificate SAN/CN match",
+                "observed": "IKE ID 'client.quantum.gov' matches certificate identity",
+                "expected": "Identity match verified",
+                "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+                "remediation": "None required."
+              },
+              {
+                "rule_id": "CERT-CRYPTO-SIG-009",
+                "status": "PASS",
+                "severity": "INFORMATIONAL",
+                "target": "initiator:leaf",
+                "condition": "Certificate signature and key security",
+                "observed": "1.3.6.1.4.1.2.267.12.8.7 (2560b) / 1.3.6.1.4.1.2.267.12.8.7",
+                "expected": "RFC 8247 compliant cryptographic suite",
+                "reason": "Certificate public key 1.3.6.1.4.1.2.267.12.8.7 meets basic classical criteria.",
+                "remediation": "Consider upgrading to modern 128-bit (ECDSA P-256) or 256-bit PQC (ML-DSA-87) algorithms."
+              }
+            ]
+          },
+          "chain_certificates": [],
+          "findings": [
+            {
+              "rule_id": "CERT-HEALTH-EXPIRED-001",
+              "status": "PASS",
+              "severity": "INFORMATIONAL",
+              "target": "initiator:leaf",
+              "condition": "Certificate expiration status",
+              "observed": "Valid (180.0 days remaining)",
+              "expected": "Active certificate",
+              "reason": "Certificate is within active validity period.",
+              "remediation": "None required."
+            },
+            {
+              "rule_id": "CERT-IDENTITY-SAN-004",
+              "status": "PASS",
+              "severity": "INFORMATIONAL",
+              "target": "initiator:leaf",
+              "condition": "IKE identity to Certificate SAN/CN match",
+              "observed": "IKE ID 'client.quantum.gov' matches certificate identity",
+              "expected": "Identity match verified",
+              "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+              "remediation": "None required."
+            },
+            {
+              "rule_id": "CERT-CRYPTO-SIG-009",
+              "status": "PASS",
+              "severity": "INFORMATIONAL",
+              "target": "initiator:leaf",
+              "condition": "Certificate signature and key security",
+              "observed": "1.3.6.1.4.1.2.267.12.8.7 (2560b) / 1.3.6.1.4.1.2.267.12.8.7",
+              "expected": "RFC 8247 compliant cryptographic suite",
+              "reason": "Certificate public key 1.3.6.1.4.1.2.267.12.8.7 meets basic classical criteria.",
+              "remediation": "Consider upgrading to modern 128-bit (ECDSA P-256) or 256-bit PQC (ML-DSA-87) algorithms."
+            }
+          ]
+        },
+        "responder": {
+          "peer": "responder",
+          "identity": {
+            "type": 2,
+            "value": "gateway.quantum.gov"
+          },
+          "auth_method": 14,
+          "peer_status": "HEALTHY",
+          "chain_length": 1,
+          "leaf_certificate": {
+            "index": 0,
+            "cert_type": "end_entity",
+            "subject": "CN=gateway.quantum.gov, O=Quantum Org",
+            "issuer": "CN=Quantum CA, O=Quantum Org",
+            "serial_number": null,
+            "is_ca": false,
+            "key_type_oid": "1.3.6.1.4.1.2.267.12.8.7",
+            "key_type_name": "1.3.6.1.4.1.2.267.12.8.7",
+            "key_bits": 2560,
+            "sig_algo_oid": "1.3.6.1.4.1.2.267.12.8.7",
+            "sig_algo_name": "1.3.6.1.4.1.2.267.12.8.7",
+            "not_before": 1790014270.0096858,
+            "not_after": 1805569870.0096858,
+            "days_until_expiration": 180.0,
+            "health_status": "HEALTHY",
+            "rating": {
+              "tier": "RFC8247_ACCEPTABLE",
+              "score": 0.5,
+              "security_bits": 112,
+              "cnsa_2_0_compliant": false,
+              "nist_modern_compliant": false,
+              "rfc8247_compliant": true,
+              "reason": "Certificate public key 1.3.6.1.4.1.2.267.12.8.7 meets basic classical criteria.",
+              "recommendation": "Consider upgrading to modern 128-bit (ECDSA P-256) or 256-bit PQC (ML-DSA-87) algorithms."
+            },
+            "findings": [
+              {
+                "rule_id": "CERT-HEALTH-EXPIRED-001",
+                "status": "PASS",
+                "severity": "INFORMATIONAL",
+                "target": "responder:leaf",
+                "condition": "Certificate expiration status",
+                "observed": "Valid (180.0 days remaining)",
+                "expected": "Active certificate",
+                "reason": "Certificate is within active validity period.",
+                "remediation": "None required."
+              },
+              {
+                "rule_id": "CERT-IDENTITY-SAN-004",
+                "status": "PASS",
+                "severity": "INFORMATIONAL",
+                "target": "responder:leaf",
+                "condition": "IKE identity to Certificate SAN/CN match",
+                "observed": "IKE ID 'gateway.quantum.gov' matches certificate identity",
+                "expected": "Identity match verified",
+                "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+                "remediation": "None required."
+              },
+              {
+                "rule_id": "CERT-CRYPTO-SIG-009",
+                "status": "PASS",
+                "severity": "INFORMATIONAL",
+                "target": "responder:leaf",
+                "condition": "Certificate signature and key security",
+                "observed": "1.3.6.1.4.1.2.267.12.8.7 (2560b) / 1.3.6.1.4.1.2.267.12.8.7",
+                "expected": "RFC 8247 compliant cryptographic suite",
+                "reason": "Certificate public key 1.3.6.1.4.1.2.267.12.8.7 meets basic classical criteria.",
+                "remediation": "Consider upgrading to modern 128-bit (ECDSA P-256) or 256-bit PQC (ML-DSA-87) algorithms."
+              }
+            ]
+          },
+          "chain_certificates": [],
+          "findings": [
+            {
+              "rule_id": "CERT-HEALTH-EXPIRED-001",
+              "status": "PASS",
+              "severity": "INFORMATIONAL",
+              "target": "responder:leaf",
+              "condition": "Certificate expiration status",
+              "observed": "Valid (180.0 days remaining)",
+              "expected": "Active certificate",
+              "reason": "Certificate is within active validity period.",
+              "remediation": "None required."
+            },
+            {
+              "rule_id": "CERT-IDENTITY-SAN-004",
+              "status": "PASS",
+              "severity": "INFORMATIONAL",
+              "target": "responder:leaf",
+              "condition": "IKE identity to Certificate SAN/CN match",
+              "observed": "IKE ID 'gateway.quantum.gov' matches certificate identity",
+              "expected": "Identity match verified",
+              "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+              "remediation": "None required."
+            },
+            {
+              "rule_id": "CERT-CRYPTO-SIG-009",
+              "status": "PASS",
+              "severity": "INFORMATIONAL",
+              "target": "responder:leaf",
+              "condition": "Certificate signature and key security",
+              "observed": "1.3.6.1.4.1.2.267.12.8.7 (2560b) / 1.3.6.1.4.1.2.267.12.8.7",
+              "expected": "RFC 8247 compliant cryptographic suite",
+              "reason": "Certificate public key 1.3.6.1.4.1.2.267.12.8.7 meets basic classical criteria.",
+              "remediation": "Consider upgrading to modern 128-bit (ECDSA P-256) or 256-bit PQC (ML-DSA-87) algorithms."
+            }
+          ]
+        }
+      },
+      "findings": [
+        {
+          "rule_id": "CERT-HEALTH-EXPIRED-001",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "initiator:leaf",
+          "condition": "Certificate expiration status",
+          "observed": "Valid (180.0 days remaining)",
+          "expected": "Active certificate",
+          "reason": "Certificate is within active validity period.",
+          "remediation": "None required."
+        },
+        {
+          "rule_id": "CERT-IDENTITY-SAN-004",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "initiator:leaf",
+          "condition": "IKE identity to Certificate SAN/CN match",
+          "observed": "IKE ID 'client.quantum.gov' matches certificate identity",
+          "expected": "Identity match verified",
+          "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+          "remediation": "None required."
+        },
+        {
+          "rule_id": "CERT-CRYPTO-SIG-009",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "initiator:leaf",
+          "condition": "Certificate signature and key security",
+          "observed": "1.3.6.1.4.1.2.267.12.8.7 (2560b) / 1.3.6.1.4.1.2.267.12.8.7",
+          "expected": "RFC 8247 compliant cryptographic suite",
+          "reason": "Certificate public key 1.3.6.1.4.1.2.267.12.8.7 meets basic classical criteria.",
+          "remediation": "Consider upgrading to modern 128-bit (ECDSA P-256) or 256-bit PQC (ML-DSA-87) algorithms."
+        },
+        {
+          "rule_id": "CERT-HEALTH-EXPIRED-001",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "responder:leaf",
+          "condition": "Certificate expiration status",
+          "observed": "Valid (180.0 days remaining)",
+          "expected": "Active certificate",
+          "reason": "Certificate is within active validity period.",
+          "remediation": "None required."
+        },
+        {
+          "rule_id": "CERT-IDENTITY-SAN-004",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "responder:leaf",
+          "condition": "IKE identity to Certificate SAN/CN match",
+          "observed": "IKE ID 'gateway.quantum.gov' matches certificate identity",
+          "expected": "Identity match verified",
+          "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+          "remediation": "None required."
+        },
+        {
+          "rule_id": "CERT-CRYPTO-SIG-009",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "responder:leaf",
+          "condition": "Certificate signature and key security",
+          "observed": "1.3.6.1.4.1.2.267.12.8.7 (2560b) / 1.3.6.1.4.1.2.267.12.8.7",
+          "expected": "RFC 8247 compliant cryptographic suite",
+          "reason": "Certificate public key 1.3.6.1.4.1.2.267.12.8.7 meets basic classical criteria.",
+          "remediation": "Consider upgrading to modern 128-bit (ECDSA P-256) or 256-bit PQC (ML-DSA-87) algorithms."
+        }
+      ]
+    },
+    "traffic_flow": {
+      "flow_key": [
+        "0.0.0.0",
+        "0.0.0.0"
+      ],
+      "verdict": null,
+      "trigger_type": "DATA_PLANE_TELEMETRY",
+      "features": {
+        "total_packets": 250.0,
+        "total_bytes": 185000.0,
+        "mean_packet_size": 740.0,
+        "flow_duration_seconds": 0.0,
+        "packets_per_second": 0.0
+      },
+      "packet_count": 250,
+      "duration_seconds": 0.0
+    }
+  }
+}
