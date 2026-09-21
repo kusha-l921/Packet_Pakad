@@ -1,51 +1,69 @@
 """
-vectorEngine.py — Pure-Python 22-Dimensional Cryptographic Vector Engine
+vectorEngine.py — Pure-Python 19-Dimensional Cryptographic Vector Engine
 
 Consumes merged IKEv2 session metadata dictionaries produced by
 metadataExtractor.extract_ikeV2_metadata(), projects each session into a
-normalised 22-D score vector.
+normalised 19-D score vector.
 
 Public API
 ──────────
     merge_session_metadata(*dicts)      → dict
-    build_vector(session_dict)          → list[float]   (len = 22)
+    build_vector(session_dict)          → list[float]   (len = 19)
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from ikeV2scores import (
-    IKEV2_CLASSICAL_DH_SCORES,
-    IKEV2_PQC_KEM_SCORES,
-    IKEV2_HYBRID_COMPOSITE_KE_SCORES,
-    IKEV2_HYBRID_BINDING_SCORES,
-    IKEV2_SEQUENCE_NUMBER_SCORES,
-    IKEV2_ENCRYPTION_SCORES,
-    IKEV2_PRF_SCORES,
-    IKEV2_INTEGRITY_SCORES,
-    IKEV2_AUTH_METHOD_SCORES,
-    IKEV2_SIGNATURE_PQC_SCORES,
-    IKEV2_HASH_SCORES,
-    IKEV2_CERT_KEY_TYPE_SCORES,
-    IKEV2_CERT_SIG_ALGO_SCORES,
-)
-
-from ikeV2Lookups import (
-    IKEV2_DH_KEY_BITS,
-    IKEV2_PQC_KEM_BITS,
-    IKEV2_AUTH_KEY_BITS,
-    IKEV2_AEAD_ENCR_IDS,
-    IKEV2_SIG_ALGO_KEY_BITS,
-    IKEV2_CERT_KEY_BITS,
-)
+try:
+    from .ikeV2scores import (
+        IKEV2_CLASSICAL_DH_SCORES,
+        IKEV2_PQC_KEM_SCORES,
+        IKEV2_HYBRID_COMPOSITE_KE_SCORES,
+        IKEV2_HYBRID_BINDING_SCORES,
+        IKEV2_SEQUENCE_NUMBER_SCORES,
+        IKEV2_ENCRYPTION_SCORES,
+        IKEV2_PRF_SCORES,
+        IKEV2_INTEGRITY_SCORES,
+        IKEV2_AUTH_METHOD_SCORES,
+        IKEV2_SIGNATURE_PQC_SCORES,
+        IKEV2_HASH_SCORES,
+    )
+    from .ikeV2Lookups import (
+        IKEV2_DH_KEY_BITS,
+        IKEV2_PQC_KEM_BITS,
+        IKEV2_AUTH_KEY_BITS,
+        IKEV2_AEAD_ENCR_IDS,
+        IKEV2_SIG_ALGO_KEY_BITS,
+    )
+except ImportError:
+    from ikeV2scores import (
+        IKEV2_CLASSICAL_DH_SCORES,
+        IKEV2_PQC_KEM_SCORES,
+        IKEV2_HYBRID_COMPOSITE_KE_SCORES,
+        IKEV2_HYBRID_BINDING_SCORES,
+        IKEV2_SEQUENCE_NUMBER_SCORES,
+        IKEV2_ENCRYPTION_SCORES,
+        IKEV2_PRF_SCORES,
+        IKEV2_INTEGRITY_SCORES,
+        IKEV2_AUTH_METHOD_SCORES,
+        IKEV2_SIGNATURE_PQC_SCORES,
+        IKEV2_HASH_SCORES,
+    )
+    from ikeV2Lookups import (
+        IKEV2_DH_KEY_BITS,
+        IKEV2_PQC_KEM_BITS,
+        IKEV2_AUTH_KEY_BITS,
+        IKEV2_AEAD_ENCR_IDS,
+        IKEV2_SIG_ALGO_KEY_BITS,
+    )
 
 
 # ═══════════════════════════════════════════════════════════════════════════
 #  Constants
 # ═══════════════════════════════════════════════════════════════════════════
 
-D = 22  # Vector dimensionality
+D = 19  # Vector dimensionality
 
 DIMENSION_NAMES: list[str] = [
     # --- Phase 1: IKE_SA_INIT ---
@@ -66,13 +84,10 @@ DIMENSION_NAMES: list[str] = [
     "AUTH_SIG_CLASSICAL_KEY_LEN",       # d[13]
     "AUTH_SIG_PQC_ALGO",                # d[14]
     "AUTH_HASH_DIGEST_ALGO",            # d[15]
-    "AUTH_CERT_KEY_TYPE",               # d[16]
-    "AUTH_CERT_KEY_LEN",                # d[17]
-    "AUTH_CERT_SIG_ALGO",               # d[18]
     # --- Phase 3: Protocol & Tunnel ---
-    "PROTO_IKE_VERSION",                # d[19]
-    "PROTO_NOTIFY_16443_EXPLICIT",      # d[20]
-    "PROTO_NAT_TRAVERSAL",             # d[21]
+    "PROTO_IKE_VERSION",                # d[16]
+    "PROTO_NOTIFY_16443_EXPLICIT",      # d[17]
+    "PROTO_NAT_TRAVERSAL",              # d[18]
 ]
 
 
@@ -206,7 +221,6 @@ def build_vector(session: dict) -> list[float]:
     tx      = _init_transforms(session)
     common  = session.get("common", {})
     auth    = session.get("IKE_AUTH", {}).get("authentication", {})
-    cert    = session.get("IKE_AUTH", {}).get("certificate", {})
     child_proposals = session.get("IKE_AUTH", {}).get("child_sa", {}).get("proposals", [])
     notifs  = _notify_types_set(session)
 
@@ -300,9 +314,6 @@ def build_vector(session: dict) -> list[float]:
     auth_type: int | None = auth.get("auth_type")
     sig_pqc_id: int | None = session.get("sig_pqc_id")
     hash_algo_id: int | None = session.get("hash_algo_id")
-    cert_key_len: int | None = session.get("cert_key_len")
-    cert_key_type_oid: str | None = session.get("cert_key_type_oid")
-    cert_sig_oid: str | None = session.get("cert_sig_algo_oid")
 
     # ── d[12]: AUTH_SIG_CLASSICAL_ALGO ─────────────────────────────────
     if auth_type is not None:
@@ -311,7 +322,6 @@ def build_vector(session: dict) -> list[float]:
     # ── d[13]: AUTH_SIG_CLASSICAL_KEY_LEN ──────────────────────────────
     sig_bits = (
         IKEV2_SIG_ALGO_KEY_BITS.get(sig_pqc_id)
-        or IKEV2_CERT_KEY_BITS.get(cert_key_type_oid)
         or IKEV2_AUTH_KEY_BITS.get(auth_type, 0)
     )
     d[13] = min(sig_bits, 256) / 256.0
@@ -328,35 +338,24 @@ def build_vector(session: dict) -> list[float]:
     elif 16431 in notifs:
         d[15] = _extract_best_hash_from_notify(session)
 
-    # ── d[16]–d[18]: Certificate fields (require X.509 parsing) ───────
-    if cert_key_type_oid is not None:
-        d[16] = IKEV2_CERT_KEY_TYPE_SCORES.get(cert_key_type_oid, 0.0)
+    # ── Phase 3: Protocol & Tunnel (d[16]–d[18]) ─────────────────────
 
-    # ── d[17]: AUTH_CERT_KEY_LEN ──────────────────────────────────────
-    cert_bits = (
-        IKEV2_CERT_KEY_BITS.get(cert_key_type_oid)
-        or cert_key_len
-        or 0
-    )
-    d[17] = min(cert_bits, 256) / 256.0
+    # ── d[16]: PROTO_IKE_VERSION  (always 1.0 for IKEv2) ─────────────
+    d[16] = 1.0
 
-    if cert_sig_oid is not None:
-        d[18] = IKEV2_CERT_SIG_ALGO_SCORES.get(cert_sig_oid, 0.0)
+    # ── d[17]: PROTO_NOTIFY_16443_EXPLICIT ────────────────────────────
+    d[17] = 1.0 if 16443 in notifs else 0.0
 
-    # ── Phase 3: Protocol & Tunnel (d[19]–d[21]) ─────────────────────
-
-    # ── d[19]: PROTO_IKE_VERSION  (always 1.0 for IKEv2) ─────────────
-    d[19] = 1.0
-
-    # ── d[20]: PROTO_NOTIFY_16443_EXPLICIT ────────────────────────────
-    d[20] = 1.0 if 16443 in notifs else 0.0
-
-    # ── d[21]: PROTO_NAT_TRAVERSAL ────────────────────────────────────
+    # ── d[18]: PROTO_NAT_TRAVERSAL ────────────────────────────────────
     src_port = common.get("src_port")
     dst_port = common.get("dst_port")
     if src_port == 4500 or dst_port == 4500:
-        d[21] = 0.5     # NAT-T UDP-encapsulated ESP
+        d[18] = 0.5     # NAT-T UDP-encapsulated ESP
     else:
-        d[21] = 1.0     # native ESP  (port 500 ↔ 500)
+        d[18] = 1.0     # native ESP  (port 500 ↔ 500)
 
     return d
+
+
+# Backward-compatible alias
+build_19d_vector = build_vector

@@ -20,7 +20,7 @@ class baseVector:
         return len(self.vector)
 
     def to_numpy(self, normalize: bool = False):
-        """Convert vector to a numpy.ndarray(shape=(22,), dtype=np.float32).
+        """Convert vector to a numpy.ndarray(shape=(19,), dtype=np.float32).
 
         If normalize is True, returns unit L2-normalized vector for cosine similarity.
         """
@@ -102,12 +102,9 @@ CNSA2_VECTOR_RAW = [
     1.00,  # d[13]  AUTH_SIG_CLASSICAL_KEY_LEN (256 bits / 256)
     1.00,  # d[14]  AUTH_SIG_PQC_ALGO (ML-DSA-87 / ID 20)
     1.00,  # d[15]  AUTH_HASH_DIGEST_ALGO (SHA2-384 / SHA2-512)
-    1.00,  # d[16]  AUTH_CERT_KEY_TYPE (ML-DSA-87 OID)
-    1.00,  # d[17]  AUTH_CERT_KEY_LEN (256 bits / 256)
-    1.00,  # d[18]  AUTH_CERT_SIG_ALGO (ML-DSA-87 OID)
-    1.00,  # d[19]  PROTO_IKE_VERSION (IKEv2)
-    1.00,  # d[20]  PROTO_NOTIFY_16443_EXPLICIT (RFC 7427 present)
-    1.00,  # d[21]  PROTO_NAT_TRAVERSAL (Native ESP)
+    1.00,  # d[16]  PROTO_IKE_VERSION (IKEv2)
+    1.00,  # d[17]  PROTO_NOTIFY_16443_EXPLICIT (RFC 7427 present)
+    1.00,  # d[18]  PROTO_NAT_TRAVERSAL (Native ESP)
 ]
 
 CNSA2_VECTOR = baseVector(
@@ -182,12 +179,9 @@ NIST_PQC_TRANSITIONAL_VECTOR_RAW = [
     0.50,  # d[13]  AUTH_SIG_CLASSICAL_KEY_LEN (128 bits / 256)
     0.00,  # d[14]  AUTH_SIG_PQC_ALGO (None)
     0.60,  # d[15]  AUTH_HASH_DIGEST_ALGO (SHA2-256)
-    0.75,  # d[16]  AUTH_CERT_KEY_TYPE (id-ecPublicKey)
-    0.50,  # d[17]  AUTH_CERT_KEY_LEN (128 bits / 256)
-    0.60,  # d[18]  AUTH_CERT_SIG_ALGO (ecdsa-with-SHA256)
-    1.00,  # d[19]  PROTO_IKE_VERSION (IKEv2)
-    1.00,  # d[20]  PROTO_NOTIFY_16443_EXPLICIT (RFC 7427 present)
-    1.00,  # d[21]  PROTO_NAT_TRAVERSAL (Native ESP)
+    1.00,  # d[16]  PROTO_IKE_VERSION (IKEv2)
+    1.00,  # d[17]  PROTO_NOTIFY_16443_EXPLICIT (RFC 7427 present)
+    1.00,  # d[18]  PROTO_NAT_TRAVERSAL (Native ESP)
 ]
 
 NIST_PQC_TRANSITIONAL_VECTOR = baseVector(
@@ -258,12 +252,9 @@ RFC8247_CLASSICAL_VECTOR_RAW = [
     0.44,  # d[13]  AUTH_SIG_CLASSICAL_KEY_LEN (112 bits / 256 = 0.4375)
     0.00,  # d[14]  AUTH_SIG_PQC_ALGO (None)
     0.60,  # d[15]  AUTH_HASH_DIGEST_ALGO (SHA2-256)
-    0.50,  # d[16]  AUTH_CERT_KEY_TYPE (Standard RSA-2048 OID)
-    0.44,  # d[17]  AUTH_CERT_KEY_LEN (112 bits / 256 = 0.4375)
-    0.60,  # d[18]  AUTH_CERT_SIG_ALGO (sha256WithRSAEncryption)
-    1.00,  # d[19]  PROTO_IKE_VERSION (IKEv2)
-    0.00,  # d[20]  PROTO_NOTIFY_16443_EXPLICIT (RFC 7427 absent)
-    1.00,  # d[21]  PROTO_NAT_TRAVERSAL (Native ESP)
+    1.00,  # d[16]  PROTO_IKE_VERSION (IKEv2)
+    0.00,  # d[17]  PROTO_NOTIFY_16443_EXPLICIT (RFC 7427 absent)
+    1.00,  # d[18]  PROTO_NAT_TRAVERSAL (Native ESP)
 ]
 
 RFC8247_CLASSICAL_VECTOR = baseVector(
@@ -328,12 +319,9 @@ NIST_SP800_131A_DEPRECATED_VECTOR_RAW = [
     0.00,  # d[13]  AUTH_SIG_CLASSICAL_KEY_LEN (0 bits)
     0.00,  # d[14]  AUTH_SIG_PQC_ALGO (None)
     0.00,  # d[15]  AUTH_HASH_DIGEST_ALGO (MD5 / ID 0 / SHA-1)
-    0.00,  # d[16]  AUTH_CERT_KEY_TYPE (Legacy DSA OID)
-    0.00,  # d[17]  AUTH_CERT_KEY_LEN (0 bits)
-    0.00,  # d[18]  AUTH_CERT_SIG_ALGO (dsa-with-sha1)
-    0.00,  # d[19]  PROTO_IKE_VERSION (IKEv1 - RFC 9395 Deprecated)
-    0.00,  # d[20]  PROTO_NOTIFY_16443_EXPLICIT (RFC 7427 absent)
-    0.50,  # d[21]  PROTO_NAT_TRAVERSAL (NAT-T UDP 4500)
+    0.00,  # d[16]  PROTO_IKE_VERSION (IKEv1 - RFC 9395 Deprecated)
+    0.00,  # d[17]  PROTO_NOTIFY_16443_EXPLICIT (RFC 7427 absent)
+    0.50,  # d[18]  PROTO_NAT_TRAVERSAL (NAT-T UDP 4500)
 ]
 
 NIST_SP800_131A_DEPRECATED_VECTOR = baseVector(

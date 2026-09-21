@@ -457,5 +457,130 @@ def on_packet_sniffed(pkt):
         print(f"   Metrics: {v.packet_count} pkts, {v.duration_seconds:.2f}s duration")
 ```
 
+---
+
+## 6. Dedicated PKI & Certificate Health Engine (`certHealthEngine.py`)
+
+Because `IKE_AUTH` inner payloads (Identity, Certificates, Authentication) are **always encrypted on the wire** (RFC 7296 §3.8), passive packet sniffing cannot observe raw X.509 chains without session keys. 
+
+The **`certHealthEngine`** runs as a dedicated, decoupled engine that ingests parsed credentials from daemon management APIs (such as strongSwan VICI / `swanctl` or Libreswan):
+
+### Core Capabilities
+* **Target Encoding**: Dedicated to **Encoding 4 (`X.509 Certificate - Signature`)**. Non-standard encodings are gracefully bypassed with an informative notice.
+* **Full Chain Auditing**: Audits both **Initiator** and **Responder** certificate chains (Leaf + Intermediate CAs).
+* **Operational Health**: Detects expired certificates (`not_after < now`), not-yet-valid certificates (`not_before > now`), and emits early warnings for certificates expiring within 30 days or 7 days.
+* **Standards-Based Rating**: Classifies each certificate into **CNSA 2.0 (Post-Quantum 256-bit)**, **NIST Modern (128/192-bit)**, **RFC 8247 Acceptable (112-bit)**, or **Deprecated/Broken**.
+* **Hardcoded Reasons & Remediation**: Every single check outputs an exact reason and administrative recommendation (e.g. `swanctl --load-creds`, target algorithms like ML-DSA-87 / ECDSA P-384).
+
+### API Usage Example
+
+```python
+from certHealthEngine import evaluate_auth_health, CertHealthStatus
+
+# 1. Ingest credentials from daemon API or test fixture
+auth_metadata = {
+    "source": "vici",
+    "daemon_type": "strongswan",
+    "initiator": {
+        "identity": "client.example.com",
+        "auth_method": 14,
+        "certificates": [
+            {
+                "encoding": 4,
+                "type": "end_entity",
+                "subject": "CN=client.example.com",
+                "issuer": "CN=Acme Intermediate CA",
+                "cert_key_type_oid": "1.2.840.10045.2.1",       # ECDSA P-384
+                "cert_key_len": 384,
+                "cert_sig_algo_oid": "1.2.840.10045.4.3.3",     # SHA-384
+                "not_before": 1700000000,
+                "not_after": 1731550000,
+                "is_ca": False,
+                "san": ["client.example.com"],
+                "key_usage": ["digitalSignature"],
+            }
+        ]
+    },
+    "responder": {
+        "identity": "198.51.100.1",
+        "auth_method": 14,
+        "certificates": [
+            {
+                "encoding": 4,
+                "type": "end_entity",
+                "subject": "CN=vpn-gw.example.com",
+                "issuer": "CN=Acme Intermediate CA",
+                "cert_key_type_oid": "1.2.840.113549.1.1.1",   # RSA-2048
+                "cert_key_len": 2048,
+                "cert_sig_algo_oid": "1.2.840.113549.1.1.11",  # SHA-256
+                "not_before": 1700000000,
+                "not_after": 1731550000,
+                "is_ca": False,
+                "san": ["198.51.100.1"],
+                "key_usage": ["digitalSignature"],
+            }
+        ]
+    }
+}
+
+# 2. Evaluate certificate health
+report = evaluate_auth_health(auth_metadata)
+
+# 3. Access structured results or formatted text report
+print(f"Overall Health: {report.overall_health_status.value}")
+print(f"Compliant:      {report.is_compliant}")
+
+# Format for terminal CLI / log alerts:
+print(report.generate_summary())
+
+# Format as JSON dictionary for web dashboard / SIEM:
+json_report = report.to_dict()
+```
+
+---
+
+## 7. 19-Dimensional Wire Cryptographic Vector Engine (`vectorEngine.py`)
+
+The vector engine projects wire-level IKEv2 session parameters into a normalized **19-dimensional score vector** ($D=19$). All dimensions are normalized to $[0.0, 1.0]$:
+
+| Index | Feature Dimension | Description | Standard Reference |
+| :---: | :--- | :--- | :--- |
+| **$d[0]$** | `INIT_KEM_CLASSICAL_ALGO` | Classical Diffie-Hellman / ECDH score | RFC 8247 §2.4 |
+| **$d[1]$** | `INIT_KEM_CLASSICAL_KEY_LEN` | Classical DH security bit strength / 256 | NIST SP 800-131A |
+| **$d[2]$** | `INIT_KEM_PQC_PRESENCE` | Post-Quantum KEM algorithm score | NIST FIPS 203 (ML-KEM) |
+| **$d[3]$** | `INIT_KEM_PQC_KEY_LEN` | PQC security bit strength / 256 | NIST Category 1–5 |
+| **$d[4]$** | `INIT_KEM_PQC_HYBRID_BINDING` | Multi-KE hybrid binding status | RFC 9370 |
+| **$d[5]$** | `INIT_KEM_MULTI_KE_ROUNDS` | Additional Key Exchange rounds ($\min(rounds, 3)/3$) | RFC 9370 |
+| **$d[6]$** | `INIT_KEM_PFS_STATUS` | Perfect Forward Secrecy in Child SA | RFC 7296 §1.3 |
+| **$d[7]$** | `INIT_SA_ENCR_ALGO` | Encryption algorithm score | RFC 8247 §2.1 |
+| **$d[8]$** | `INIT_SA_ENCR_KEY_LEN` | Encryption key length / 256 | RFC 8221 |
+| **$d[9]$** | `INIT_SA_PRF_ALGO` | Pseudo-Random Function score | RFC 8247 §2.2 |
+| **$d[10]$** | `INIT_SA_INTEG_ALGO` | Integrity algorithm score (AEAD + NONE = 1.0) | RFC 8247 §2.3 |
+| **$d[11]$** | `INIT_SA_ESN_CAPABILITY` | Extended Sequence Numbers (64-bit = 1.0, 32-bit = 0.0) | RFC 7296 |
+| **$d[12]$** | `AUTH_SIG_CLASSICAL_ALGO` | Authentication method score (Digital Sig = 1.0) | RFC 7427 |
+| **$d[13]$** | `AUTH_SIG_CLASSICAL_KEY_LEN` | Signature key length / 256 | NIST SP 800-52r2 |
+| **$d[14]$** | `AUTH_SIG_PQC_ALGO` | PQC signature score (ML-DSA) | NIST FIPS 204 |
+| **$d[15]$** | `AUTH_HASH_DIGEST_ALGO` | Hash digest score (via Notify 16431 data) | RFC 7427 |
+| **$d[16]$** | `PROTO_IKE_VERSION` | IKE protocol version (1.0 for IKEv2) | RFC 7296 / RFC 9395 |
+| **$d[17]$** | `PROTO_NOTIFY_16443_EXPLICIT`| Notify 16443 (SIGNATURE_HASH_ALGORITHMS) present | RFC 7427 |
+| **$d[18]$** | `PROTO_NAT_TRAVERSAL` | NAT-T UDP-4500 (0.5) vs native ESP UDP-500 (1.0) | RFC 3948 |
+
+### Vector Extraction & Cosine Similarity Example
+
+```python
+from vectorEngine import build_vector
+from cosineSimilarity import classify_session
+
+# 1. Generate 19-D vector from session dictionary
+vector_19d = build_vector(session_dict)
+print("19-D Vector:", vector_19d)
+
+# 2. Classify session against CNSA 2.0, NIST PQC, and RFC 8247 policy anchors
+classification = classify_session(vector_19d)
+print(f"Matched Policy Profile: {classification['closest_profile']}")
+print(f"Cosine Similarity:      {classification['highest_similarity']:.4f}")
+```
+
+
 
 

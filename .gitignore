@@ -1,8 +1,4 @@
-# Test files & test artifacts
-test_*.py
-*_test.py
-tests/
-test/
+# Test artifacts
 .pytest_cache/
 .coverage
 htmlcov/

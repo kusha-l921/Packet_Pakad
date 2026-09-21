@@ -8,8 +8,12 @@ try:
 except ImportError:
     np = None
 
-from baseVectors import POLICY_ANCHORS, baseVector
-from vectorEngine import build_vector
+try:
+    from .baseVectors import POLICY_ANCHORS, baseVector
+    from .vectorEngine import build_vector
+except ImportError:
+    from baseVectors import POLICY_ANCHORS, baseVector
+    from vectorEngine import build_vector
 
 
 def cosine_similarity(

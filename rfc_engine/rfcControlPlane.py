@@ -21,31 +21,63 @@ from __future__ import annotations
 
 from typing import Any
 
-from rfcEngineModels import (
-    ApplicableContext,
-    HybridClassification,
-    PqcClassification,
-    RequirementLevel,
-    RuleCategory,
-    RuleEvaluationResult,
-    RuleStatus,
-    SecurityPosture,
-    Severity,
-    SpecSourceType,
-)
-from rfcRegistries import (
-    AEAD_ENCR_IDS,
-    CERT_KEY_TYPE_OIDS,
-    CERT_SIG_ALGO_OIDS,
-    ESP_ENCR_REGISTRY,
-    ESP_INTEG_REGISTRY,
-    IKEV2_AUTH_METHODS_REGISTRY,
-    IKEV2_DH_REGISTRY,
-    IKEV2_ENCR_REGISTRY,
-    IKEV2_INTEG_REGISTRY,
-    IKEV2_PRF_REGISTRY,
-    PQC_SIG_ALGO_REGISTRY,
-)
+try:
+    from .rfcEngineModels import (
+        ApplicableContext,
+        HybridClassification,
+        PqcClassification,
+        RequirementLevel,
+        RuleCategory,
+        RuleEvaluationResult,
+        RuleStatus,
+        SecurityPosture,
+        Severity,
+        SpecSourceType,
+    )
+    from .rfcRegistries import (
+        AEAD_ENCR_IDS,
+        CERT_KEY_TYPE_OIDS,
+        CERT_SIG_ALGO_OIDS,
+        ESP_ENCR_REGISTRY,
+        ESP_INTEG_REGISTRY,
+        IKEV2_AUTH_METHODS_REGISTRY,
+        IKEV2_DH_REGISTRY,
+        IKEV2_ENCR_REGISTRY,
+        IKEV2_INTEG_REGISTRY,
+        IKEV2_PRF_REGISTRY,
+        PQC_SIG_ALGO_REGISTRY,
+    )
+except ImportError:
+    from rfcEngineModels import (
+        ApplicableContext,
+        HybridClassification,
+        PqcClassification,
+        RequirementLevel,
+        RuleCategory,
+        RuleEvaluationResult,
+        RuleStatus,
+        SecurityPosture,
+        Severity,
+        SpecSourceType,
+    )
+    from rfcRegistries import (
+        AEAD_ENCR_IDS,
+        CERT_KEY_TYPE_OIDS,
+        CERT_SIG_ALGO_OIDS,
+        ESP_ENCR_REGISTRY,
+        ESP_INTEG_REGISTRY,
+        IKEV2_AUTH_METHODS_REGISTRY,
+        IKEV2_DH_REGISTRY,
+        IKEV2_ENCR_REGISTRY,
+        IKEV2_INTEG_REGISTRY,
+        IKEV2_PRF_REGISTRY,
+        PQC_SIG_ALGO_REGISTRY,
+    )
+
+try:
+    from cert_engine.certHealthEngine import evaluate_auth_health
+except ImportError:
+    from certHealthEngine import evaluate_auth_health
 
 
 class RfcControlPlaneEngine:
@@ -1126,7 +1158,35 @@ class RfcControlPlaneEngine:
                     spec_source=SpecSourceType.PUBLISHED_RFC.value,
                 ))
 
-        # Certificate Auditing (RFC 7296 §3.6)
+        # Dedicated PKI & Certificate Health Auditing if auth_metadata is provided
+        if "auth_metadata" in session:
+            cert_report = evaluate_auth_health(session["auth_metadata"])
+            for finding in cert_report.all_findings:
+                status = RuleStatus.PASS if finding.status.value == "PASS" else (RuleStatus.WARNING if finding.status.value == "WARNING" else RuleStatus.FAIL)
+                sev = (
+                    Severity.CRITICAL if finding.severity.value == "CRITICAL"
+                    else Severity.HIGH if finding.severity.value == "HIGH"
+                    else Severity.MEDIUM if finding.severity.value == "MEDIUM"
+                    else Severity.INFORMATIONAL
+                )
+                results.append(RuleEvaluationResult(
+                    rule_id=finding.rule_id,
+                    rfc="RFC 5280 / RFC 7427",
+                    section="§4",
+                    category=RuleCategory.CAT7_AUTHENTICATION.value,
+                    condition=f"{finding.target}: {finding.condition}",
+                    requirement_level=RequirementLevel.MUST.value if status == RuleStatus.FAIL else RequirementLevel.SHOULD.value,
+                    applicable_context=ApplicableContext.HANDSHAKE.value,
+                    status=status,
+                    severity=sev,
+                    reason=f"{finding.reason} | Remediation: {finding.remediation}",
+                    observed_value=finding.observed,
+                    expected_requirement=finding.expected,
+                    spec_source=SpecSourceType.PUBLISHED_RFC.value,
+                ))
+            return results
+
+        # Legacy Certificate Auditing (RFC 7296 §3.6)
         cert_sig_oid = (
             cert_data.get("cert_sig_algo_oid")
             or session.get("cert_sig_algo_oid")
