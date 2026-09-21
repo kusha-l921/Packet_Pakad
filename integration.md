@@ -405,4 +405,57 @@ engine.reset_telemetry_windows(spi="0x12345678")
 engine.reset_telemetry_windows()
 ```
 
+---
+
+### Example 5: Dual-Engine Real-Time Live Capture (RFC Compliance + ML Flow Classification)
+
+The platform supports two distinct, complementary sliding windows operating on real-time ESP traffic:
+
+1. **RFC Anti-Replay Sliding Window (`RfcRuleEngine.process_esp_packet`)**:
+   - **RFC 4303 §3.4.3** deterministic sequence number bitmask over $[H - 64 + 1, H]$.
+   - Keyed per **SPI** (Child SA direction).
+   - Validates anti-replay integrity, sequence rollover, and port mappings.
+2. **ML Flow Feature Extraction Sliding Window (`FlowEngine.process_packet`)**:
+   - Circular FIFO queue of length $N$ (default 200 packets) with stride step $S$ (default 25) and 5.0s idle timeout.
+   - Keyed per **Bidirectional IP Pair** `(min(src, dst), max(src, dst))`.
+   - Computes 25 statistical flow metrics (IAT, packet/byte ratios, throughput) for ML traffic classification models.
+
+#### Unified Live Capture with `RealtimePacketDispatcher`:
+
+```python
+from FlowEngine import FlowEngine, RealtimePacketDispatcher
+from metadataExtractor import extract_esp_metadata
+from rfcRuleEngine import RfcRuleEngine
+
+# 1. Initialize engines and dispatcher (optionally load your trained ML classifier)
+# import joblib
+# ml_model = joblib.load("traffic_classifier.pkl")
+ml_model = None
+
+dispatcher = RealtimePacketDispatcher(
+    rfc_engine=RfcRuleEngine(replay_window_size=64),
+    flow_engine=FlowEngine(window_size=200, stride=25, idle_timeout=5.0),
+    ml_model=ml_model,
+)
+
+def on_packet_sniffed(pkt):
+    esp_meta = extract_esp_metadata(pkt)
+    if not esp_meta:
+        return
+
+    # Dispatch to BOTH engines simultaneously in a single call
+    rfc_results, flow_verdicts = dispatcher.dispatch(esp_meta)
+
+    # 1. Inspect RFC Compliance Findings
+    for r in rfc_results:
+        if r.status.value == "FAIL":
+            print(f"🚨 [RFC ALERT] {r.rule_id} violated: {r.reason}")
+
+    # 2. Inspect Machine Learning Flow Classification Verdicts
+    for v in flow_verdicts:
+        print(f"📊 [ML VERDICT] Flow {v.flow_key} ({v.trigger_type}): {v.verdict}")
+        print(f"   Metrics: {v.packet_count} pkts, {v.duration_seconds:.2f}s duration")
+```
+
+
 
