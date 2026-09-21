@@ -21,63 +21,32 @@ from __future__ import annotations
 
 from typing import Any
 
-try:
-    from .rfcEngineModels import (
-        ApplicableContext,
-        HybridClassification,
-        PqcClassification,
-        RequirementLevel,
-        RuleCategory,
-        RuleEvaluationResult,
-        RuleStatus,
-        SecurityPosture,
-        Severity,
-        SpecSourceType,
-    )
-    from .rfcRegistries import (
-        AEAD_ENCR_IDS,
-        CERT_KEY_TYPE_OIDS,
-        CERT_SIG_ALGO_OIDS,
-        ESP_ENCR_REGISTRY,
-        ESP_INTEG_REGISTRY,
-        IKEV2_AUTH_METHODS_REGISTRY,
-        IKEV2_DH_REGISTRY,
-        IKEV2_ENCR_REGISTRY,
-        IKEV2_INTEG_REGISTRY,
-        IKEV2_PRF_REGISTRY,
-        PQC_SIG_ALGO_REGISTRY,
-    )
-except ImportError:
-    from rfcEngineModels import (
-        ApplicableContext,
-        HybridClassification,
-        PqcClassification,
-        RequirementLevel,
-        RuleCategory,
-        RuleEvaluationResult,
-        RuleStatus,
-        SecurityPosture,
-        Severity,
-        SpecSourceType,
-    )
-    from rfcRegistries import (
-        AEAD_ENCR_IDS,
-        CERT_KEY_TYPE_OIDS,
-        CERT_SIG_ALGO_OIDS,
-        ESP_ENCR_REGISTRY,
-        ESP_INTEG_REGISTRY,
-        IKEV2_AUTH_METHODS_REGISTRY,
-        IKEV2_DH_REGISTRY,
-        IKEV2_ENCR_REGISTRY,
-        IKEV2_INTEG_REGISTRY,
-        IKEV2_PRF_REGISTRY,
-        PQC_SIG_ALGO_REGISTRY,
-    )
-
-try:
-    from cert_engine.certHealthEngine import evaluate_auth_health
-except ImportError:
-    from certHealthEngine import evaluate_auth_health
+from .rfcEngineModels import (
+    ApplicableContext,
+    HybridClassification,
+    PqcClassification,
+    RequirementLevel,
+    RuleCategory,
+    RuleEvaluationResult,
+    RuleStatus,
+    SecurityPosture,
+    Severity,
+    SpecSourceType,
+)
+from .rfcRegistries import (
+    AEAD_ENCR_IDS,
+    CERT_KEY_TYPE_OIDS,
+    CERT_SIG_ALGO_OIDS,
+    ESP_ENCR_REGISTRY,
+    ESP_INTEG_REGISTRY,
+    IKEV2_AUTH_METHODS_REGISTRY,
+    IKEV2_DH_REGISTRY,
+    IKEV2_ENCR_REGISTRY,
+    IKEV2_INTEG_REGISTRY,
+    IKEV2_PRF_REGISTRY,
+    PQC_SIG_ALGO_REGISTRY,
+)
+from cert_engine.certHealthEngine import evaluate_auth_health
 
 
 class RfcControlPlaneEngine:

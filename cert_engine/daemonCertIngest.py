@@ -23,20 +23,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
-try:
-    from .certHealthEngine import (
-        CertHealthEngine,
-        CertHealthReport,
-        evaluate_auth_health,
-        parse_x509_certificate,
-    )
-except ImportError:
-    from certHealthEngine import (
-        CertHealthEngine,
-        CertHealthReport,
-        evaluate_auth_health,
-        parse_x509_certificate,
-    )
+from .certHealthEngine import (
+    CertHealthEngine,
+    CertHealthReport,
+    evaluate_auth_health,
+    parse_x509_certificate,
+)
 
 
 def load_cert_bytes(file_path: str | Path) -> bytes:

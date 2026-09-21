@@ -15,48 +15,26 @@ from __future__ import annotations
 
 from typing import Any
 
-try:
-    from .ikeV2scores import (
-        IKEV2_CLASSICAL_DH_SCORES,
-        IKEV2_PQC_KEM_SCORES,
-        IKEV2_HYBRID_COMPOSITE_KE_SCORES,
-        IKEV2_HYBRID_BINDING_SCORES,
-        IKEV2_SEQUENCE_NUMBER_SCORES,
-        IKEV2_ENCRYPTION_SCORES,
-        IKEV2_PRF_SCORES,
-        IKEV2_INTEGRITY_SCORES,
-        IKEV2_AUTH_METHOD_SCORES,
-        IKEV2_SIGNATURE_PQC_SCORES,
-        IKEV2_HASH_SCORES,
-    )
-    from .ikeV2Lookups import (
-        IKEV2_DH_KEY_BITS,
-        IKEV2_PQC_KEM_BITS,
-        IKEV2_AUTH_KEY_BITS,
-        IKEV2_AEAD_ENCR_IDS,
-        IKEV2_SIG_ALGO_KEY_BITS,
-    )
-except ImportError:
-    from ikeV2scores import (
-        IKEV2_CLASSICAL_DH_SCORES,
-        IKEV2_PQC_KEM_SCORES,
-        IKEV2_HYBRID_COMPOSITE_KE_SCORES,
-        IKEV2_HYBRID_BINDING_SCORES,
-        IKEV2_SEQUENCE_NUMBER_SCORES,
-        IKEV2_ENCRYPTION_SCORES,
-        IKEV2_PRF_SCORES,
-        IKEV2_INTEGRITY_SCORES,
-        IKEV2_AUTH_METHOD_SCORES,
-        IKEV2_SIGNATURE_PQC_SCORES,
-        IKEV2_HASH_SCORES,
-    )
-    from ikeV2Lookups import (
-        IKEV2_DH_KEY_BITS,
-        IKEV2_PQC_KEM_BITS,
-        IKEV2_AUTH_KEY_BITS,
-        IKEV2_AEAD_ENCR_IDS,
-        IKEV2_SIG_ALGO_KEY_BITS,
-    )
+from .ikeV2scores import (
+    IKEV2_CLASSICAL_DH_SCORES,
+    IKEV2_PQC_KEM_SCORES,
+    IKEV2_HYBRID_COMPOSITE_KE_SCORES,
+    IKEV2_HYBRID_BINDING_SCORES,
+    IKEV2_SEQUENCE_NUMBER_SCORES,
+    IKEV2_ENCRYPTION_SCORES,
+    IKEV2_PRF_SCORES,
+    IKEV2_INTEGRITY_SCORES,
+    IKEV2_AUTH_METHOD_SCORES,
+    IKEV2_SIGNATURE_PQC_SCORES,
+    IKEV2_HASH_SCORES,
+)
+from .ikeV2Lookups import (
+    IKEV2_DH_KEY_BITS,
+    IKEV2_PQC_KEM_BITS,
+    IKEV2_AUTH_KEY_BITS,
+    IKEV2_AEAD_ENCR_IDS,
+    IKEV2_SIG_ALGO_KEY_BITS,
+)
 
 
 # ═══════════════════════════════════════════════════════════════════════════

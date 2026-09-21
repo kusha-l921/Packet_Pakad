@@ -16,10 +16,9 @@ Sources:
 
 from __future__ import annotations
 
-try:
-    from .rfcEngineModels import RequirementLevel, SpecSourceType
-except ImportError:
-    from rfcEngineModels import RequirementLevel, SpecSourceType
+from typing import Any
+
+from .rfcEngineModels import RequirementLevel, SpecSourceType
 
 
 # RFC 8247 §2.1: IKEv2 Encryption Algorithms (Transform Type 1)

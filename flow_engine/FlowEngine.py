@@ -2,10 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any
-try:
-    from .FlowRecord import FlowRecord
-except ImportError:
-    from FlowRecord import FlowRecord
+from .FlowRecord import FlowRecord
 
 
 @dataclass
@@ -172,10 +169,7 @@ class RealtimePacketDispatcher:
         flow_engine: FlowEngine | None = None,
         ml_model: Any | None = None,
     ) -> None:
-        try:
-            from rfc_engine import RfcRuleEngine
-        except ImportError:
-            from rfcRuleEngine import RfcRuleEngine
+        from rfc_engine import RfcRuleEngine
 
         self.rfc_engine = rfc_engine or RfcRuleEngine()
         self.flow_engine = flow_engine or FlowEngine()

@@ -12,26 +12,15 @@ from __future__ import annotations
 from typing import Any
 import ipaddress
 
-try:
-    from .rfcEngineModels import (
-        ApplicableContext,
-        RequirementLevel,
-        RuleCategory,
-        RuleEvaluationResult,
-        RuleStatus,
-        Severity,
-        SpecSourceType,
-    )
-except ImportError:
-    from rfcEngineModels import (
-        ApplicableContext,
-        RequirementLevel,
-        RuleCategory,
-        RuleEvaluationResult,
-        RuleStatus,
-        Severity,
-        SpecSourceType,
-    )
+from .rfcEngineModels import (
+    ApplicableContext,
+    RequirementLevel,
+    RuleCategory,
+    RuleEvaluationResult,
+    RuleStatus,
+    Severity,
+    SpecSourceType,
+)
 
 
 class SlidingWindowReplayDetector:

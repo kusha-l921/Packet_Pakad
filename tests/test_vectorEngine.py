@@ -47,42 +47,23 @@ def _approx(a, b, tol=1e-6):
     assert abs(a - b) < tol, f"expected ~{b}, got {a}"
 
 
-try:
-    from vector_engine.vectorEngine import (
-        D, DIMENSION_NAMES,
-        merge_session_metadata,
-        build_vector,
-    )
-    from vector_engine import baseVectors, ikeV2IDs, ikeV2Lookups
-    from vector_engine.baseVectors import (
-        POLICY_ANCHORS,
-        NIST_PQC_TRANSITIONAL_VECTOR,
-        NIST_PQC_TRANSITIONAL_DICT,
-        RFC8247_CLASSICAL_VECTOR,
-        RFC8247_CLASSICAL_DICT,
-        NIST_SP800_131A_DEPRECATED_VECTOR,
-        NIST_SP800_131A_DEPRECATED_DICT,
-        CNSA2_VECTOR,
-        baseVector,
-    )
-except ImportError:
-    from vectorEngine import (
-        D, DIMENSION_NAMES,
-        merge_session_metadata,
-        build_vector,
-    )
-    import baseVectors, ikeV2IDs, ikeV2Lookups
-    from baseVectors import (
-        POLICY_ANCHORS,
-        NIST_PQC_TRANSITIONAL_VECTOR,
-        NIST_PQC_TRANSITIONAL_DICT,
-        RFC8247_CLASSICAL_VECTOR,
-        RFC8247_CLASSICAL_DICT,
-        NIST_SP800_131A_DEPRECATED_VECTOR,
-        NIST_SP800_131A_DEPRECATED_DICT,
-        CNSA2_VECTOR,
-        baseVector,
-    )
+from vector_engine.vectorEngine import (
+    D, DIMENSION_NAMES,
+    merge_session_metadata,
+    build_vector,
+)
+from vector_engine import baseVectors, ikeV2IDs, ikeV2Lookups
+from vector_engine.baseVectors import (
+    POLICY_ANCHORS,
+    NIST_PQC_TRANSITIONAL_VECTOR,
+    NIST_PQC_TRANSITIONAL_DICT,
+    RFC8247_CLASSICAL_VECTOR,
+    RFC8247_CLASSICAL_DICT,
+    NIST_SP800_131A_DEPRECATED_VECTOR,
+    NIST_SP800_131A_DEPRECATED_DICT,
+    CNSA2_VECTOR,
+    baseVector,
+)
 
 
 # ═══════════════════════════════════════════════════════════════════════════

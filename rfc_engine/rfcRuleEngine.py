@@ -10,26 +10,15 @@ from __future__ import annotations
 
 from typing import Any
 
-try:
-    from .rfcControlPlane import RfcControlPlaneEngine
-    from .rfcEngineModels import (
-        CategoryComplianceSummary,
-        EngineReport,
-        RuleCategory,
-        RuleEvaluationResult,
-        RuleStatus,
-    )
-    from .rfcRuntimeTelemetry import RfcRuntimeTelemetryEngine
-except ImportError:
-    from rfcControlPlane import RfcControlPlaneEngine
-    from rfcEngineModels import (
-        CategoryComplianceSummary,
-        EngineReport,
-        RuleCategory,
-        RuleEvaluationResult,
-        RuleStatus,
-    )
-    from rfcRuntimeTelemetry import RfcRuntimeTelemetryEngine
+from .rfcControlPlane import RfcControlPlaneEngine
+from .rfcEngineModels import (
+    CategoryComplianceSummary,
+    EngineReport,
+    RuleCategory,
+    RuleEvaluationResult,
+    RuleStatus,
+)
+from .rfcRuntimeTelemetry import RfcRuntimeTelemetryEngine
 
 
 class RfcRuleEngine:
