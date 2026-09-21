@@ -41,8 +41,6 @@ $RECYCLE.BIN/
 scratch/
 
 # Specific ignored modules
-metadataExtractor.py
 ikeV1IDs.py
-ikeV2IDs.py
 ikeV1scores.py
 
