@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Environments
+.venv/
+env/
+venv/
+ENV/
+
+# Testing caches
+.pytest_cache/
+
+# IDE / Editor artifacts
+.idea/
+.vscode/
+*.swp
+*~
+
+# Generated storage index:
+# The index files (storage/index/*.json) are 100% reproducible artifacts rebuilt via:
+#   python scripts/build_knowledge_index.py
+# A baseline index is retained in version control for instant zero-step evaluation,
+# but temporary scratch indices should not be committed.

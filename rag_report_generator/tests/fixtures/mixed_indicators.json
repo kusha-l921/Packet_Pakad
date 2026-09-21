@@ -1,0 +1,162 @@
+{
+  "integration_schema_version": "1.0",
+  "analysis_metadata": {
+    "file_name": "synthetic_mixed_indicators.pcap",
+    "file_type": "pcap",
+    "total_packets": 18500,
+    "readable": true,
+    "analysis_status": "SUCCESS",
+    "engine_version": "2.0.0",
+    "feature_schema_version": "1.0",
+    "evaluation_mode": "GROUP_ISOLATED",
+    "dataset_provenance": {
+      "origin": "synthetic_test_fixture",
+      "capture_type": "fixture_mixed_indicators"
+    },
+    "model_information": {
+      "model_id": "gradient_boosting_traffic_classifier_v1",
+      "model_version": "1.0.0",
+      "domain_status": {
+        "ipsec_validation": "not_applicable_non_ipsec"
+      }
+    }
+  },
+  "capture_summary": {
+    "total_packets": 18500,
+    "total_flows": 15,
+    "duration": 360.0,
+    "total_bytes": 14500000,
+    "protocols": {
+      "TCP": 17000,
+      "UDP": 1500
+    },
+    "risk_distribution": {
+      "LOW": 14,
+      "MEDIUM": 0,
+      "HIGH": 1,
+      "CRITICAL": 0
+    },
+    "traffic_distribution": {
+      "file_transfer": 15
+    },
+    "average_confidence": 0.88,
+    "overall_risk_score": 50,
+    "overall_risk_level": "HIGH",
+    "top_indicators": [
+      {
+        "indicator_id": "LONG_LIVED_HIGH_VOLUME_FLOW",
+        "occurrences": 1,
+        "frequency_pct": 0.066
+      },
+      {
+        "indicator_id": "UNUSUAL_BURST_ACTIVITY",
+        "occurrences": 1,
+        "frequency_pct": 0.066
+      },
+      {
+        "indicator_id": "STRONG_DIRECTIONAL_ASYMMETRY",
+        "occurrences": 1,
+        "frequency_pct": 0.066
+      },
+      {
+        "indicator_id": "PERIODIC_LOW_VOLUME_ACTIVITY",
+        "occurrences": 1,
+        "frequency_pct": 0.066
+      }
+    ]
+  },
+  "ipsec_analysis": {
+    "ipsec_detected": false,
+    "detected": false,
+    "esp_detected": false,
+    "ah_detected": false,
+    "ike_related_traffic_detected": false,
+    "nat_traversal_related_traffic_detected": false,
+    "domain_validation_status": "NOT_APPLICABLE",
+    "allow_unverified_domain": false
+  },
+  "flows": [
+    {
+      "flow_id": "flow_long_lived_01",
+      "flow_metadata": {
+        "flow_id": "flow_long_lived_01",
+        "ip_version": 4,
+        "protocol": "TCP",
+        "endpoint_a": "10.0.1.100:50123",
+        "endpoint_b": "198.51.100.55:9000",
+        "first_timestamp": 0.0,
+        "last_timestamp": 350.0,
+        "is_ipsec_related": false,
+        "esp_detected": false,
+        "ah_detected": false,
+        "ike_related": false,
+        "nat_t_related": false
+      },
+      "five_tuple": {
+        "src_ip": "10.0.1.100",
+        "dst_ip": "198.51.100.55",
+        "src_port": 50123,
+        "dst_port": 9000,
+        "protocol": "TCP"
+      },
+      "packets": 12000,
+      "bytes": 11000000,
+      "duration_seconds": 350.0,
+      "features": {
+        "total_packets": 12000.0,
+        "total_bytes": 11000000.0,
+        "flow_duration_seconds": 350.0,
+        "packets_per_second": 34.28,
+        "forward_byte_ratio": 0.91
+      },
+      "prediction": {
+        "traffic_category": "file_transfer",
+        "predicted_category": "file_transfer",
+        "confidence": 0.88,
+        "confidence_level": "HIGH",
+        "prediction_status": "COMPLETED",
+        "probabilities": {
+          "file_transfer": 0.88,
+          "web": 0.05,
+          "video": 0.04,
+          "interactive": 0.02,
+          "voip": 0.01
+        }
+      },
+      "model_uncertainty": {
+        "present": false,
+        "level": "LOW",
+        "entropy": 0.21,
+        "margin": 0.83,
+        "flags": []
+      },
+      "behavior": {
+        "traffic_pattern": "Long-Lived High Volume Session",
+        "observations": [
+          "PERSISTENT_VOLUME",
+          "ASYMMETRIC_FORWARD"
+        ]
+      },
+      "security_assessment": {
+        "risk_score": 50,
+        "risk_level": "HIGH",
+        "indicators": [
+          { "indicator_id": "LONG_LIVED_HIGH_VOLUME_FLOW", "severity": "MEDIUM", "reason": "Persistent high volume flow" },
+          { "indicator_id": "UNUSUAL_BURST_ACTIVITY", "severity": "MEDIUM", "reason": "High cadence transmission burst" },
+          { "indicator_id": "STRONG_DIRECTIONAL_ASYMMETRY", "severity": "LOW", "reason": "One-way dominant byte ratio" },
+          { "indicator_id": "PERIODIC_LOW_VOLUME_ACTIVITY", "severity": "LOW", "reason": "Background beaconing pulses" }
+        ],
+        "score_contributions": [
+          { "indicator": "LONG_LIVED_HIGH_VOLUME_FLOW", "points": 15 },
+          { "indicator": "UNUSUAL_BURST_ACTIVITY", "points": 15 },
+          { "indicator": "STRONG_DIRECTIONAL_ASYMMETRY", "points": 10 },
+          { "indicator": "PERIODIC_LOW_VOLUME_ACTIVITY", "points": 10 }
+        ]
+      },
+      "explainability": {
+        "summary": "Concurrent persistence, burst, asymmetric distribution, and low-volume periodicity observed resulting in HIGH risk (50/100)."
+      },
+      "summary": "Concurrent persistence, burst, asymmetric distribution, and low-volume periodicity observed resulting in HIGH risk (50/100)."
+    }
+  ]
+}

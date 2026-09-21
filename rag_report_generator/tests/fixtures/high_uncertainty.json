@@ -1,0 +1,149 @@
+{
+  "integration_schema_version": "1.0",
+  "analysis_metadata": {
+    "file_name": "synthetic_high_uncertainty.pcap",
+    "file_type": "pcap",
+    "total_packets": 1500,
+    "readable": true,
+    "analysis_status": "SUCCESS",
+    "engine_version": "2.0.0",
+    "feature_schema_version": "1.0",
+    "evaluation_mode": "WITHIN_CAPTURE_HOLDOUT",
+    "dataset_provenance": {
+      "origin": "synthetic_test_fixture",
+      "capture_type": "fixture_high_uncertainty"
+    },
+    "model_information": {
+      "model_id": "gradient_boosting_traffic_classifier_v1",
+      "model_version": "1.0.0",
+      "domain_status": {
+        "ipsec_validation": "not_applicable_non_ipsec"
+      }
+    }
+  },
+  "capture_summary": {
+    "total_packets": 1500,
+    "total_flows": 5,
+    "duration": 90.0,
+    "total_bytes": 670000,
+    "protocols": {
+      "UDP": 1200,
+      "TCP": 300
+    },
+    "risk_distribution": {
+      "LOW": 5,
+      "MEDIUM": 0,
+      "HIGH": 0,
+      "CRITICAL": 0
+    },
+    "traffic_distribution": {
+      "video": 5
+    },
+    "average_confidence": 0.42,
+    "overall_risk_score": 10,
+    "overall_risk_level": "LOW",
+    "top_indicators": [
+      {
+        "indicator_id": "PERIODIC_LOW_VOLUME_ACTIVITY",
+        "occurrences": 1,
+        "frequency_pct": 0.20
+      }
+    ]
+  },
+  "ipsec_analysis": {
+    "ipsec_detected": false,
+    "detected": false,
+    "esp_detected": false,
+    "ah_detected": false,
+    "ike_related_traffic_detected": false,
+    "nat_traversal_related_traffic_detected": false,
+    "domain_validation_status": "NOT_APPLICABLE",
+    "allow_unverified_domain": false
+  },
+  "flows": [
+    {
+      "flow_id": "flow_ambiguous_01",
+      "flow_metadata": {
+        "flow_id": "flow_ambiguous_01",
+        "ip_version": 4,
+        "protocol": "UDP",
+        "endpoint_a": "192.168.10.50:5004",
+        "endpoint_b": "203.0.113.19:5004",
+        "first_timestamp": 0.0,
+        "last_timestamp": 90.0,
+        "is_ipsec_related": false,
+        "esp_detected": false,
+        "ah_detected": false,
+        "ike_related": false,
+        "nat_t_related": false
+      },
+      "five_tuple": {
+        "src_ip": "192.168.10.50",
+        "dst_ip": "203.0.113.19",
+        "src_port": 5004,
+        "dst_port": 5004,
+        "protocol": "UDP"
+      },
+      "packets": 1200,
+      "bytes": 550000,
+      "duration_seconds": 90.0,
+      "features": {
+        "total_packets": 1200.0,
+        "total_bytes": 550000.0,
+        "flow_duration_seconds": 90.0,
+        "packets_per_second": 13.33,
+        "forward_byte_ratio": 0.50
+      },
+      "prediction": {
+        "traffic_category": "video",
+        "predicted_category": "video",
+        "confidence": 0.42,
+        "confidence_level": "LOW",
+        "prediction_status": "COMPLETED",
+        "probabilities": {
+          "web": 0.38,
+          "video": 0.42,
+          "voip": 0.12,
+          "file_transfer": 0.04,
+          "interactive": 0.04
+        }
+      },
+      "model_uncertainty": {
+        "present": true,
+        "level": "HIGH",
+        "entropy": 1.85,
+        "margin": 0.04,
+        "flags": [
+          {
+            "code": "HIGH_UNCERTAINTY",
+            "message": "Probabilities evenly split between video and web categories"
+          }
+        ]
+      },
+      "behavior": {
+        "traffic_pattern": "Periodic Streaming / Beaconing",
+        "observations": [
+          "LOW_VOLUME_PERIODICITY"
+        ]
+      },
+      "security_assessment": {
+        "risk_score": 10,
+        "risk_level": "LOW",
+        "indicators": [
+          {
+            "indicator_id": "PERIODIC_LOW_VOLUME_ACTIVITY",
+            "severity": "LOW",
+            "reason": "Regular periodic pulses"
+          }
+        ],
+        "score_contributions": [
+          { "indicator": "PERIODIC_LOW_VOLUME_ACTIVITY", "points": 10 }
+        ]
+      },
+      "explainability": {
+        "summary": "Periodic beaconing observed with high classification dispersion. Evaluated at LOW risk (10/100)."
+      },
+      "summary": "Periodic beaconing observed with high classification dispersion. Evaluated at LOW risk (10/100)."
+    }
+  ]
+}

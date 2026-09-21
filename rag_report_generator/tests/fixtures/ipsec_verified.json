@@ -1,0 +1,128 @@
+{
+  "integration_schema_version": "1.0",
+  "analysis_metadata": {
+    "file_name": "synthetic_ipsec_verified.pcap",
+    "file_type": "pcap",
+    "total_packets": 3200,
+    "readable": true,
+    "analysis_status": "SUCCESS",
+    "engine_version": "2.0.0",
+    "feature_schema_version": "1.0",
+    "evaluation_mode": "GROUP_ISOLATED",
+    "dataset_provenance": {
+      "origin": "synthetic_test_fixture",
+      "capture_type": "fixture_ipsec_verified"
+    },
+    "model_information": {
+      "model_id": "gradient_boosting_traffic_classifier_v1",
+      "model_version": "1.0.0",
+      "domain_status": {
+        "ipsec_validation": "verified_ipsec"
+      }
+    }
+  },
+  "capture_summary": {
+    "total_packets": 3200,
+    "total_flows": 6,
+    "duration": 60.0,
+    "total_bytes": 3400000,
+    "protocols": {
+      "ESP": 3100,
+      "UDP": 100
+    },
+    "risk_distribution": {
+      "LOW": 6,
+      "MEDIUM": 0,
+      "HIGH": 0,
+      "CRITICAL": 0
+    },
+    "traffic_distribution": {
+      "web": 6
+    },
+    "average_confidence": 0.95,
+    "overall_risk_score": 0,
+    "overall_risk_level": "LOW",
+    "top_indicators": []
+  },
+  "ipsec_analysis": {
+    "ipsec_detected": true,
+    "detected": true,
+    "esp_detected": true,
+    "ah_detected": false,
+    "ike_related_traffic_detected": true,
+    "nat_traversal_related_traffic_detected": false,
+    "domain_validation_status": "VERIFIED_IPSEC",
+    "allow_unverified_domain": false
+  },
+  "flows": [
+    {
+      "flow_id": "flow_esp_verified_01",
+      "flow_metadata": {
+        "flow_id": "flow_esp_verified_01",
+        "ip_version": 4,
+        "protocol": "ESP",
+        "endpoint_a": "10.10.1.2:0",
+        "endpoint_b": "10.20.1.2:0",
+        "first_timestamp": 0.0,
+        "last_timestamp": 60.0,
+        "is_ipsec_related": true,
+        "esp_detected": true,
+        "ah_detected": false,
+        "ike_related": false,
+        "nat_t_related": false
+      },
+      "five_tuple": {
+        "src_ip": "10.10.1.2",
+        "dst_ip": "10.20.1.2",
+        "src_port": 0,
+        "dst_port": 0,
+        "protocol": "ESP"
+      },
+      "packets": 3100,
+      "bytes": 3350000,
+      "duration_seconds": 60.0,
+      "features": {
+        "total_packets": 3100.0,
+        "total_bytes": 3350000.0,
+        "flow_duration_seconds": 60.0,
+        "packets_per_second": 51.67,
+        "forward_byte_ratio": 0.48
+      },
+      "prediction": {
+        "traffic_category": "web",
+        "predicted_category": "web",
+        "confidence": 0.95,
+        "confidence_level": "HIGH",
+        "prediction_status": "COMPLETED",
+        "probabilities": {
+          "web": 0.95,
+          "video": 0.02,
+          "voip": 0.01,
+          "file_transfer": 0.01,
+          "interactive": 0.01
+        }
+      },
+      "model_uncertainty": {
+        "present": false,
+        "level": "LOW",
+        "entropy": 0.08,
+        "margin": 0.93,
+        "flags": []
+      },
+      "behavior": {
+        "traffic_pattern": "Encrypted Web Session",
+        "observations": []
+      },
+      "security_assessment": {
+        "risk_score": 0,
+        "risk_level": "LOW",
+        "indicators": [],
+        "score_contributions": []
+      },
+      "explainability": {
+        "summary": "Normal flow profile with no risk indicators under verified IPsec domain."
+      },
+      "summary": "Normal flow profile with no risk indicators under verified IPsec domain."
+    }
+  ]
+}

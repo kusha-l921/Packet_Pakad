@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rag_report_generator"
+version = "1.0.0"
+description = "RAG Knowledge Base and Retrieval Subsystem for Network Security Traffic Analysis"
+authors = [{ name = "Person 2 Network Security Team" }]
+readme = "rag_report_generator/README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "PyYAML>=6.0",
+    "rapidfuzz>=3.0.0",
+    "regex>=2023.0.0",
+]
+
+[project.scripts]
+rag-retrieve = "rag_report_generator.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["rag_report_generator*"]

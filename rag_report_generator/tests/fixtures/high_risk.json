@@ -1,0 +1,168 @@
+{
+  "integration_schema_version": "1.0",
+  "analysis_metadata": {
+    "file_name": "synthetic_high_risk.pcap",
+    "file_type": "pcap",
+    "total_packets": 45000,
+    "readable": true,
+    "analysis_status": "SUCCESS",
+    "engine_version": "2.0.0",
+    "feature_schema_version": "1.0",
+    "evaluation_mode": "GROUP_ISOLATED",
+    "dataset_provenance": {
+      "origin": "synthetic_test_fixture",
+      "capture_type": "fixture_high_risk"
+    },
+    "model_information": {
+      "model_id": "gradient_boosting_traffic_classifier_v1",
+      "model_version": "1.0.0",
+      "domain_status": {
+        "ipsec_validation": "unverified",
+        "override_used": true
+      }
+    }
+  },
+  "capture_summary": {
+    "total_packets": 45000,
+    "total_flows": 18,
+    "duration": 120.0,
+    "total_bytes": 48000000,
+    "protocols": {
+      "TCP": 44000,
+      "UDP": 1000
+    },
+    "risk_distribution": {
+      "LOW": 17,
+      "MEDIUM": 0,
+      "HIGH": 1,
+      "CRITICAL": 0
+    },
+    "traffic_distribution": {
+      "file_transfer": 18
+    },
+    "average_confidence": 0.84,
+    "overall_risk_score": 60,
+    "overall_risk_level": "HIGH",
+    "top_indicators": [
+      {
+        "indicator_id": "UNUSUAL_HIGH_UPLOAD_VOLUME",
+        "occurrences": 1,
+        "frequency_pct": 0.055
+      },
+      {
+        "indicator_id": "UNUSUAL_HIGH_PACKET_RATE",
+        "occurrences": 1,
+        "frequency_pct": 0.055
+      },
+      {
+        "indicator_id": "UNUSUAL_BURST_ACTIVITY",
+        "occurrences": 1,
+        "frequency_pct": 0.055
+      }
+    ]
+  },
+  "ipsec_analysis": {
+    "ipsec_detected": true,
+    "detected": true,
+    "esp_detected": true,
+    "ah_detected": false,
+    "ike_related_traffic_detected": false,
+    "nat_traversal_related_traffic_detected": false,
+    "domain_validation_status": "TECHNICALLY_COMPATIBLE_DOMAIN_UNVERIFIED",
+    "allow_unverified_domain": true
+  },
+  "flows": [
+    {
+      "flow_id": "flow_bulk_upload_01",
+      "flow_metadata": {
+        "flow_id": "flow_bulk_upload_01",
+        "ip_version": 4,
+        "protocol": "TCP",
+        "endpoint_a": "10.0.0.15:49152",
+        "endpoint_b": "198.51.100.4:443",
+        "first_timestamp": 0.0,
+        "last_timestamp": 110.0,
+        "is_ipsec_related": true,
+        "esp_detected": true,
+        "ah_detected": false,
+        "ike_related": false,
+        "nat_t_related": false
+      },
+      "five_tuple": {
+        "src_ip": "10.0.0.15",
+        "dst_ip": "198.51.100.4",
+        "src_port": 49152,
+        "dst_port": 443,
+        "protocol": "TCP"
+      },
+      "packets": 32000,
+      "bytes": 42000000,
+      "duration_seconds": 110.0,
+      "features": {
+        "total_packets": 32000.0,
+        "total_bytes": 42000000.0,
+        "flow_duration_seconds": 110.0,
+        "packets_per_second": 290.9,
+        "forward_byte_ratio": 0.94
+      },
+      "prediction": {
+        "traffic_category": "file_transfer",
+        "predicted_category": "file_transfer",
+        "confidence": 0.84,
+        "confidence_level": "HIGH",
+        "prediction_status": "TECHNICALLY_COMPATIBLE_DOMAIN_UNVERIFIED",
+        "probabilities": {
+          "file_transfer": 0.84,
+          "web": 0.05,
+          "video": 0.05,
+          "interactive": 0.05,
+          "voip": 0.01
+        }
+      },
+      "model_uncertainty": {
+        "present": false,
+        "level": "LOW",
+        "entropy": 0.25,
+        "margin": 0.79,
+        "flags": []
+      },
+      "behavior": {
+        "traffic_pattern": "High-Volume Bulk Transfer",
+        "observations": [
+          "HIGH_PACKET_RATE",
+          "HIGH_UPLOAD_VOLUME"
+        ]
+      },
+      "security_assessment": {
+        "risk_score": 60,
+        "risk_level": "HIGH",
+        "indicators": [
+          {
+            "indicator_id": "UNUSUAL_HIGH_UPLOAD_VOLUME",
+            "severity": "HIGH",
+            "reason": "Massive outbound byte transfer ratio"
+          },
+          {
+            "indicator_id": "UNUSUAL_HIGH_PACKET_RATE",
+            "severity": "MEDIUM",
+            "reason": "High transmission cadence"
+          },
+          {
+            "indicator_id": "UNUSUAL_BURST_ACTIVITY",
+            "severity": "MEDIUM",
+            "reason": "Sudden transmission burst"
+          }
+        ],
+        "score_contributions": [
+          { "indicator": "UNUSUAL_HIGH_UPLOAD_VOLUME", "points": 25 },
+          { "indicator": "UNUSUAL_HIGH_PACKET_RATE", "points": 20 },
+          { "indicator": "UNUSUAL_BURST_ACTIVITY", "points": 15 }
+        ]
+      },
+      "explainability": {
+        "summary": "Multiple high-volume transfer and high packet-rate indicators triggered resulting in HIGH behavioral risk (score: 60/100)."
+      },
+      "summary": "Multiple high-volume transfer and high packet-rate indicators triggered resulting in HIGH behavioral risk (score: 60/100)."
+    }
+  ]
+}

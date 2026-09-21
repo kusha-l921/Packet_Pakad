@@ -1,0 +1,129 @@
+{
+  "integration_schema_version": "1.0",
+  "analysis_metadata": {
+    "file_name": "synthetic_low_risk.pcap",
+    "file_type": "pcap",
+    "total_packets": 512,
+    "readable": true,
+    "analysis_status": "SUCCESS",
+    "engine_version": "2.0.0",
+    "feature_schema_version": "1.0",
+    "evaluation_mode": "GROUP_ISOLATED",
+    "dataset_provenance": {
+      "origin": "synthetic_test_fixture",
+      "capture_type": "fixture_low_risk"
+    },
+    "model_information": {
+      "model_id": "gradient_boosting_traffic_classifier_v1",
+      "model_version": "1.0.0",
+      "domain_status": {
+        "ipsec_validation": "not_applicable_non_ipsec",
+        "reason": "Traffic is not IPsec encapsulated; model operating in native domain"
+      }
+    }
+  },
+  "capture_summary": {
+    "total_packets": 512,
+    "total_flows": 4,
+    "duration": 12.5,
+    "total_bytes": 245000,
+    "protocols": {
+      "TCP": 500,
+      "UDP": 12
+    },
+    "risk_distribution": {
+      "LOW": 4,
+      "MEDIUM": 0,
+      "HIGH": 0,
+      "CRITICAL": 0
+    },
+    "traffic_distribution": {
+      "web": 4
+    },
+    "average_confidence": 0.92,
+    "overall_risk_score": 0,
+    "overall_risk_level": "LOW",
+    "top_indicators": []
+  },
+  "ipsec_analysis": {
+    "ipsec_detected": false,
+    "detected": false,
+    "esp_detected": false,
+    "ah_detected": false,
+    "ike_related_traffic_detected": false,
+    "nat_traversal_related_traffic_detected": false,
+    "domain_validation_status": "NOT_APPLICABLE",
+    "allow_unverified_domain": false
+  },
+  "flows": [
+    {
+      "flow_id": "flow_tcp_001",
+      "flow_metadata": {
+        "flow_id": "flow_tcp_001",
+        "ip_version": 4,
+        "protocol": "TCP",
+        "endpoint_a": "192.168.1.10:54321",
+        "endpoint_b": "93.184.216.34:443",
+        "first_timestamp": 100.0,
+        "last_timestamp": 112.0,
+        "is_ipsec_related": false,
+        "esp_detected": false,
+        "ah_detected": false,
+        "ike_related": false,
+        "nat_t_related": false
+      },
+      "five_tuple": {
+        "src_ip": "192.168.1.10",
+        "dst_ip": "93.184.216.34",
+        "src_port": 54321,
+        "dst_port": 443,
+        "protocol": "TCP"
+      },
+      "packets": 320,
+      "bytes": 180000,
+      "duration_seconds": 12.0,
+      "features": {
+        "total_packets": 320.0,
+        "total_bytes": 180000.0,
+        "flow_duration_seconds": 12.0,
+        "packets_per_second": 26.67,
+        "forward_byte_ratio": 0.25
+      },
+      "prediction": {
+        "traffic_category": "web",
+        "predicted_category": "web",
+        "confidence": 0.92,
+        "confidence_level": "HIGH",
+        "prediction_status": "COMPLETED",
+        "probabilities": {
+          "web": 0.92,
+          "video": 0.04,
+          "voip": 0.02,
+          "file_transfer": 0.01,
+          "interactive": 0.01
+        }
+      },
+      "model_uncertainty": {
+        "present": false,
+        "level": "LOW",
+        "entropy": 0.12,
+        "margin": 0.88,
+        "flags": []
+      },
+      "behavior": {
+        "traffic_pattern": "Standard Web Session",
+        "observations": []
+      },
+      "security_assessment": {
+        "risk_score": 0,
+        "risk_level": "LOW",
+        "indicators": [],
+        "score_contributions": []
+      },
+      "explainability": {
+        "summary": "Flow statistically resembles 'web' traffic with high confidence (92.0%). No behavioral risk indicators observed."
+      },
+      "summary": "Flow statistically resembles 'web' traffic with high confidence (92.0%). No behavioral risk indicators observed."
+    }
+  ]
+}

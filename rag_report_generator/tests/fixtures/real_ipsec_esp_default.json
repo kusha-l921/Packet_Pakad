@@ -1,0 +1,168 @@
+{
+  "integration_schema_version": "1.0",
+  "analysis_metadata": {
+    "file_name": "ipsec_esp.pcap",
+    "file_path": "/home/illoir/Desktop/sih/sample_data/ipsec_esp.pcap",
+    "file_type": "pcap",
+    "total_packets": 2,
+    "readable": true,
+    "analysis_status": "SUCCESS",
+    "errors": [],
+    "warnings": [],
+    "model_information": {
+      "model_id": "gradient_boosting_traffic_classifier_v1",
+      "model_version": "1.0.0",
+      "feature_schema_version": "1.0",
+      "domain_status": {
+        "ipsec_validation": "unverified"
+      }
+    }
+  },
+  "capture_summary": {
+    "total_flows": 1,
+    "risk_distribution": {
+      "LOW": 1,
+      "MEDIUM": 0,
+      "HIGH": 0,
+      "CRITICAL": 0
+    },
+    "traffic_distribution": {
+      "unclassified": 1
+    },
+    "average_confidence": 0.0,
+    "overall_risk_score": 20,
+    "overall_risk_level": "LOW",
+    "top_indicators": [
+      {
+        "indicator_id": "UNUSUAL_HIGH_PACKET_RATE",
+        "occurrences": 1,
+        "frequency_pct": 1.0
+      }
+    ]
+  },
+  "ipsec_analysis": {
+    "ipsec_detected": true,
+    "esp_detected": true,
+    "ah_detected": false,
+    "ike_related_traffic_detected": false,
+    "nat_traversal_related_traffic_detected": false,
+    "ike_version": null
+  },
+  "flows": [
+    {
+      "flow_id": "ESP_10.0.0.1_10.0.0.2",
+      "flow_metadata": {
+        "flow_id": "ESP_10.0.0.1_10.0.0.2",
+        "ip_version": 4,
+        "protocol": "ESP",
+        "endpoint_a": "10.0.0.1",
+        "endpoint_b": "10.0.0.2",
+        "first_timestamp": 1789108303.4817,
+        "last_timestamp": 1789108303.4819,
+        "is_ipsec_related": true,
+        "esp_detected": true,
+        "ah_detected": false,
+        "ike_related": false,
+        "nat_t_related": false
+      },
+      "features": {
+        "total_packets": 2.0,
+        "forward_packets": 1.0,
+        "backward_packets": 1.0,
+        "total_bytes": 131.0,
+        "forward_bytes": 63.0,
+        "backward_bytes": 68.0,
+        "minimum_packet_size": 63.0,
+        "maximum_packet_size": 68.0,
+        "mean_packet_size": 65.5,
+        "standard_deviation_packet_size": 3.5355,
+        "median_packet_size": 65.5,
+        "forward_mean_packet_size": 63.0,
+        "backward_mean_packet_size": 68.0,
+        "flow_duration_seconds": 0.0001,
+        "packets_per_second": 14588.8835,
+        "bytes_per_second": 955571.8678,
+        "mean_inter_arrival_time": 0.0001,
+        "minimum_inter_arrival_time": 0.0001,
+        "maximum_inter_arrival_time": 0.0001,
+        "standard_deviation_inter_arrival_time": 0.0,
+        "forward_packet_ratio": 0.5,
+        "backward_packet_ratio": 0.5,
+        "forward_byte_ratio": 0.4809,
+        "backward_byte_ratio": 0.5191,
+        "maximum_packets_in_one_second": 2.0
+      },
+      "prediction": {
+        "traffic_category": "unclassified",
+        "confidence": 0.0,
+        "confidence_level": "LOW",
+        "prediction_status": "TECHNICALLY_COMPATIBLE_DOMAIN_UNVERIFIED",
+        "probabilities": {},
+        "model_name": "gradient_boosting_traffic_classifier_v1",
+        "model_version": "1.0.0",
+        "domain_status": {
+          "ipsec_validation": "unverified"
+        },
+        "warnings": [
+          "Model 'gradient_boosting_traffic_classifier_v1' is technically compatible with Schema 1.0, but has NOT been validated on real IPsec/StrongSwan encrypted traffic. IPsec generalization is unverified.",
+          "Model 'gradient_boosting_traffic_classifier_v1' is technically compatible with Schema 1.0, but has NOT been validated on real IPsec/StrongSwan encrypted traffic. Inference blocked without explicit opt-in (allow_unverified_domain=True)."
+        ]
+      },
+      "model_uncertainty": {
+        "present": true,
+        "flags": [
+          {
+            "code": "LOW_CLASSIFICATION_CONFIDENCE",
+            "severity": "INFO",
+            "message": "The traffic does not strongly resemble any category currently known to the classification model (top resemblance: 'unclassified' at 0.00% confidence). This represents classification uncertainty and is not itself evidence of elevated behavioral risk."
+          }
+        ]
+      },
+      "behavior": {
+        "traffic_pattern": "High-Throughput Streaming / Bulk Transfer",
+        "observations": [
+          "HIGH_PACKET_RATE",
+          "HIGH_BYTE_THROUGHPUT"
+        ],
+        "metrics_summary": {
+          "total_packets": 2,
+          "total_bytes": 131,
+          "duration_seconds": 0.0001,
+          "packets_per_second": 14588.88,
+          "bytes_per_second": 955571.87,
+          "forward_byte_ratio": 0.4809,
+          "backward_byte_ratio": 0.5191,
+          "max_packets_one_second": 2
+        }
+      },
+      "security_assessment": {
+        "risk_score": 20,
+        "risk_level": "LOW",
+        "indicators": [
+          {
+            "indicator_id": "UNUSUAL_HIGH_PACKET_RATE",
+            "severity": "MEDIUM",
+            "reason": "Flow exhibited an unusually high packet rate (14588.9 pkts/sec) over 0.00s.",
+            "supporting_features": {
+              "packets_per_second": 14588.8835,
+              "total_packets": 2,
+              "flow_duration_seconds": 0.0001
+            }
+          }
+        ],
+        "score_contributions": [
+          {
+            "indicator": "UNUSUAL_HIGH_PACKET_RATE",
+            "points": 20,
+            "reason": "Flow exhibited an unusually high packet rate (14588.9 pkts/sec) over 0.00s."
+          }
+        ]
+      },
+      "explainability": {
+        "important_features": [],
+        "summary": "Flow does not strongly match known traffic categories (top statistical resemblance: 'unclassified' at 0.0% confidence). Observable behavior aligns with 'High-Throughput Streaming / Bulk Transfer', transferring 131 bytes across 2 packets over 0.00 seconds. Flagged 1 behavioral indicator(s) [UNUSUAL_HIGH_PACKET_RATE]: Flow exhibited an unusually high packet rate (14588.9 pkts/sec) over 0.00s. Resulting behavioral risk assessment is LOW risk (score: 20/100)."
+      },
+      "summary": "Flow does not strongly match known traffic categories (top statistical resemblance: 'unclassified' at 0.0% confidence). Observable behavior aligns with 'High-Throughput Streaming / Bulk Transfer', transferring 131 bytes across 2 packets over 0.00 seconds. Flagged 1 behavioral indicator(s) [UNUSUAL_HIGH_PACKET_RATE]: Flow exhibited an unusually high packet rate (14588.9 pkts/sec) over 0.00s. Resulting behavioral risk assessment is LOW risk (score: 20/100)."
+    }
+  ]
+}

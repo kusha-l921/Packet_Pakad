@@ -1,0 +1,7 @@
+{
+  "version": "1.0",
+  "dimension": 384,
+  "chunk_count": 106,
+  "index_type": "FlatCosineVectorStore",
+  "checksum": "c410bcbb70e4832d0d0c46504d9063b6f9eaee86753b1f38354651bfa1f5d0f0"
+}

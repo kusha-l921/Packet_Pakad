@@ -1,0 +1,145 @@
+{
+  "integration_schema_version": "1.0",
+  "analysis_metadata": {
+    "file_name": "synthetic_ipsec_unverified.pcap",
+    "file_type": "pcap",
+    "total_packets": 1024,
+    "readable": true,
+    "analysis_status": "SUCCESS",
+    "engine_version": "2.0.0",
+    "feature_schema_version": "1.0",
+    "evaluation_mode": "GROUP_ISOLATED",
+    "dataset_provenance": {
+      "origin": "synthetic_test_fixture",
+      "capture_type": "fixture_ipsec_unverified"
+    },
+    "model_information": {
+      "model_id": "gradient_boosting_traffic_classifier_v1",
+      "model_version": "1.0.0",
+      "domain_status": {
+        "ipsec_validation": "unverified",
+        "override_used": false
+      }
+    }
+  },
+  "capture_summary": {
+    "total_packets": 1024,
+    "total_flows": 12,
+    "duration": 35.7,
+    "total_bytes": 850000,
+    "protocols": {
+      "ESP": 800,
+      "UDP": 224
+    },
+    "risk_distribution": {
+      "LOW": 12,
+      "MEDIUM": 0,
+      "HIGH": 0,
+      "CRITICAL": 0
+    },
+    "traffic_distribution": {
+      "web": 12
+    },
+    "average_confidence": 0.812,
+    "overall_risk_score": 20,
+    "overall_risk_level": "LOW",
+    "top_indicators": [
+      {
+        "indicator_id": "UNUSUAL_HIGH_PACKET_RATE",
+        "occurrences": 1,
+        "frequency_pct": 0.083
+      }
+    ]
+  },
+  "ipsec_analysis": {
+    "ipsec_detected": true,
+    "detected": true,
+    "esp_detected": true,
+    "ah_detected": false,
+    "ike_related_traffic_detected": true,
+    "nat_traversal_related_traffic_detected": false,
+    "domain_validation_status": "TECHNICALLY_COMPATIBLE_DOMAIN_UNVERIFIED",
+    "allow_unverified_domain": false
+  },
+  "flows": [
+    {
+      "flow_id": "flow_esp_001",
+      "flow_metadata": {
+        "flow_id": "flow_esp_001",
+        "ip_version": 4,
+        "protocol": "ESP",
+        "endpoint_a": "172.16.1.5:0",
+        "endpoint_b": "198.51.100.1:0",
+        "first_timestamp": 0.0,
+        "last_timestamp": 35.0,
+        "is_ipsec_related": true,
+        "esp_detected": true,
+        "ah_detected": false,
+        "ike_related": false,
+        "nat_t_related": false
+      },
+      "five_tuple": {
+        "src_ip": "172.16.1.5",
+        "dst_ip": "198.51.100.1",
+        "src_port": 0,
+        "dst_port": 0,
+        "protocol": "ESP"
+      },
+      "packets": 800,
+      "bytes": 750000,
+      "duration_seconds": 35.0,
+      "features": {
+        "total_packets": 800.0,
+        "total_bytes": 750000.0,
+        "flow_duration_seconds": 35.0,
+        "packets_per_second": 22.86,
+        "forward_byte_ratio": 0.50
+      },
+      "prediction": {
+        "traffic_category": "web",
+        "predicted_category": "web",
+        "confidence": 0.812,
+        "confidence_level": "HIGH",
+        "prediction_status": "TECHNICALLY_COMPATIBLE_DOMAIN_UNVERIFIED",
+        "probabilities": {
+          "web": 0.812,
+          "video": 0.088,
+          "voip": 0.05,
+          "file_transfer": 0.03,
+          "interactive": 0.02
+        }
+      },
+      "model_uncertainty": {
+        "present": false,
+        "level": "LOW",
+        "entropy": 0.35,
+        "margin": 0.724,
+        "flags": []
+      },
+      "behavior": {
+        "traffic_pattern": "Encrypted Streaming / Transfer",
+        "observations": [
+          "HIGH_PACKET_RATE"
+        ]
+      },
+      "security_assessment": {
+        "risk_score": 20,
+        "risk_level": "LOW",
+        "indicators": [
+          {
+            "indicator_id": "UNUSUAL_HIGH_PACKET_RATE",
+            "severity": "MEDIUM",
+            "reason": "Elevated packet rate on encrypted flow"
+          }
+        ],
+        "score_contributions": [
+          { "indicator": "UNUSUAL_HIGH_PACKET_RATE", "points": 20 }
+        ]
+      },
+      "explainability": {
+        "summary": "Elevated packet rate observed on encrypted ESP flow. Evaluated at LOW behavioral risk (20/100)."
+      },
+      "summary": "Elevated packet rate observed on encrypted ESP flow. Evaluated at LOW behavioral risk (20/100)."
+    }
+  ]
+}
