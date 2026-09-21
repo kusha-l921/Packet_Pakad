@@ -137,6 +137,8 @@ class SessionAggregator:
 
             # Notifications
             self._merge_notifications(session, composite_dict)
+            if "ipsec_mode" in composite_dict:
+                session.common["ipsec_mode"] = composite_dict["ipsec_mode"]
 
             # IKE_SA_INIT
             init_data = composite_dict.get("IKE_SA_INIT", {})
@@ -479,7 +481,10 @@ class SessionAggregator:
 
         # Determine IPsec SA Mode (RFC 7296 §1.3.1 & §3.10.1)
         # Notification 16391 is USE_TRANSPORT_MODE. If present -> TRANSPORT, else default TUNNEL.
-        is_transport_mode = 16391 in session.notify_types
+        is_transport_mode = (
+            16391 in session.notify_types
+            or session.common.get("ipsec_mode") == "TRANSPORT"
+        )
         ipsec_mode = "TRANSPORT" if is_transport_mode else "TUNNEL"
         if session.auth_metadata and isinstance(session.auth_metadata, dict):
             daemon_mode = session.auth_metadata.get("mode") or session.auth_metadata.get("ipsec_mode")
@@ -757,6 +762,13 @@ class SessionAggregator:
         top_notify = pkt_dict.get("notify", {})
         if isinstance(top_notify, dict):
             notifs.extend(top_notify.get("messages", []))
+            for nt in top_notify.get("notify_types", []):
+                try:
+                    session.notify_types.add(int(nt))
+                except (ValueError, TypeError):
+                    pass
+        elif isinstance(top_notify, list):
+            notifs.extend(top_notify)
 
         # From exchange-specific blocks
         for exch_key in ("IKE_SA_INIT", "IKE_AUTH", "IKE_INTERMEDIATE", "CREATE_CHILD_SA", "INFORMATIONAL"):
@@ -765,6 +777,13 @@ class SessionAggregator:
                 val = exch_dict["notify"]
                 if isinstance(val, list):
                     notifs.extend(val)
+                elif isinstance(val, dict):
+                    notifs.extend(val.get("messages", []))
+                    for nt in val.get("notify_types", []):
+                        try:
+                            session.notify_types.add(int(nt))
+                        except (ValueError, TypeError):
+                            pass
 
         for n in notifs:
             if isinstance(n, dict):

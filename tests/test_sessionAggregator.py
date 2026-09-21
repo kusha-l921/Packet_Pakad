@@ -542,6 +542,50 @@ def test_thread_safety_concurrent_ingest():
         assert s.is_handshake_complete() is True
 
 
+@test
+def test_ipsec_mode_tunnel_and_transport():
+    """Verify IPsec SA mode discrimination between default TUNNEL and USE_TRANSPORT_MODE (16391)."""
+    # 1. Default Tunnel Mode
+    agg_tunnel = SessionAggregator()
+    agg_tunnel.ingest_packet(_make_sa_init_req(init_spi="0x1111111111111111"))
+    agg_tunnel.ingest_packet(_make_sa_init_resp(init_spi="0x1111111111111111", resp_spi="0x2222222222222222"))
+    agg_tunnel.ingest_packet(_make_auth_req(init_spi="0x1111111111111111", resp_spi="0x2222222222222222"))
+    agg_tunnel.ingest_packet(_make_auth_resp(init_spi="0x1111111111111111", resp_spi="0x2222222222222222"))
+    canon_tunnel = agg_tunnel.get_canonical_session_dict("0x1111111111111111")
+    assert canon_tunnel["ipsec_mode"] == "TUNNEL"
+    assert canon_tunnel["IKE_AUTH"]["child_sa"]["mode"] == "TUNNEL"
+    assert canon_tunnel["IKE_AUTH"]["child_sa"]["is_transport_mode"] is False
+
+    # 2. Transport Mode via Notification 16391
+    agg_trans = SessionAggregator()
+    auth_req_trans = _make_auth_req(init_spi="0x3333333333333333", resp_spi="0x4444444444444444")
+    auth_req_trans["notify"] = {
+        "present": True,
+        "notify_types": [16391],
+        "messages": [{"type": 16391, "name": "USE_TRANSPORT_MODE"}],
+    }
+    agg_trans.ingest_packet(_make_sa_init_req(init_spi="0x3333333333333333"))
+    agg_trans.ingest_packet(_make_sa_init_resp(init_spi="0x3333333333333333", resp_spi="0x4444444444444444"))
+    agg_trans.ingest_packet(auth_req_trans)
+    agg_trans.ingest_packet(_make_auth_resp(init_spi="0x3333333333333333", resp_spi="0x4444444444444444"))
+    canon_trans = agg_trans.get_canonical_session_dict("0x3333333333333333")
+    assert canon_trans["ipsec_mode"] == "TRANSPORT"
+    assert canon_trans["IKE_AUTH"]["child_sa"]["mode"] == "TRANSPORT"
+    assert canon_trans["IKE_AUTH"]["child_sa"]["is_transport_mode"] is True
+
+    # 3. Transport Mode via Daemon Auth Metadata
+    agg_daemon = SessionAggregator()
+    agg_daemon.ingest_packet(_make_sa_init_req(init_spi="0x5555555555555555"))
+    agg_daemon.ingest_packet(_make_sa_init_resp(init_spi="0x5555555555555555", resp_spi="0x6666666666666666"))
+    agg_daemon.ingest_packet(_make_auth_req(init_spi="0x5555555555555555", resp_spi="0x6666666666666666"))
+    agg_daemon.ingest_packet(_make_auth_resp(init_spi="0x5555555555555555", resp_spi="0x6666666666666666"))
+    agg_daemon.attach_daemon_credentials("0x5555555555555555", {"mode": "TRANSPORT"})
+    canon_daemon = agg_daemon.get_canonical_session_dict("0x5555555555555555")
+    assert canon_daemon["ipsec_mode"] == "TRANSPORT"
+    assert canon_daemon["IKE_AUTH"]["child_sa"]["mode"] == "TRANSPORT"
+    assert canon_daemon["IKE_AUTH"]["child_sa"]["is_transport_mode"] is True
+
+
 if __name__ == "__main__":
     success = run_all()
     sys.exit(0 if success else 1)

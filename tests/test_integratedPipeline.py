@@ -528,6 +528,41 @@ def test_ml_model_adapter_lifecycle():
     assert burst_verdict["verdict"] == "ANOMALOUS_HIGH_RATE_BURST"
 
 
+@test
+def test_ipsec_mode_pipeline_propagation():
+    """Verify that ipsec_mode (TUNNEL vs TRANSPORT) correctly propagates through all report files and RAG payload."""
+    temp_dir = Path(tempfile.mkdtemp(prefix="sih_mode_test_"))
+    try:
+        # Case A: Default TUNNEL mode
+        pipeline_tunnel = IntegratedPipeline(output_dir=temp_dir / "tunnel")
+        s_dict_tunnel, a_meta_tunnel = build_synthetic_multi_ke_session()
+        res_tunnel = pipeline_tunnel.process_session_dict(s_dict_tunnel, a_meta_tunnel)
+
+        rag_payload_tunnel = res_tunnel["rag_payload"]
+        assert rag_payload_tunnel["metadata"]["ipsec_mode"] == "TUNNEL"
+        assert rag_payload_tunnel["summaries"]["rfc_compliance"]["ipsec_mode"] == "TUNNEL"
+        assert rag_payload_tunnel["raw_sources"]["canonical_session"]["ipsec_mode"] == "TUNNEL"
+        assert rag_payload_tunnel["raw_sources"]["rfc_compliance"]["ipsec_mode"] == "TUNNEL"
+
+        # Case B: TRANSPORT mode via Notification 16391
+        pipeline_trans = IntegratedPipeline(output_dir=temp_dir / "trans")
+        s_dict_trans, a_meta_trans = build_synthetic_multi_ke_session()
+        s_dict_trans["notify"] = {
+            "present": True,
+            "notify_types": [16391],
+            "messages": [{"type": 16391, "name": "USE_TRANSPORT_MODE"}],
+        }
+        res_trans = pipeline_trans.process_session_dict(s_dict_trans, a_meta_trans)
+
+        rag_payload_trans = res_trans["rag_payload"]
+        assert rag_payload_trans["metadata"]["ipsec_mode"] == "TRANSPORT"
+        assert rag_payload_trans["summaries"]["rfc_compliance"]["ipsec_mode"] == "TRANSPORT"
+        assert rag_payload_trans["raw_sources"]["canonical_session"]["ipsec_mode"] == "TRANSPORT"
+        assert rag_payload_trans["raw_sources"]["rfc_compliance"]["ipsec_mode"] == "TRANSPORT"
+    finally:
+        shutil.rmtree(temp_dir, ignore_errors=True)
+
+
 # ═══════════════════════════════════════════════════════════════════════════
 #  Main Entry
 # ═══════════════════════════════════════════════════════════════════════════
