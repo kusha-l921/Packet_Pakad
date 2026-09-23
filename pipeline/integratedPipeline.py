@@ -199,8 +199,18 @@ class IntegratedPipeline:
             "rag_payload": rag_payload,
         }
 
-    def process_pcap(self, pcap_path: str | Path) -> list[str]:
-        """Process an offline PCAP capture file through control and data plane extractors."""
+    def process_pcap(
+        self,
+        pcap_path: str | Path,
+        auth_metadata: dict[str, Any] | None = None,
+        use_pyshark: bool = False,
+    ) -> list[str]:
+        """Process an offline PCAP capture file through control and data plane extractors.
+        
+        Extracts IKEv2 handshake exchanges (proposals, key exchange, notify) and ESP
+        data-plane telemetry (sequence numbers, byte counts, flow rates) from real PCAPs.
+        Optionally attaches out-of-band daemon credentials and exports compliance reports.
+        """
         path = Path(pcap_path)
         if not path.exists():
             raise FileNotFoundError(f"PCAP file not found: {path}")
@@ -208,36 +218,61 @@ class IntegratedPipeline:
         logger.info("Processing PCAP capture: %s", path)
         completed_sessions: list[str] = []
 
-        # 1. Scapy pass for ESP data plane
-        try:
-            from scapy.all import rdpcap
-            scapy_pkts = rdpcap(str(path))
-            logger.info("Loaded %d packets via Scapy. Extracting ESP metadata...", len(scapy_pkts))
-            for pkt in scapy_pkts:
-                esp_meta = extract_esp_metadata(pkt)
-                if esp_meta:
-                    self.ingest_esp_packet(esp_meta)
-        except Exception as e:
-            logger.warning("Scapy PCAP pass encountered an issue: %s", e)
+        from scapy.all import rdpcap
+        scapy_pkts = rdpcap(str(path))
+        logger.info("Loaded %d packets via Scapy from %s", len(scapy_pkts), path.name)
 
-        # 2. PyShark pass for IKEv2 control plane
-        try:
-            import pyshark
-            cap = pyshark.FileCapture(
-                str(path),
-                display_filter="isakmp",
-                use_json=True,
-                include_raw=True,
-            )
-            logger.info("Extracting IKEv2 control packets via PyShark...")
-            for pkt in cap:
-                ike_meta = extract_ikeV2_metadata(pkt)
-                if ike_meta:
-                    init_spi = self.ingest_ike_packet(ike_meta)
-                    if init_spi and init_spi not in completed_sessions:
-                        completed_sessions.append(init_spi)
-            cap.close()
-        except Exception as e:
-            logger.warning("PyShark PCAP pass encountered an issue: %s", e)
+        # 1. First pass: extract control-plane IKEv2 exchanges to establish SA session state
+        ike_count = 0
+        for pkt in scapy_pkts:
+            ike_meta = extract_ikeV2_metadata(pkt)
+            if ike_meta:
+                ike_count += 1
+                init_spi = self.ingest_ike_packet(ike_meta)
+                if init_spi and init_spi not in completed_sessions:
+                    completed_sessions.append(init_spi)
+
+        logger.info("Extracted %d IKEv2 control packets (%d session(s) active)", ike_count, len(completed_sessions))
+
+        # Optional PyShark pass if requested and available
+        if use_pyshark and ike_count == 0:
+            try:
+                import pyshark
+                cap = pyshark.FileCapture(
+                    str(path),
+                    display_filter="isakmp",
+                    use_json=True,
+                    include_raw=True,
+                )
+                logger.info("Extracting IKEv2 control packets via PyShark...")
+                for pkt in cap:
+                    ike_meta = extract_ikeV2_metadata(pkt)
+                    if ike_meta:
+                        init_spi = self.ingest_ike_packet(ike_meta)
+                        if init_spi and init_spi not in completed_sessions:
+                            completed_sessions.append(init_spi)
+                cap.close()
+            except Exception as e:
+                logger.debug("PyShark pass skipped or failed: %s", e)
+
+        # 2. Second pass: extract ESP data plane telemetry and feed into flow engine
+        esp_count = 0
+        for pkt in scapy_pkts:
+            esp_meta = extract_esp_metadata(pkt)
+            if esp_meta:
+                esp_count += 1
+                self.ingest_esp_packet(esp_meta)
+
+        logger.info("Extracted %d ESP data-plane packets across %d active flow(s)", esp_count, len(self.latest_flow_verdicts))
+
+        # 3. Attach out-of-band daemon credentials if provided
+        if auth_metadata:
+            for spi in completed_sessions:
+                self.attach_daemon_credentials(spi, auth_metadata)
+
+        # 4. Trigger analytical report export if sessions exist and auto-export is enabled
+        if self.auto_export_on_complete:
+            for spi in completed_sessions:
+                self.export_session_reports(spi)
 
         return completed_sessions

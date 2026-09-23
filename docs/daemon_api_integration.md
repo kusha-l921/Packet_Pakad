@@ -15,7 +15,7 @@ To perform high-assurance X.509 PKI auditing (CNSA 2.0 quantum resistance, certi
 
 ## 2. Integration Methods
 
-The pipeline provides two out-of-band ingestion paths implemented in [`cert_engine/daemonCertIngest.py`](file:///c:/Users/Cat/Desktop/SIH-160%20Rule%20Engine/cert_engine/daemonCertIngest.py) and exposed via [`IntegratedPipeline`](file:///c:/Users/Cat/Desktop/SIH-160%20Rule%20Engine/pipeline/integratedPipeline.py):
+The pipeline provides two out-of-band ingestion paths implemented in [`cert_engine/daemonCertIngest.py`](../cert_engine/daemonCertIngest.py) and exposed via [`IntegratedPipeline`](../pipeline/integratedPipeline.py):
 
 ### Method A: Local Certificate Directory Scanning (Windows / Linux / Development)
 
@@ -148,4 +148,4 @@ if __name__ == "__main__":
 ## 5. Security & Privacy Safeguards
 - **Private keys are NEVER required or accepted.**
 - The pipeline exclusively audits public X.509 certificates and handshake parameters.
-- If any private key string is accidentally present, [`pipeline/ragExporter.py`](file:///c:/Users/Cat/Desktop/SIH-160%20Rule%20Engine/pipeline/ragExporter.py) automatically strips and replaces it with `[REDACTED_SENSITIVE_KEY_MATERIAL]`.
+- If any private key string is accidentally present, [`pipeline/ragExporter.py`](../pipeline/ragExporter.py) automatically strips and replaces it with `[REDACTED_SENSITIVE_KEY_MATERIAL]`.

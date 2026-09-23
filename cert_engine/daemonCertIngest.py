@@ -178,20 +178,49 @@ def ingest_from_directory(
 def ingest_from_vici(
     socket_path: str = "/var/run/charon.vici",
 ) -> dict[str, Any]:
-    """Ingest certificates directly from strongSwan's VICI UNIX domain socket.
+    """Ingest certificates or active SA metadata directly from strongSwan's VICI socket.
     
-    If python `vici` package is installed and strongSwan is running, queries
-    `list-certs` and extracts active X.509 certificates.
+    Supports python `vici` package as well as built-in zero-dependency `vici_client`.
     """
+    candidates = [
+        socket_path,
+        "/var/run/charon.vici",
+        "/run/strongswan/charon.vici",
+        "/run/charon.vici",
+        str(Path.home() / "sih-ipsec-testbed" / "shared-vici" / "charon.vici"),
+    ]
+    resolved_path = socket_path
+    for c in candidates:
+        if os.path.exists(c):
+            resolved_path = c
+            break
+
+    session = None
     try:
         import vici  # type: ignore
-        session = vici.Session(socket_path=socket_path)
+        session = vici.Session(socket_path=resolved_path)
+    except (ImportError, Exception):
+        try:
+            from .vici_client import Session
+            session = Session(socket_path=resolved_path)
+        except Exception as e_inner:
+            return {
+                "source": "vici_socket",
+                "status": "connection_error",
+                "error": str(e_inner),
+                "note": f"Could not connect to strongSwan VICI socket at {resolved_path}.",
+            }
+
+    try:
         certs_found = []
-        for cert in session.list_certs():
-            data = cert.get("data")
-            if data:
-                certs_found.append(data)
-        
+        try:
+            for cert in session.list_certs():
+                data = cert.get("data")
+                if data:
+                    certs_found.append(data)
+        except Exception:
+            pass
+
         if certs_found:
             peer_cred = build_peer_credentials(
                 peer_name="responder",
@@ -199,20 +228,43 @@ def ingest_from_vici(
                 intermediate_certs=certs_found[1:] if len(certs_found) > 1 else None,
             )
             return build_auth_metadata(responder=peer_cred, source="vici_socket")
-        else:
-            return {"source": "vici_socket", "status": "no_certificates_loaded", "responder": {}}
-    except ImportError:
-        return {
-            "source": "vici_socket",
-            "status": "vici_module_not_installed",
-            "note": "Install 'vici' (pip install vici) or use file-based certificate ingestion.",
-        }
+
+        # Fallback: inspect active SAs if PSK authentication is active
+        active_sas = []
+        try:
+            for sa in session.list_sas():
+                active_sas.append(sa)
+        except Exception:
+            pass
+
+        if active_sas:
+            sa_data = active_sas[0]
+            first_sa_name = list(sa_data.keys())[0] if sa_data else "sih-tunnel"
+            sa_info = sa_data.get(first_sa_name, {})
+            local_id = sa_info.get("local-id", "client")
+            remote_id = sa_info.get("remote-id", "gateway")
+            auth_type = sa_info.get("local-auth", "psk")
+            auth_id = 2 if str(auth_type).lower() == "psk" else 14
+
+            peer_cred = {
+                "identity": {"type": 2, "value": remote_id},
+                "auth_method": auth_id,
+                "certificates": [],
+            }
+            init_cred = {
+                "identity": {"type": 2, "value": local_id},
+                "auth_method": auth_id,
+                "certificates": [],
+            }
+            return build_auth_metadata(initiator=init_cred, responder=peer_cred, source="vici_socket")
+
+        return {"source": "vici_socket", "status": "no_certificates_loaded", "responder": {}}
     except Exception as e:
         return {
             "source": "vici_socket",
             "status": "connection_error",
             "error": str(e),
-            "note": f"Could not connect to strongSwan VICI socket at {socket_path}.",
+            "note": f"Could not connect to strongSwan VICI socket at {resolved_path}.",
         }
 
 

@@ -382,8 +382,70 @@ def _pyshark_get_raw_udp_payload(pkt):
 #  IKEv2 METADATA EXTRACTOR — PyShark-based
 # ═══════════════════════════════════════════════════════════════════════════
 
+def extract_ikeV2_from_scapy(pkt):
+    """Extract IKEv2 metadata from a Scapy packet (UDP 500 or NAT-T UDP 4500)."""
+    if not (hasattr(pkt, 'haslayer') and pkt.haslayer(UDP)):
+        return None
+
+    sport = pkt[UDP].sport
+    dport = pkt[UDP].dport
+    if sport not in (500, 4500) and dport not in (500, 4500):
+        return None
+
+    raw_bytes = bytes(pkt[UDP].payload)
+    # Strip RFC 3948 Non-ESP Marker (4 bytes of 0x00) if present on UDP 4500
+    if raw_bytes[:4] == bytes([0, 0, 0, 0]):
+        raw_bytes = raw_bytes[4:]
+
+    if len(raw_bytes) < 28:
+        return None
+
+    major_ver = raw_bytes[17] >> 4
+    if major_ver != 2:
+        return None
+
+    init_spi = "0x" + raw_bytes[:8].hex()
+    resp_spi = "0x" + raw_bytes[8:16].hex()
+    exchangeType = raw_bytes[18]
+    flags_int = raw_bytes[19]
+    is_response = bool(flags_int & 0x20)
+    message_id = int.from_bytes(raw_bytes[20:24], "big")
+
+    src_ip = None
+    dst_ip = None
+    if pkt.haslayer(IP):
+        src_ip = str(pkt[IP].src)
+        dst_ip = str(pkt[IP].dst)
+    elif pkt.haslayer(IPv6):
+        src_ip = str(pkt[IPv6].src)
+        dst_ip = str(pkt[IPv6].dst)
+
+    try:
+        timestamp = float(pkt.time)
+    except (AttributeError, ValueError, TypeError):
+        timestamp = 0.0
+
+    return _build_ikev2_metadata_dict(
+        raw_bytes=raw_bytes,
+        exchangeType=exchangeType,
+        init_spi=init_spi,
+        resp_spi=resp_spi,
+        flags_int=flags_int,
+        is_response=is_response,
+        message_id=message_id,
+        src_ip=src_ip,
+        dst_ip=dst_ip,
+        src_port=sport,
+        dst_port=dport,
+        timestamp=timestamp,
+    )
+
+
 def extract_ikeV2_metadata(pkt):
-    """Extract IKEv2 metadata from a PyShark packet."""
+    """Extract IKEv2 metadata from a PyShark packet or Scapy packet."""
+    if hasattr(pkt, 'haslayer'):
+        return extract_ikeV2_from_scapy(pkt)
+
     if not hasattr(pkt, 'isakmp'):
         return None
 
@@ -438,8 +500,37 @@ def extract_ikeV2_metadata(pkt):
     except (AttributeError, ValueError, TypeError):
         timestamp = 0.0
 
-    # ── Parse payloads from raw bytes ──────────────────────────────────
     raw_bytes = _pyshark_get_raw_udp_payload(pkt)
+    return _build_ikev2_metadata_dict(
+        raw_bytes=raw_bytes,
+        exchangeType=exchangeType,
+        init_spi=init_spi,
+        resp_spi=resp_spi,
+        flags_int=flags_int,
+        is_response=is_response,
+        message_id=message_id,
+        src_ip=src_ip,
+        dst_ip=dst_ip,
+        src_port=src_port,
+        dst_port=dst_port,
+        timestamp=timestamp,
+    )
+
+
+def _build_ikev2_metadata_dict(
+    raw_bytes,
+    exchangeType,
+    init_spi,
+    resp_spi,
+    flags_int,
+    is_response,
+    message_id,
+    src_ip,
+    dst_ip,
+    src_port,
+    dst_port,
+    timestamp,
+):
     parsed = _parse_ikev2_from_raw(raw_bytes, exchangeType) if (raw_bytes and len(raw_bytes) >= 28) else {}
 
     is_encrypted = parsed.get("is_encrypted", False)
