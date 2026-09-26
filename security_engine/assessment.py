@@ -1,270 +1,415 @@
-import json
+from typing import Any, Dict
 
 
-# -----------------------------
-# SECURITY ASSESSMENT FUNCTION
-# -----------------------------
+def _is_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
 
-def analyze_security(data):
 
-    security = data.get("security_parameters", {})
+def analyze_security(analysis_data: Dict[str, Any]) -> Dict[str, Any]:
+
+    security = analysis_data.get(
+        "security_parameters",
+        {}
+    )
 
     findings = []
     recommendations = []
 
-    # -----------------------------
+    score = 0
+    max_score = 0
+
+    # =========================================================
     # ENCRYPTION
-    # -----------------------------
+    # =========================================================
 
-    encryption = security.get("encryption", "")
+    encryption = security.get(
+        "encryption",
+        "Unknown"
+    )
 
-    if encryption == "AES-256":
+    if encryption != "Unknown":
+
+        max_score += 25
+
+        if encryption in {
+            "AES-256",
+            "AES-GCM",
+            "ChaCha20-Poly1305",
+        }:
+
+            score += 25
+
+            findings.append({
+                "parameter": "Encryption",
+                "status": "GOOD",
+                "message": (
+                    f"{encryption} strong encryption "
+                    "is being used."
+                ),
+            })
+
+        elif encryption == "AES-128":
+
+            score += 20
+
+            findings.append({
+                "parameter": "Encryption",
+                "status": "GOOD",
+                "message": (
+                    "AES-128 encryption is being used."
+                ),
+            })
+
+            recommendations.append({
+                "parameter": "Encryption",
+                "status": "INFO",
+                "message": (
+                    "Consider AES-256 or an approved "
+                    "AEAD cipher where supported."
+                ),
+            })
+
+        else:
+
+            findings.append({
+                "parameter": "Encryption",
+                "status": "WARNING",
+                "message": (
+                    f"Encryption detected: {encryption}."
+                ),
+            })
+
+            recommendations.append({
+                "parameter": "Encryption",
+                "status": "ACTION",
+                "message": (
+                    "Use a modern strong encryption algorithm."
+                ),
+            })
+
+    else:
+
         findings.append({
             "parameter": "Encryption",
-            "status": "GOOD",
-            "message": "AES-256 strong encryption is being used."
+            "status": "UNKNOWN",
+            "message": (
+                "Encryption could not be determined "
+                "from the captured traffic."
+            ),
         })
-        encryption_score = 25
 
-    else:
-        findings.append({
+        recommendations.append({
             "parameter": "Encryption",
-            "status": "WARNING",
-            "message": f"{encryption} encryption is weaker than AES-256."
+            "status": "INFO",
+            "message": (
+                "Capture the IKE negotiation containing "
+                "the Security Association proposal."
+            ),
         })
-        recommendations.append(
-            "Use strong AES-256 encryption for better security."
-        )
-        encryption_score = 0
 
-    # -----------------------------
-    # PERFECT FORWARD SECRECY
-    # -----------------------------
+    # =========================================================
+    # PFS
+    # =========================================================
 
-    pfs = security.get("pfs", False)
+    pfs = security.get(
+        "pfs",
+        "Unknown"
+    )
 
-    if pfs:
-        findings.append({
-            "parameter": "PFS",
-            "status": "GOOD",
-            "message": "Perfect Forward Secrecy is enabled."
-        })
-        pfs_score = 15
+    if isinstance(pfs, bool):
+
+        max_score += 15
+
+        if pfs:
+
+            score += 15
+
+            findings.append({
+                "parameter": "PFS",
+                "status": "GOOD",
+                "message": (
+                    "Perfect Forward Secrecy is enabled."
+                ),
+            })
+
+        else:
+
+            findings.append({
+                "parameter": "PFS",
+                "status": "HIGH_RISK",
+                "message": (
+                    "Perfect Forward Secrecy is disabled."
+                ),
+            })
+
+            recommendations.append({
+                "parameter": "PFS",
+                "status": "ACTION",
+                "message": (
+                    "Enable Perfect Forward Secrecy "
+                    "for Child SA negotiations."
+                ),
+            })
 
     else:
+
         findings.append({
             "parameter": "PFS",
-            "status": "HIGH_RISK",
-            "message": "Perfect Forward Secrecy is disabled."
+            "status": "UNKNOWN",
+            "message": (
+                "PFS status could not be determined "
+                "from the captured traffic."
+            ),
         })
-        recommendations.append(
-            "Enable Perfect Forward Secrecy (PFS) to protect past sessions."
-        )
-        pfs_score = 0
 
-    # -----------------------------
-    # DIFFIE-HELLMAN GROUP
-    # -----------------------------
+    # =========================================================
+    # DH GROUP
+    # =========================================================
 
-    dh_group = security.get("dh_group", 0)
+    dh_group = security.get(
+        "dh_group",
+        "Unknown"
+    )
 
-    if dh_group >= 14:
-        findings.append({
-            "parameter": "DH Group",
-            "status": "GOOD",
-            "message": f"DH Group {dh_group} provides an acceptable key exchange strength."
-        })
-        dh_score = 20
+    if _is_number(dh_group):
+
+        max_score += 20
+
+        if dh_group >= 14:
+
+            score += 20
+
+            findings.append({
+                "parameter": "DH Group",
+                "status": "GOOD",
+                "message": (
+                    f"DH Group {dh_group} provides "
+                    "an acceptable key exchange strength."
+                ),
+            })
+
+        else:
+
+            findings.append({
+                "parameter": "DH Group",
+                "status": "HIGH_RISK",
+                "message": (
+                    f"DH Group {dh_group} is considered "
+                    "weak for the configured security policy."
+                ),
+            })
+
+            recommendations.append({
+                "parameter": "DH Group",
+                "status": "ACTION",
+                "message": (
+                    "Use a stronger approved "
+                    "Diffie-Hellman group."
+                ),
+            })
 
     else:
+
         findings.append({
             "parameter": "DH Group",
-            "status": "HIGH_RISK",
-            "message": f"DH Group {dh_group} is weak."
+            "status": "UNKNOWN",
+            "message": (
+                "DH group could not be determined "
+                "from the captured traffic."
+            ),
         })
-        recommendations.append(
-            "Use a stronger Diffie-Hellman group for secure key exchange."
-        )
-        dh_score = 0
 
-    # -----------------------------
+    # =========================================================
     # KEY LIFETIME
-    # -----------------------------
+    # =========================================================
 
-    key_lifetime = security.get("key_lifetime", 0)
+    key_lifetime = security.get(
+        "key_lifetime",
+        "Unknown"
+    )
 
-    if key_lifetime <= 28800:
-        findings.append({
-            "parameter": "Key Lifetime",
-            "status": "GOOD",
-            "message": f"Key lifetime is {key_lifetime} seconds."
-        })
-        key_lifetime_score = 15
+    if _is_number(key_lifetime):
+
+        max_score += 15
+
+        if key_lifetime <= 28800:
+
+            score += 15
+
+            findings.append({
+                "parameter": "Key Lifetime",
+                "status": "GOOD",
+                "message": (
+                    f"Key lifetime is "
+                    f"{key_lifetime} seconds."
+                ),
+            })
+
+        else:
+
+            score += 8
+
+            findings.append({
+                "parameter": "Key Lifetime",
+                "status": "WARNING",
+                "message": (
+                    f"Key lifetime is "
+                    f"{key_lifetime} seconds."
+                ),
+            })
+
+            recommendations.append({
+                "parameter": "Key Lifetime",
+                "status": "ACTION",
+                "message": (
+                    "Consider using a shorter key lifetime "
+                    "according to the organization's policy."
+                ),
+            })
 
     else:
+
         findings.append({
             "parameter": "Key Lifetime",
-            "status": "WARNING",
-            "message": f"Key lifetime is {key_lifetime} seconds, which is relatively long."
+            "status": "UNKNOWN",
+            "message": (
+                "Key lifetime was not observed "
+                "in the captured traffic."
+            ),
         })
-        recommendations.append(
-            "Reduce the key lifetime to limit the exposure period of encryption keys."
-        )
-        key_lifetime_score = 0
 
-    # -----------------------------
+    # =========================================================
     # REPLAY PROTECTION
-    # -----------------------------
+    # =========================================================
 
     replay_protection = security.get(
         "replay_protection",
-        False
+        "Unknown"
     )
 
-    if replay_protection:
-        findings.append({
-            "parameter": "Replay Protection",
-            "status": "GOOD",
-            "message": "Replay protection is enabled."
-        })
-        replay_score = 15
+    if isinstance(replay_protection, bool):
+
+        max_score += 15
+
+        if replay_protection:
+
+            score += 15
+
+            findings.append({
+                "parameter": "Replay Protection",
+                "status": "GOOD",
+                "message": (
+                    "Replay protection is enabled."
+                ),
+            })
+
+        else:
+
+            findings.append({
+                "parameter": "Replay Protection",
+                "status": "HIGH_RISK",
+                "message": (
+                    "Replay protection is disabled."
+                ),
+            })
+
+            recommendations.append({
+                "parameter": "Replay Protection",
+                "status": "ACTION",
+                "message": (
+                    "Enable replay protection for IPsec traffic."
+                ),
+            })
 
     else:
+
         findings.append({
             "parameter": "Replay Protection",
-            "status": "HIGH_RISK",
-            "message": "Replay protection is disabled."
+            "status": "UNKNOWN",
+            "message": (
+                "Replay protection status could not "
+                "be determined from the capture."
+            ),
         })
-        recommendations.append(
-            "Enable replay protection to prevent replay attacks."
-        )
-        replay_score = 0
 
-    # -----------------------------
+    # =========================================================
     # METADATA EXPOSURE
-    # -----------------------------
+    # =========================================================
 
     metadata_exposure = security.get(
         "metadata_exposure",
-        False
+        "Unknown"
     )
 
-    if not metadata_exposure:
-        findings.append({
-            "parameter": "Metadata Exposure",
-            "status": "GOOD",
-            "message": "No significant metadata exposure detected."
-        })
-        metadata_score = 10
+    if isinstance(metadata_exposure, bool):
+
+        max_score += 10
+
+        if not metadata_exposure:
+
+            score += 10
+
+            findings.append({
+                "parameter": "Metadata Exposure",
+                "status": "GOOD",
+                "message": (
+                    "No significant metadata exposure detected."
+                ),
+            })
+
+        else:
+
+            findings.append({
+                "parameter": "Metadata Exposure",
+                "status": "WARNING",
+                "message": (
+                    "VPN traffic metadata may be observable."
+                ),
+            })
+
+            recommendations.append({
+                "parameter": "Metadata Exposure",
+                "status": "INFO",
+                "message": (
+                    "Review exposed traffic metadata such as "
+                    "packet timing, sizes, endpoints and flow patterns."
+                ),
+            })
+
+    # =========================================================
+    # FINAL SCORE
+    # =========================================================
+
+    if max_score == 0:
+
+        security_score = 0
+        risk_level = "UNKNOWN"
 
     else:
-        findings.append({
-            "parameter": "Metadata Exposure",
-            "status": "HIGH_RISK",
-            "message": "Sensitive metadata exposure detected."
-        })
-        recommendations.append(
-            "Reduce sensitive metadata exposure in the VPN traffic."
+
+        security_score = round(
+            (score / max_score) * 100
         )
-        metadata_score = 0
 
-    # -----------------------------
-    # SECURITY SCORE
-    # -----------------------------
+        if security_score >= 80:
 
-    security_score = (
-        encryption_score
-        + pfs_score
-        + dh_score
-        + key_lifetime_score
-        + replay_score
-        + metadata_score
-    )
+            risk_level = "LOW"
 
-    # -----------------------------
-    # RISK LEVEL
-    # -----------------------------
+        elif security_score >= 60:
 
-    if security_score >= 80:
-        risk_level = "LOW"
+            risk_level = "MEDIUM"
 
-    elif security_score >= 60:
-        risk_level = "MEDIUM"
+        else:
 
-    else:
-        risk_level = "HIGH"
+            risk_level = "HIGH"
 
-    # -----------------------------
-    # FINAL RESULT
-    # -----------------------------
-
-    result = {
-        "capture_id": data.get("capture_id", "N/A"),
-
-        "protocol_analysis": data.get(
-            "protocol_analysis",
-            {}
-        ),
-
-        "security_parameters": data.get(
-            "security_parameters",
-            {}
-        ),
-
-        "traffic_features": data.get(
-            "traffic_features",
-            {}
-        ),
-
-        "ai_prediction": data.get(
-            "ai_prediction",
-            {}
-        ),
-
+    return {
         "security_score": security_score,
-
         "risk_level": risk_level,
-
+        "score_details": {
+            "earned_points": score,
+            "available_points": max_score,
+        },
         "findings": findings,
-
-        "recommendations": recommendations
+        "recommendations": recommendations,
     }
-
-    return result
-
-
-# -----------------------------
-# RUN AS SCRIPT
-# -----------------------------
-
-if __name__ == "__main__":
-
-    with open(
-        "data/mock_analysis.json",
-        "r"
-    ) as file:
-
-        data = json.load(file)
-
-    result = analyze_security(data)
-
-    with open(
-        "data/security_result.json",
-        "w"
-    ) as file:
-
-        json.dump(
-            result,
-            file,
-            indent=4
-        )
-
-    print("Security assessment completed.")
-    print(
-        "Security Score:",
-        result["security_score"]
-    )
-    print(
-        "Risk Level:",
-        result["risk_level"]
-    )
