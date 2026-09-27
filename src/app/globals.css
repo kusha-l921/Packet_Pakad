@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* DARK OBSIDIAN THEME (Default) */
+  --color-bg-rgb: 11, 12, 13;            /* #0B0C0D */
+  --color-deep-rgb: 16, 18, 20;          /* #101214 */
+  --color-elevated-rgb: 23, 25, 28;      /* #17191C */
+  --color-secondary-rgb: 29, 32, 36;     /* #1D2024 */
+  --color-border-rgb: 42, 45, 49;        /* #2A2D31 */
+  --color-border-subtle-rgb: 33, 36, 40; /* #212428 */
+  --color-text-rgb: 232, 227, 216;       /* #E8E3D8 */
+  --color-muted-rgb: 155, 157, 154;      /* #9B9D9A */
+  --color-copper-rgb: 196, 122, 82;      /* #C47A52 */
+  --color-copper-hover-rgb: 214, 138, 98;
+  --color-mint-rgb: 143, 184, 168;       /* #8FB8A8 */
+  --color-mint-hover-rgb: 161, 201, 185;
+  --color-critical-rgb: 224, 90, 90;     /* #E05A5A */
+  --color-warning-rgb: 215, 168, 77;     /* #D7A84D */
+  --color-info-rgb: 126, 155, 184;       /* #7E9BB8 */
+
+  --background: #0B0C0D;
+  --foreground: #E8E3D8;
+}
+
+html.light, .light {
+  /* WHITE / LIGHT WORKSTATION THEME */
+  --color-bg-rgb: 245, 246, 248;         /* #F5F6F8 Clean architectural light canvas */
+  --color-deep-rgb: 255, 255, 255;       /* #FFFFFF Pure crisp white panels */
+  --color-elevated-rgb: 240, 242, 245;   /* #F0F2F5 Light elevated surfaces */
+  --color-secondary-rgb: 230, 233, 238;  /* #E6E9EE Secondary pills, tags & inputs */
+  --color-border-rgb: 210, 215, 222;     /* #D2D7DE Crisp hairline borders */
+  --color-border-subtle-rgb: 224, 228, 234;
+  --color-text-rgb: 18, 21, 24;          /* #121518 Deep charcoal technical black */
+  --color-muted-rgb: 95, 102, 110;       /* #5F666E High legibility neutral slate */
+  --color-copper-rgb: 184, 92, 46;       /* #B85C2E Deep oxidized burnt copper */
+  --color-copper-hover-rgb: 160, 78, 36;
+  --color-mint-rgb: 24, 120, 88;         /* #187858 High contrast deep security mint */
+  --color-mint-hover-rgb: 19, 98, 72;
+  --color-critical-rgb: 211, 47, 47;     /* #D32F2F */
+  --color-warning-rgb: 180, 83, 9;       /* #B45309 */
+  --color-info-rgb: 37, 99, 235;         /* #2563EB */
+
+  --background: #F5F6F8;
+  --foreground: #121518;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: rgb(var(--color-bg-rgb));
+  color: rgb(var(--color-text-rgb));
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--color-deep-rgb));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--color-border-rgb));
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--color-muted-rgb) / 0.5);
+}
+
+/* Selection */
+::selection {
+  background: rgba(196, 122, 82, 0.35);
+  color: #FFFFFF;
+}
+
+html.light ::selection {
+  background: rgba(184, 92, 46, 0.25);
+  color: #121518;
+}
+
+/* Technical font utility */
+.font-mono-tech {
+  font-family: 'JetBrains Mono', 'IBM Plex Mono', 'Geist Mono', monospace;
+  font-feature-settings: 'tnum' on, 'zero' on;
+}
+
+/* Subtle hairline borders */
+.border-subtle {
+  border-color: rgb(var(--color-border-subtle-rgb));
+}
+
+/* Panel cards adapting to dark/white mode */
+.panel-technical {
+  background: rgb(var(--color-deep-rgb));
+  border: 1px solid rgb(var(--color-border-rgb));
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.panel-elevated {
+  background: rgb(var(--color-elevated-rgb));
+  border: 1px solid rgb(var(--color-border-rgb));
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Terminal scanline subtle overlay */
+.scanline {
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%, 
+    rgba(0, 0, 0, 0.25) 50%
+  );
+  background-size: 100% 4px;
+}
