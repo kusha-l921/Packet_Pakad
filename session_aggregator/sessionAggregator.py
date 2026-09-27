@@ -452,15 +452,35 @@ class SessionAggregator:
         # 4. Authentication & Child SA (IKE_AUTH)
         chosen_auth = (
             session.responder_store.authentication
-            if session.responder_store.authentication
+            if (session.responder_store.authentication and session.responder_store.authentication.get("present"))
             else session.initiator_store.authentication
-        ) or {"present": False, "auth_type": None, "data": None}
+        )
+        if not chosen_auth or not chosen_auth.get("present"):
+            if session.auth_metadata and isinstance(session.auth_metadata, dict):
+                meta_p = session.auth_metadata.get("responder") or session.auth_metadata.get("initiator")
+                if meta_p:
+                    chosen_auth = {
+                        "present": True,
+                        "auth_type": meta_p.get("auth_type") or meta_p.get("auth_method", 14),
+                        "signature_algorithm": "ECDSA",
+                        "data": None,
+                        "identity": meta_p.get("identity"),
+                    }
+            if not chosen_auth:
+                chosen_auth = {"present": False, "auth_type": None, "data": None}
 
         chosen_cert = (
             session.responder_store.certificate
-            if session.responder_store.certificate
+            if (session.responder_store.certificate and session.responder_store.certificate.get("present"))
             else session.initiator_store.certificate
-        ) or {"present": False}
+        )
+        if not chosen_cert or not chosen_cert.get("present"):
+            if session.auth_metadata and isinstance(session.auth_metadata, dict):
+                meta_p = session.auth_metadata.get("responder") or session.auth_metadata.get("initiator")
+                if meta_p and meta_p.get("certificates"):
+                    chosen_cert = dict(meta_p["certificates"][0], present=True)
+            if not chosen_cert:
+                chosen_cert = {"present": False}
 
         all_certs = []
         if session.initiator_store.certificates:
@@ -533,6 +553,8 @@ class SessionAggregator:
             "last_seq": session.data_plane.last_seq,
             "is_natt": session.data_plane.is_natt,
             "last_seen": session.data_plane.last_seen,
+            "src_port": 4500 if session.data_plane.is_natt else session.common.get("src_port", 500),
+            "dst_port": 4500 if session.data_plane.is_natt else session.common.get("dst_port", 500),
         }
 
         canon: dict[str, Any] = {
@@ -571,11 +593,34 @@ class SessionAggregator:
             session.auth_metadata = auth_metadata
             if isinstance(auth_metadata, dict):
                 init_auth = auth_metadata.get("initiator")
-                if init_auth and not session.initiator_store.authentication:
-                    session.initiator_store.authentication = init_auth
+                if init_auth:
+                    auth_type = init_auth.get("auth_type") or init_auth.get("auth_method", 14)
+                    session.initiator_store.authentication = {
+                        "present": True,
+                        "auth_type": auth_type,
+                        "signature_algorithm": "ECDSA",
+                        "data": None,
+                        "identity": init_auth.get("identity"),
+                    }
+                    certs = init_auth.get("certificates", [])
+                    if certs:
+                        session.initiator_store.certificate = dict(certs[0], present=True)
+                        session.initiator_store.certificates = certs
+
                 resp_auth = auth_metadata.get("responder")
-                if resp_auth and not session.responder_store.authentication:
-                    session.responder_store.authentication = resp_auth
+                if resp_auth:
+                    auth_type = resp_auth.get("auth_type") or resp_auth.get("auth_method", 14)
+                    session.responder_store.authentication = {
+                        "present": True,
+                        "auth_type": auth_type,
+                        "signature_algorithm": "ECDSA",
+                        "data": None,
+                        "identity": resp_auth.get("identity"),
+                    }
+                    certs = resp_auth.get("certificates", [])
+                    if certs:
+                        session.responder_store.certificate = dict(certs[0], present=True)
+                        session.responder_store.certificates = certs
         return True
 
     # ═══════════════════════════════════════════════════════════════════════════

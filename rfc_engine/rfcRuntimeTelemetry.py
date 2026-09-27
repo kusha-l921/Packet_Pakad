@@ -339,6 +339,21 @@ class RfcRuntimeTelemetryEngine:
             or telemetry_dict.get("observed_packets")
             or []
         )
+        if (not isinstance(packets, list) or len(packets) == 0) and dp.get("seq_numbers"):
+            avg_b = int(dp.get("byte_count", 0) / max(1, len(dp["seq_numbers"])))
+            ts_ctx = (child_sa_context or {}).get("traffic_selectors", {})
+            inner_src = ts_ctx.get("initiator", [{}])[0].get("start_address")
+            inner_dst = ts_ctx.get("responder", [{}])[0].get("start_address")
+            packets = [
+                {
+                    "seq_num": s,
+                    "wire_bytes": avg_b or 100,
+                    "is_natt": dp.get("is_natt", False),
+                    "timestamp": dp.get("last_seen", 0.0),
+                    **({"inner_src_ip": inner_src, "inner_dst_ip": inner_dst} if inner_src and inner_dst else {})
+                }
+                for s in dp["seq_numbers"]
+            ]
 
         if not isinstance(packets, list) or len(packets) == 0:
             return self._not_verifiable_boundary(

@@ -81,6 +81,8 @@ class IntegratedPipeline:
 
         init_spi = session.initiator_spi
         if session.is_handshake_complete() and self.auto_export_on_complete:
+            if Path("/certs").is_dir():
+                self.ingest_daemon_credentials_from_path(init_spi, "/certs", identity_value="sun.enterprise.net")
             logger.info("Handshake complete for session %s. Exporting reports...", init_spi)
             self.export_session_reports(init_spi)
 

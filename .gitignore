@@ -48,3 +48,6 @@ sessions/
 ikeV1IDs.py
 ikeV1scores.py
 
+# Environment secrets and credentials
+.env
+.env.*

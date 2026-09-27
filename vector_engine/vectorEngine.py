@@ -301,6 +301,7 @@ def build_vector(session: dict) -> list[float]:
     sig_bits = (
         IKEV2_SIG_ALGO_KEY_BITS.get(sig_pqc_id)
         or IKEV2_AUTH_KEY_BITS.get(auth_type, 0)
+        or session.get("IKE_AUTH", {}).get("certificate", {}).get("cert_key_len", 0)
     )
     d[13] = min(sig_bits, 256) / 256.0
 
