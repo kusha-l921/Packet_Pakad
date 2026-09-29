@@ -1,0 +1,363 @@
+{
+  "overall_health_status": "HEALTHY",
+  "is_compliant": true,
+  "reference_time": 1790672838.6512873,
+  "summary": {
+    "total_certificates_audited": 2,
+    "critical_failures_count": 0,
+    "warnings_count": 2,
+    "passed_count": 6
+  },
+  "peers": {
+    "initiator": {
+      "peer": "initiator",
+      "identity": {
+        "type": 2,
+        "value": "sun.enterprise.net"
+      },
+      "auth_method": 14,
+      "peer_status": "HEALTHY",
+      "chain_length": 1,
+      "leaf_certificate": {
+        "index": 0,
+        "cert_type": "end_entity",
+        "subject": "CN=sun.enterprise.net",
+        "issuer": "CN=sun.enterprise.net",
+        "serial_number": "0x2d1744ccc7b8d0aa5804000f37971f628d6def3f",
+        "is_ca": true,
+        "key_type_oid": "1.2.840.10045.2.1",
+        "key_type_name": "ECDSA (id-ecPublicKey)",
+        "key_bits": 384,
+        "sig_algo_oid": "1.2.840.10045.4.3.2",
+        "sig_algo_name": "ecdsa-with-SHA256",
+        "not_before": 1790270203,
+        "not_after": 1821806203,
+        "days_until_expiration": 360.3,
+        "health_status": "HEALTHY",
+        "rating": {
+          "tier": "NIST_MODERN",
+          "score": 0.75,
+          "security_bits": 128,
+          "cnsa_2_0_compliant": false,
+          "nist_modern_compliant": true,
+          "rfc8247_compliant": true,
+          "reason": "ECDSA (id-ecPublicKey) (384 bits) with ecdsa-with-SHA256 provides 128-bit modern classical security per NIST SP 800-52r2.",
+          "recommendation": "Meets current modern baselines. For future quantum safety, plan migration to ML-DSA (FIPS 204)."
+        },
+        "findings": [
+          {
+            "rule_id": "CERT-HEALTH-EXPIRED-001",
+            "status": "PASS",
+            "severity": "INFORMATIONAL",
+            "target": "initiator:leaf",
+            "condition": "Certificate expiration status",
+            "observed": "Valid (360.3 days remaining)",
+            "expected": "Active certificate",
+            "reason": "Certificate is within active validity period.",
+            "remediation": "None required."
+          },
+          {
+            "rule_id": "CERT-CHAIN-LEAF-FLAG-006",
+            "status": "WARNING",
+            "severity": "MEDIUM",
+            "target": "initiator:leaf",
+            "condition": "Leaf certificate Basic Constraints check",
+            "observed": "is_ca = TRUE",
+            "expected": "End-entity certificate MUST have is_ca = FALSE",
+            "reason": "End-entity (leaf) certificate is configured as a Certificate Authority (cA=TRUE). This violates the principle of least privilege.",
+            "remediation": "Re-issue the client/server certificate with 'basicConstraints = CA:FALSE' to prevent misuse as an unauthorized signing CA."
+          },
+          {
+            "rule_id": "CERT-IDENTITY-SAN-004",
+            "status": "PASS",
+            "severity": "INFORMATIONAL",
+            "target": "initiator:leaf",
+            "condition": "IKE identity to Certificate SAN/CN match",
+            "observed": "IKE ID 'sun.enterprise.net' matches certificate identity",
+            "expected": "Identity match verified",
+            "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+            "remediation": "None required."
+          },
+          {
+            "rule_id": "CERT-CRYPTO-SIG-009",
+            "status": "PASS",
+            "severity": "INFORMATIONAL",
+            "target": "initiator:leaf",
+            "condition": "Certificate signature and key security",
+            "observed": "ECDSA (id-ecPublicKey) (384b) / ecdsa-with-SHA256",
+            "expected": "RFC 8247 compliant cryptographic suite",
+            "reason": "ECDSA (id-ecPublicKey) (384 bits) with ecdsa-with-SHA256 provides 128-bit modern classical security per NIST SP 800-52r2.",
+            "remediation": "Meets current modern baselines. For future quantum safety, plan migration to ML-DSA (FIPS 204)."
+          }
+        ]
+      },
+      "chain_certificates": [],
+      "findings": [
+        {
+          "rule_id": "CERT-HEALTH-EXPIRED-001",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "initiator:leaf",
+          "condition": "Certificate expiration status",
+          "observed": "Valid (360.3 days remaining)",
+          "expected": "Active certificate",
+          "reason": "Certificate is within active validity period.",
+          "remediation": "None required."
+        },
+        {
+          "rule_id": "CERT-CHAIN-LEAF-FLAG-006",
+          "status": "WARNING",
+          "severity": "MEDIUM",
+          "target": "initiator:leaf",
+          "condition": "Leaf certificate Basic Constraints check",
+          "observed": "is_ca = TRUE",
+          "expected": "End-entity certificate MUST have is_ca = FALSE",
+          "reason": "End-entity (leaf) certificate is configured as a Certificate Authority (cA=TRUE). This violates the principle of least privilege.",
+          "remediation": "Re-issue the client/server certificate with 'basicConstraints = CA:FALSE' to prevent misuse as an unauthorized signing CA."
+        },
+        {
+          "rule_id": "CERT-IDENTITY-SAN-004",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "initiator:leaf",
+          "condition": "IKE identity to Certificate SAN/CN match",
+          "observed": "IKE ID 'sun.enterprise.net' matches certificate identity",
+          "expected": "Identity match verified",
+          "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+          "remediation": "None required."
+        },
+        {
+          "rule_id": "CERT-CRYPTO-SIG-009",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "initiator:leaf",
+          "condition": "Certificate signature and key security",
+          "observed": "ECDSA (id-ecPublicKey) (384b) / ecdsa-with-SHA256",
+          "expected": "RFC 8247 compliant cryptographic suite",
+          "reason": "ECDSA (id-ecPublicKey) (384 bits) with ecdsa-with-SHA256 provides 128-bit modern classical security per NIST SP 800-52r2.",
+          "remediation": "Meets current modern baselines. For future quantum safety, plan migration to ML-DSA (FIPS 204)."
+        }
+      ]
+    },
+    "responder": {
+      "peer": "responder",
+      "identity": {
+        "type": 2,
+        "value": "moon.enterprise.net"
+      },
+      "auth_method": 14,
+      "peer_status": "HEALTHY",
+      "chain_length": 1,
+      "leaf_certificate": {
+        "index": 0,
+        "cert_type": "end_entity",
+        "subject": "CN=moon.enterprise.net",
+        "issuer": "CN=moon.enterprise.net",
+        "serial_number": "0x317163f14c36ab21eaaeaa8ce17f913c01c46282",
+        "is_ca": true,
+        "key_type_oid": "1.2.840.10045.2.1",
+        "key_type_name": "ECDSA (id-ecPublicKey)",
+        "key_bits": 384,
+        "sig_algo_oid": "1.2.840.10045.4.3.2",
+        "sig_algo_name": "ecdsa-with-SHA256",
+        "not_before": 1790270202,
+        "not_after": 1821806202,
+        "days_until_expiration": 360.3,
+        "health_status": "HEALTHY",
+        "rating": {
+          "tier": "NIST_MODERN",
+          "score": 0.75,
+          "security_bits": 128,
+          "cnsa_2_0_compliant": false,
+          "nist_modern_compliant": true,
+          "rfc8247_compliant": true,
+          "reason": "ECDSA (id-ecPublicKey) (384 bits) with ecdsa-with-SHA256 provides 128-bit modern classical security per NIST SP 800-52r2.",
+          "recommendation": "Meets current modern baselines. For future quantum safety, plan migration to ML-DSA (FIPS 204)."
+        },
+        "findings": [
+          {
+            "rule_id": "CERT-HEALTH-EXPIRED-001",
+            "status": "PASS",
+            "severity": "INFORMATIONAL",
+            "target": "responder:leaf",
+            "condition": "Certificate expiration status",
+            "observed": "Valid (360.3 days remaining)",
+            "expected": "Active certificate",
+            "reason": "Certificate is within active validity period.",
+            "remediation": "None required."
+          },
+          {
+            "rule_id": "CERT-CHAIN-LEAF-FLAG-006",
+            "status": "WARNING",
+            "severity": "MEDIUM",
+            "target": "responder:leaf",
+            "condition": "Leaf certificate Basic Constraints check",
+            "observed": "is_ca = TRUE",
+            "expected": "End-entity certificate MUST have is_ca = FALSE",
+            "reason": "End-entity (leaf) certificate is configured as a Certificate Authority (cA=TRUE). This violates the principle of least privilege.",
+            "remediation": "Re-issue the client/server certificate with 'basicConstraints = CA:FALSE' to prevent misuse as an unauthorized signing CA."
+          },
+          {
+            "rule_id": "CERT-IDENTITY-SAN-004",
+            "status": "PASS",
+            "severity": "INFORMATIONAL",
+            "target": "responder:leaf",
+            "condition": "IKE identity to Certificate SAN/CN match",
+            "observed": "IKE ID 'moon.enterprise.net' matches certificate identity",
+            "expected": "Identity match verified",
+            "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+            "remediation": "None required."
+          },
+          {
+            "rule_id": "CERT-CRYPTO-SIG-009",
+            "status": "PASS",
+            "severity": "INFORMATIONAL",
+            "target": "responder:leaf",
+            "condition": "Certificate signature and key security",
+            "observed": "ECDSA (id-ecPublicKey) (384b) / ecdsa-with-SHA256",
+            "expected": "RFC 8247 compliant cryptographic suite",
+            "reason": "ECDSA (id-ecPublicKey) (384 bits) with ecdsa-with-SHA256 provides 128-bit modern classical security per NIST SP 800-52r2.",
+            "remediation": "Meets current modern baselines. For future quantum safety, plan migration to ML-DSA (FIPS 204)."
+          }
+        ]
+      },
+      "chain_certificates": [],
+      "findings": [
+        {
+          "rule_id": "CERT-HEALTH-EXPIRED-001",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "responder:leaf",
+          "condition": "Certificate expiration status",
+          "observed": "Valid (360.3 days remaining)",
+          "expected": "Active certificate",
+          "reason": "Certificate is within active validity period.",
+          "remediation": "None required."
+        },
+        {
+          "rule_id": "CERT-CHAIN-LEAF-FLAG-006",
+          "status": "WARNING",
+          "severity": "MEDIUM",
+          "target": "responder:leaf",
+          "condition": "Leaf certificate Basic Constraints check",
+          "observed": "is_ca = TRUE",
+          "expected": "End-entity certificate MUST have is_ca = FALSE",
+          "reason": "End-entity (leaf) certificate is configured as a Certificate Authority (cA=TRUE). This violates the principle of least privilege.",
+          "remediation": "Re-issue the client/server certificate with 'basicConstraints = CA:FALSE' to prevent misuse as an unauthorized signing CA."
+        },
+        {
+          "rule_id": "CERT-IDENTITY-SAN-004",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "responder:leaf",
+          "condition": "IKE identity to Certificate SAN/CN match",
+          "observed": "IKE ID 'moon.enterprise.net' matches certificate identity",
+          "expected": "Identity match verified",
+          "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+          "remediation": "None required."
+        },
+        {
+          "rule_id": "CERT-CRYPTO-SIG-009",
+          "status": "PASS",
+          "severity": "INFORMATIONAL",
+          "target": "responder:leaf",
+          "condition": "Certificate signature and key security",
+          "observed": "ECDSA (id-ecPublicKey) (384b) / ecdsa-with-SHA256",
+          "expected": "RFC 8247 compliant cryptographic suite",
+          "reason": "ECDSA (id-ecPublicKey) (384 bits) with ecdsa-with-SHA256 provides 128-bit modern classical security per NIST SP 800-52r2.",
+          "remediation": "Meets current modern baselines. For future quantum safety, plan migration to ML-DSA (FIPS 204)."
+        }
+      ]
+    }
+  },
+  "findings": [
+    {
+      "rule_id": "CERT-HEALTH-EXPIRED-001",
+      "status": "PASS",
+      "severity": "INFORMATIONAL",
+      "target": "initiator:leaf",
+      "condition": "Certificate expiration status",
+      "observed": "Valid (360.3 days remaining)",
+      "expected": "Active certificate",
+      "reason": "Certificate is within active validity period.",
+      "remediation": "None required."
+    },
+    {
+      "rule_id": "CERT-CHAIN-LEAF-FLAG-006",
+      "status": "WARNING",
+      "severity": "MEDIUM",
+      "target": "initiator:leaf",
+      "condition": "Leaf certificate Basic Constraints check",
+      "observed": "is_ca = TRUE",
+      "expected": "End-entity certificate MUST have is_ca = FALSE",
+      "reason": "End-entity (leaf) certificate is configured as a Certificate Authority (cA=TRUE). This violates the principle of least privilege.",
+      "remediation": "Re-issue the client/server certificate with 'basicConstraints = CA:FALSE' to prevent misuse as an unauthorized signing CA."
+    },
+    {
+      "rule_id": "CERT-IDENTITY-SAN-004",
+      "status": "PASS",
+      "severity": "INFORMATIONAL",
+      "target": "initiator:leaf",
+      "condition": "IKE identity to Certificate SAN/CN match",
+      "observed": "IKE ID 'sun.enterprise.net' matches certificate identity",
+      "expected": "Identity match verified",
+      "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+      "remediation": "None required."
+    },
+    {
+      "rule_id": "CERT-CRYPTO-SIG-009",
+      "status": "PASS",
+      "severity": "INFORMATIONAL",
+      "target": "initiator:leaf",
+      "condition": "Certificate signature and key security",
+      "observed": "ECDSA (id-ecPublicKey) (384b) / ecdsa-with-SHA256",
+      "expected": "RFC 8247 compliant cryptographic suite",
+      "reason": "ECDSA (id-ecPublicKey) (384 bits) with ecdsa-with-SHA256 provides 128-bit modern classical security per NIST SP 800-52r2.",
+      "remediation": "Meets current modern baselines. For future quantum safety, plan migration to ML-DSA (FIPS 204)."
+    },
+    {
+      "rule_id": "CERT-HEALTH-EXPIRED-001",
+      "status": "PASS",
+      "severity": "INFORMATIONAL",
+      "target": "responder:leaf",
+      "condition": "Certificate expiration status",
+      "observed": "Valid (360.3 days remaining)",
+      "expected": "Active certificate",
+      "reason": "Certificate is within active validity period.",
+      "remediation": "None required."
+    },
+    {
+      "rule_id": "CERT-CHAIN-LEAF-FLAG-006",
+      "status": "WARNING",
+      "severity": "MEDIUM",
+      "target": "responder:leaf",
+      "condition": "Leaf certificate Basic Constraints check",
+      "observed": "is_ca = TRUE",
+      "expected": "End-entity certificate MUST have is_ca = FALSE",
+      "reason": "End-entity (leaf) certificate is configured as a Certificate Authority (cA=TRUE). This violates the principle of least privilege.",
+      "remediation": "Re-issue the client/server certificate with 'basicConstraints = CA:FALSE' to prevent misuse as an unauthorized signing CA."
+    },
+    {
+      "rule_id": "CERT-IDENTITY-SAN-004",
+      "status": "PASS",
+      "severity": "INFORMATIONAL",
+      "target": "responder:leaf",
+      "condition": "IKE identity to Certificate SAN/CN match",
+      "observed": "IKE ID 'moon.enterprise.net' matches certificate identity",
+      "expected": "Identity match verified",
+      "reason": "IKE Identity is correctly bound to certificate Subject Alternative Name / Subject CN.",
+      "remediation": "None required."
+    },
+    {
+      "rule_id": "CERT-CRYPTO-SIG-009",
+      "status": "PASS",
+      "severity": "INFORMATIONAL",
+      "target": "responder:leaf",
+      "condition": "Certificate signature and key security",
+      "observed": "ECDSA (id-ecPublicKey) (384b) / ecdsa-with-SHA256",
+      "expected": "RFC 8247 compliant cryptographic suite",
+      "reason": "ECDSA (id-ecPublicKey) (384 bits) with ecdsa-with-SHA256 provides 128-bit modern classical security per NIST SP 800-52r2.",
+      "remediation": "Meets current modern baselines. For future quantum safety, plan migration to ML-DSA (FIPS 204)."
+    }
+  ]
+}

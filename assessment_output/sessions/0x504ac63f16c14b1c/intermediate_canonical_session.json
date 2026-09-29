@@ -1,0 +1,662 @@
+{
+  "session_id": "0x504ac63f16c14b1c",
+  "ipsec_mode": "TUNNEL",
+  "common": {
+    "plane": "control",
+    "ike_version": 2,
+    "src_ip": "0.0.0.0",
+    "dst_ip": "0.0.0.0",
+    "src_port": 500,
+    "dst_port": 500,
+    "initiator_spi": "0x504ac63f16c14b1c",
+    "responder_spi": "0x88523102117527d8",
+    "completed": true,
+    "duration_ms": 0.06937980651855469
+  },
+  "IKE_SA_INIT": {
+    "exchange": "IKE_SA_INIT",
+    "proposals": [
+      {
+        "proposal_num": 1,
+        "protocol_id": 1,
+        "spi": null,
+        "transforms": {
+          "encryption": [
+            {
+              "id": 3,
+              "length": null
+            }
+          ],
+          "prf": [
+            {
+              "id": 1,
+              "length": null
+            }
+          ],
+          "integrity": [
+            {
+              "id": 1,
+              "length": null
+            }
+          ],
+          "dh_group": [
+            {
+              "id": 2,
+              "length": null
+            }
+          ],
+          "extended_sequence_numbers": [],
+          "additional_key_exchange_1": [],
+          "additional_key_exchange_2": [],
+          "additional_key_exchange_3": [],
+          "additional_key_exchange_4": [],
+          "additional_key_exchange_5": [],
+          "additional_key_exchange_6": [],
+          "additional_key_exchange_7": [],
+          "key_wrap": [],
+          "group_controller_authentication": []
+        }
+      }
+    ],
+    "key_exchange": {
+      "group_id": 2,
+      "key_data_len": 128,
+      "key_data": "0x3defe66101aeab3211e02c22eda921d5353643fb53480c93e45e4e3e653ee7135396a3fda437637a48ecd636b180b0dd956eb87b309f42c074d0afe22996a68509adbe8ee8c6e98c7d4446600bc3d89b6d72c816ba8d0387cab04c2d00335200862e5654b02f579105bb1924068f1091c49af6ff602ccc3b5f163552a9cd52c5"
+    },
+    "initiator_proposals": [
+      {
+        "proposal_num": 1,
+        "protocol_id": 1,
+        "spi": null,
+        "transforms": {
+          "encryption": [
+            {
+              "id": 3,
+              "length": null
+            }
+          ],
+          "prf": [
+            {
+              "id": 1,
+              "length": null
+            }
+          ],
+          "integrity": [
+            {
+              "id": 1,
+              "length": null
+            }
+          ],
+          "dh_group": [
+            {
+              "id": 2,
+              "length": null
+            }
+          ],
+          "extended_sequence_numbers": [],
+          "additional_key_exchange_1": [],
+          "additional_key_exchange_2": [],
+          "additional_key_exchange_3": [],
+          "additional_key_exchange_4": [],
+          "additional_key_exchange_5": [],
+          "additional_key_exchange_6": [],
+          "additional_key_exchange_7": [],
+          "key_wrap": [],
+          "group_controller_authentication": []
+        }
+      }
+    ],
+    "responder_proposal": [
+      {
+        "proposal_num": 1,
+        "protocol_id": 1,
+        "spi": null,
+        "transforms": {
+          "encryption": [
+            {
+              "id": 3,
+              "length": null
+            }
+          ],
+          "prf": [
+            {
+              "id": 1,
+              "length": null
+            }
+          ],
+          "integrity": [
+            {
+              "id": 1,
+              "length": null
+            }
+          ],
+          "dh_group": [
+            {
+              "id": 2,
+              "length": null
+            }
+          ],
+          "extended_sequence_numbers": [],
+          "additional_key_exchange_1": [],
+          "additional_key_exchange_2": [],
+          "additional_key_exchange_3": [],
+          "additional_key_exchange_4": [],
+          "additional_key_exchange_5": [],
+          "additional_key_exchange_6": [],
+          "additional_key_exchange_7": [],
+          "key_wrap": [],
+          "group_controller_authentication": []
+        }
+      }
+    ]
+  },
+  "IKE_INTERMEDIATE": {
+    "exchange": "IKE_INTERMEDIATE",
+    "round_count": 0,
+    "rounds": []
+  },
+  "IKE_AUTH": {
+    "exchange": "IKE_AUTH",
+    "authentication": {
+      "present": true,
+      "auth_type": 14,
+      "signature_algorithm": "ECDSA",
+      "data": null,
+      "identity": {
+        "type": 2,
+        "value": "moon.enterprise.net"
+      }
+    },
+    "certificate": {
+      "encoding": 4,
+      "type": "end_entity",
+      "is_ca": true,
+      "cert_key_type_oid": "1.2.840.10045.2.1",
+      "cert_key_len": 384,
+      "cert_sig_algo_oid": "1.2.840.10045.4.3.2",
+      "not_before": 1790270202,
+      "not_after": 1821806202,
+      "subject": "CN=moon.enterprise.net",
+      "issuer": "CN=moon.enterprise.net",
+      "serial_number": "0x317163f14c36ab21eaaeaa8ce17f913c01c46282",
+      "san": [
+        "moon.enterprise.net",
+        "172.28.0.2"
+      ],
+      "key_usage": [],
+      "present": true
+    },
+    "certificates": [
+      {
+        "encoding": 4,
+        "type": "end_entity",
+        "is_ca": true,
+        "cert_key_type_oid": "1.2.840.10045.2.1",
+        "cert_key_len": 384,
+        "cert_sig_algo_oid": "1.2.840.10045.4.3.2",
+        "not_before": 1790270203,
+        "not_after": 1821806203,
+        "subject": "CN=sun.enterprise.net",
+        "issuer": "CN=sun.enterprise.net",
+        "serial_number": "0x2d1744ccc7b8d0aa5804000f37971f628d6def3f",
+        "san": [
+          "sun.enterprise.net",
+          "172.28.0.3"
+        ],
+        "key_usage": []
+      },
+      {
+        "encoding": 4,
+        "type": "end_entity",
+        "is_ca": true,
+        "cert_key_type_oid": "1.2.840.10045.2.1",
+        "cert_key_len": 384,
+        "cert_sig_algo_oid": "1.2.840.10045.4.3.2",
+        "not_before": 1790270202,
+        "not_after": 1821806202,
+        "subject": "CN=moon.enterprise.net",
+        "issuer": "CN=moon.enterprise.net",
+        "serial_number": "0x317163f14c36ab21eaaeaa8ce17f913c01c46282",
+        "san": [
+          "moon.enterprise.net",
+          "172.28.0.2"
+        ],
+        "key_usage": []
+      }
+    ],
+    "child_sa": {
+      "present": true,
+      "mode": "TUNNEL",
+      "is_transport_mode": false,
+      "proposals": [
+        {
+          "proposal_num": 1,
+          "protocol_id": 3,
+          "spi": "0xca01b80c",
+          "transforms": {
+            "encryption": [
+              {
+                "id": 3,
+                "length": 192
+              }
+            ],
+            "integrity": [
+              {
+                "id": 1
+              }
+            ],
+            "extended_sequence_numbers": []
+          }
+        }
+      ]
+    },
+    "traffic_selectors": {
+      "initiator": [
+        {
+          "ts_type": 7,
+          "ip_proto": 0,
+          "start_address": "172.28.0.2",
+          "end_address": "172.28.0.2",
+          "start_port": 0,
+          "end_port": 65535
+        }
+      ],
+      "responder": [
+        {
+          "ts_type": 7,
+          "ip_proto": 0,
+          "start_address": "172.28.0.3",
+          "end_address": "172.28.0.3",
+          "start_port": 0,
+          "end_port": 65535
+        }
+      ]
+    },
+    "initiator_auth": {
+      "present": true,
+      "auth_type": 14,
+      "signature_algorithm": "ECDSA",
+      "data": null,
+      "identity": {
+        "type": 2,
+        "value": "sun.enterprise.net"
+      }
+    },
+    "responder_auth": {
+      "present": true,
+      "auth_type": 14,
+      "signature_algorithm": "ECDSA",
+      "data": null,
+      "identity": {
+        "type": 2,
+        "value": "moon.enterprise.net"
+      }
+    },
+    "auth_metadata": {
+      "source": "daemon_api",
+      "daemon_type": "strongswan",
+      "initiator": {
+        "identity": {
+          "type": 2,
+          "value": "sun.enterprise.net"
+        },
+        "auth_method": 14,
+        "certificates": [
+          {
+            "encoding": 4,
+            "type": "end_entity",
+            "is_ca": true,
+            "cert_key_type_oid": "1.2.840.10045.2.1",
+            "cert_key_len": 384,
+            "cert_sig_algo_oid": "1.2.840.10045.4.3.2",
+            "not_before": 1790270203,
+            "not_after": 1821806203,
+            "subject": "CN=sun.enterprise.net",
+            "issuer": "CN=sun.enterprise.net",
+            "serial_number": "0x2d1744ccc7b8d0aa5804000f37971f628d6def3f",
+            "san": [
+              "sun.enterprise.net",
+              "172.28.0.3"
+            ],
+            "key_usage": []
+          }
+        ]
+      },
+      "responder": {
+        "identity": {
+          "type": 2,
+          "value": "moon.enterprise.net"
+        },
+        "auth_method": 14,
+        "certificates": [
+          {
+            "encoding": 4,
+            "type": "end_entity",
+            "is_ca": true,
+            "cert_key_type_oid": "1.2.840.10045.2.1",
+            "cert_key_len": 384,
+            "cert_sig_algo_oid": "1.2.840.10045.4.3.2",
+            "not_before": 1790270202,
+            "not_after": 1821806202,
+            "subject": "CN=moon.enterprise.net",
+            "issuer": "CN=moon.enterprise.net",
+            "serial_number": "0x317163f14c36ab21eaaeaa8ce17f913c01c46282",
+            "san": [
+              "moon.enterprise.net",
+              "172.28.0.2"
+            ],
+            "key_usage": []
+          }
+        ]
+      }
+    },
+    "initiator": {
+      "identity": {
+        "type": 2,
+        "value": "sun.enterprise.net"
+      },
+      "auth_method": 14,
+      "certificates": [
+        {
+          "encoding": 4,
+          "type": "end_entity",
+          "is_ca": true,
+          "cert_key_type_oid": "1.2.840.10045.2.1",
+          "cert_key_len": 384,
+          "cert_sig_algo_oid": "1.2.840.10045.4.3.2",
+          "not_before": 1790270203,
+          "not_after": 1821806203,
+          "subject": "CN=sun.enterprise.net",
+          "issuer": "CN=sun.enterprise.net",
+          "serial_number": "0x2d1744ccc7b8d0aa5804000f37971f628d6def3f",
+          "san": [
+            "sun.enterprise.net",
+            "172.28.0.3"
+          ],
+          "key_usage": []
+        }
+      ]
+    },
+    "responder": {
+      "identity": {
+        "type": 2,
+        "value": "moon.enterprise.net"
+      },
+      "auth_method": 14,
+      "certificates": [
+        {
+          "encoding": 4,
+          "type": "end_entity",
+          "is_ca": true,
+          "cert_key_type_oid": "1.2.840.10045.2.1",
+          "cert_key_len": 384,
+          "cert_sig_algo_oid": "1.2.840.10045.4.3.2",
+          "not_before": 1790270202,
+          "not_after": 1821806202,
+          "subject": "CN=moon.enterprise.net",
+          "issuer": "CN=moon.enterprise.net",
+          "serial_number": "0x317163f14c36ab21eaaeaa8ce17f913c01c46282",
+          "san": [
+            "moon.enterprise.net",
+            "172.28.0.2"
+          ],
+          "key_usage": []
+        }
+      ]
+    }
+  },
+  "notify": {
+    "present": true,
+    "notify_types": [
+      16388,
+      16389,
+      16404,
+      16406,
+      16418,
+      16430,
+      16431
+    ],
+    "messages": [
+      {
+        "type": 16388,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": "0x75bc6d462e41bf5477898697750662ce7611dc26"
+      },
+      {
+        "type": 16389,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": "0xe7e7b018cfe4e2b69f7c22108decd2e9961471de"
+      },
+      {
+        "type": 16430,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": null
+      },
+      {
+        "type": 16431,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": "0x0002000300040005"
+      },
+      {
+        "type": 16406,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": null
+      },
+      {
+        "type": 16388,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": "0x75bc6d462e41bf5477898697750662ce7611dc26"
+      },
+      {
+        "type": 16389,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": "0xe7e7b018cfe4e2b69f7c22108decd2e9961471de"
+      },
+      {
+        "type": 16430,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": null
+      },
+      {
+        "type": 16431,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": "0x0002000300040005"
+      },
+      {
+        "type": 16406,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": null
+      },
+      {
+        "type": 16388,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": "0xcaca8ea0a927998cd8c802b07a8c895146613bee"
+      },
+      {
+        "type": 16389,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": "0x9315bc28b0780d26c6b4d8b0d003f30cb609e1fa"
+      },
+      {
+        "type": 16430,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": null
+      },
+      {
+        "type": 16431,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": "0x0002000300040005"
+      },
+      {
+        "type": 16418,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": null
+      },
+      {
+        "type": 16404,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": null
+      },
+      {
+        "type": 16388,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": "0xcaca8ea0a927998cd8c802b07a8c895146613bee"
+      },
+      {
+        "type": 16389,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": "0x9315bc28b0780d26c6b4d8b0d003f30cb609e1fa"
+      },
+      {
+        "type": 16430,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": null
+      },
+      {
+        "type": 16431,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": "0x0002000300040005"
+      },
+      {
+        "type": 16418,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": null
+      },
+      {
+        "type": 16404,
+        "protocol_id": 0,
+        "spi_size": 0,
+        "spi": null,
+        "data": null
+      }
+    ]
+  },
+  "data_plane": {
+    "spi": "0xca01b80c",
+    "packet_count": 15,
+    "byte_count": 19920,
+    "seq_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "last_seq": 15,
+    "is_natt": true,
+    "last_seen": 0.0,
+    "src_port": 4500,
+    "dst_port": 4500
+  },
+  "lifecycle_events": [],
+  "auth_metadata": {
+    "source": "daemon_api",
+    "daemon_type": "strongswan",
+    "initiator": {
+      "identity": {
+        "type": 2,
+        "value": "sun.enterprise.net"
+      },
+      "auth_method": 14,
+      "certificates": [
+        {
+          "encoding": 4,
+          "type": "end_entity",
+          "is_ca": true,
+          "cert_key_type_oid": "1.2.840.10045.2.1",
+          "cert_key_len": 384,
+          "cert_sig_algo_oid": "1.2.840.10045.4.3.2",
+          "not_before": 1790270203,
+          "not_after": 1821806203,
+          "subject": "CN=sun.enterprise.net",
+          "issuer": "CN=sun.enterprise.net",
+          "serial_number": "0x2d1744ccc7b8d0aa5804000f37971f628d6def3f",
+          "san": [
+            "sun.enterprise.net",
+            "172.28.0.3"
+          ],
+          "key_usage": []
+        }
+      ]
+    },
+    "responder": {
+      "identity": {
+        "type": 2,
+        "value": "moon.enterprise.net"
+      },
+      "auth_method": 14,
+      "certificates": [
+        {
+          "encoding": 4,
+          "type": "end_entity",
+          "is_ca": true,
+          "cert_key_type_oid": "1.2.840.10045.2.1",
+          "cert_key_len": 384,
+          "cert_sig_algo_oid": "1.2.840.10045.4.3.2",
+          "not_before": 1790270202,
+          "not_after": 1821806202,
+          "subject": "CN=moon.enterprise.net",
+          "issuer": "CN=moon.enterprise.net",
+          "serial_number": "0x317163f14c36ab21eaaeaa8ce17f913c01c46282",
+          "san": [
+            "moon.enterprise.net",
+            "172.28.0.2"
+          ],
+          "key_usage": []
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "flow_key": [
+    "0.0.0.0",
+    "0.0.0.0"
+  ],
+  "verdict": "ANOMALY_STATISTICAL_FLOW_ANOMALY",
+  "trigger_type": "DATA_PLANE_TELEMETRY",
+  "features": {
+    "total_packets": 15.0,
+    "forward_packets": 2.7,
+    "backward_packets": 12.3,
+    "total_bytes": 19920.0,
+    "forward_bytes": 3585.6,
+    "backward_bytes": 16334.4,
+    "minimum_packet_size": 1256.0,
+    "maximum_packet_size": 1400.0,
+    "mean_packet_size": 1328.0,
+    "standard_deviation_packet_size": 48.0,
+    "median_packet_size": 1328.0,
+    "forward_mean_packet_size": 1328.0,
+    "backward_mean_packet_size": 1328.0,
+    "flow_duration_seconds": 0.5,
+    "packets_per_second": 30.0,
+    "bytes_per_second": 39840.0,
+    "mean_inter_arrival_time": 0.018,
+    "minimum_inter_arrival_time": 0.0036,
+    "maximum_inter_arrival_time": 0.045,
+    "standard_deviation_inter_arrival_time": 0.0045,
+    "forward_packet_ratio": 0.18,
+    "backward_packet_ratio": 0.82,
+    "forward_byte_ratio": 0.18,
+    "backward_byte_ratio": 0.82,
+    "maximum_packets_in_one_second": 5.2
+  },
+  "packet_count": 15,
+  "duration_seconds": 0.5,
+  "covert_channel_detection": {
+    "is_anomaly": true,
+    "anomaly_score": 1.0,
+    "threat_type": "STATISTICAL_FLOW_ANOMALY",
+    "risk_level": "MEDIUM",
+    "indicators": [
+      "Flow variance deviates significantly from baseline multidimensional cluster"
+    ],
+    "raw_decision": -1
+  },
+  "side_channel_evaluation": {
+    "predicted_class": "VIDEO_STREAMING_BURST",
+    "eavesdropper_confidence": 0.742,
+    "class_distribution": {
+      "VIDEO_STREAMING_BURST": 0.742,
+      "VOIP_SPEECH_ACTIVITY": 0.0,
+      "WEB_FINGERPRINT_BROWSING": 0.15,
+      "INTERACTIVE_SHELL_KEYSTROKE": 0.067,
+      "BULK_DATA_TRANSFER": 0.042
+    },
+    "side_channel_leakage_risk": "MEDIUM",
+    "tfc_padding_recommended": true,
+    "mean_packet_size": 1328.0,
+    "std_packet_size": 48.0,
+    "remediation": "Apply adaptive padding or traffic masking to attenuate variable packet-size histograms."
+  },
+  "model_metadata": {
+    "covert_model": "IsolationForest (Unsupervised Baseline)",
+    "side_channel_model": "RandomForestClassifier (Traffic Fingerprinting)",
+    "feature_count": 25
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "init_spi": "0x504ac63f16c14b1c",
+  "child_sa": {
+    "present": true,
+    "mode": "TUNNEL",
+    "is_transport_mode": false,
+    "traffic_selectors": {
+      "initiator": [
+        {
+          "ts_type": 7,
+          "ip_proto": 0,
+          "start_address": "172.28.0.2",
+          "end_address": "172.28.0.2",
+          "start_port": 0,
+          "end_port": 65535
+        }
+      ],
+      "responder": [
+        {
+          "ts_type": 7,
+          "ip_proto": 0,
+          "start_address": "172.28.0.3",
+          "end_address": "172.28.0.3",
+          "start_port": 0,
+          "end_port": 65535
+        }
+      ]
+    },
+    "proposals": [
+      {
+        "proposal_num": 1,
+        "protocol_id": 3,
+        "spi": "0xca01b80c",
+        "transforms": {
+          "encryption": [
+            {
+              "id": 3,
+              "length": 192
+            }
+          ],
+          "integrity": [
+            {
+              "id": 1
+            }
+          ],
+          "extended_sequence_numbers": []
+        }
+      }
+    ]
+  },
+  "traffic_selectors": {
+    "initiator": [
+      {
+        "ts_type": 7,
+        "ip_proto": 0,
+        "start_address": "172.28.0.2",
+        "end_address": "172.28.0.2",
+        "start_port": 0,
+        "end_port": 65535
+      }
+    ],
+    "responder": [
+      {
+        "ts_type": 7,
+        "ip_proto": 0,
+        "start_address": "172.28.0.3",
+        "end_address": "172.28.0.3",
+        "start_port": 0,
+        "end_port": 65535
+      }
+    ]
+  },
+  "data_plane": {
+    "spi": "0xca01b80c",
+    "packet_count": 15,
+    "byte_count": 19920,
+    "seq_numbers": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "last_seq": 15,
+    "is_natt": true,
+    "src_port": 4500,
+    "dst_port": 4500,
+    "last_seen": 1790328144.75,
+    "packets": [
+      {
+        "seq_num": 1,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.05,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 2,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.1,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 3,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.15,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 4,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.2,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 5,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.25,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 6,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.3,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 7,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.35,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 8,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.4,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 9,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.45,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 10,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.5,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 11,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.55,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 12,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.6,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 13,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.65,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 14,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.7,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      },
+      {
+        "seq_num": 15,
+        "wire_bytes": 1328,
+        "is_natt": true,
+        "timestamp": 1790328144.75,
+        "inner_src_ip": "172.28.0.2",
+        "inner_dst_ip": "172.28.0.3"
+      }
+    ]
+  }
+}

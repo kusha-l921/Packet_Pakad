@@ -1,0 +1,586 @@
+# RFC Health & Compliance Rule Engine — Integration Guide
+
+This guide explains how to integrate and call the **RFC-Based Health and Compliance Rule Engine** for IPsec and IKEv2.
+
+---
+
+## 1. Quick Start: What Function to Call
+
+The primary entry point is the `RfcRuleEngine` class (`rfcRuleEngine.py`), which provides three core methods:
+
+1. **`evaluate(session_dict, telemetry_dict=None)`** — Full evaluation of handshake session and/or batch telemetry.
+2. **`process_esp_packet(packet_dict, session_dict=None)`** — Real-time evaluation of a single ESP packet (live packet streaming).
+3. **`reset_telemetry_windows(spi=None)`** — Reset sliding window state for an SPI or all SPIs (e.g. on rekey).
+
+```python
+from rfcRuleEngine import RfcRuleEngine
+
+# 1. Instantiate the engine (optional: configure anti-replay window size, default=64)
+engine = RfcRuleEngine(replay_window_size=64)
+
+# 2. Call evaluate() with your session dict (and optional telemetry dict)
+report = engine.evaluate(session_dict, telemetry_dict=None)
+
+# 3. Access decoupled results
+print("Overall Status:", report.overall_rfc_status.value)      # PASS, FAIL, WARNING, NOT_VERIFIABLE
+print("PQC Status:", report.pqc_classification.value)          # NONE, PQC_KEM, PPK, PQC_SIG, COMPOSITE
+print("Hybrid Status:", report.hybrid_classification.value)    # HYBRID, NOT_HYBRID, NOT_VERIFIABLE
+print("Security Posture:", report.cryptographic_posture.value) # STRONG, ACCEPTABLE, WEAK, BROKEN
+```
+
+---
+
+## 2. API Signatures & Input Parameters
+
+### Method 1: `evaluate(...)`
+```python
+def evaluate(
+    self,
+    session_dict: dict[str, Any],
+    telemetry_dict: dict[str, Any] | None = None
+) -> EngineReport:
+```
+
+### Method 2: `process_esp_packet(...)`
+```python
+def process_esp_packet(
+    self,
+    packet_dict: dict[str, Any],
+    session_dict: dict[str, Any] | None = None
+) -> list[RuleEvaluationResult]:
+```
+
+### Method 3: `reset_telemetry_windows(...)`
+```python
+def reset_telemetry_windows(
+    self,
+    spi: str | None = None
+) -> None:
+```
+
+### Parameter 1: `session_dict` (Part 1: Post-Handshake Control Plane)
+
+The unified handshake session dictionary produced by `metadataExtractor.extract_ikeV2_metadata()` or merged via `merge_session_metadata(*dicts)`.
+
+#### Structure / Keys Expected:
+```python
+session_dict = {
+    # ── Header & Plane Metadata ──────────────────────────────────────
+    "common": {
+        "ike_version": 2,          # 2 for IKEv2 (1 flags RFC 9395 deprecation)
+        "src_ip": "192.168.1.1",
+        "dst_ip": "192.168.1.2",
+        "src_port": 500,           # 500 (native) or 4500 (NAT-T)
+        "dst_port": 500,
+        "message_id": 0,           # Optional: validates sequential ordering
+    },
+
+    # ── IKE_SA_INIT (Exchange 34) ───────────────────────────────────
+    "IKE_SA_INIT": {
+        "exchange": "IKE_SA_INIT",
+        "proposals": [{
+            "proposal_num": 1,
+            "protocol_id": 1,      # 1 = IKE
+            "transforms": {
+                "encryption": [{"id": 20, "length": 256}],   # e.g., AES-GCM-256 (ID 20) or AES-CBC (ID 12)
+                "prf":        [{"id": 6}],                    # e.g., HMAC-SHA2-384 (ID 6) or HMAC-SHA2-256 (ID 5)
+                "integrity":  [{"id": 0}],                    # ID 0 (NONE) for AEAD; ID 12 for non-AEAD
+                "dh_group":   [{"id": 20}],                   # e.g., P-384 (ID 20), Curve25519 (ID 31), MODP-2048 (ID 14)
+                "extended_sequence_numbers": [{"id": 1}],     # 1 = ESN enabled, 0 = 32-bit
+                "additional_key_exchange_1": [{"id": 37}],    # Optional: RFC 9370 Multi-KE (e.g., ML-KEM-1024)
+            },
+        }],
+        "key_exchange": {
+            "group_id": 20,
+            "key_data_len": 96,
+        },
+    },
+
+    # ── IKE_AUTH (Exchange 35) ──────────────────────────────────────
+    "IKE_AUTH": {
+        "exchange": "IKE_AUTH",
+        "authentication": {
+            "present": True,
+            "auth_type": 14,       # 14 = Digital Signature (RFC 7427), 2 = PSK, 9/10/11 = ECDSA
+            "data": "0x...",
+        },
+        "certificate": {           # Optional for PSK
+            "present": True,
+            "encoding": 4,         # X.509 Certificate - Signature
+            "cert_key_type_oid": "2.16.840.1.101.3.4.3.19",  # e.g., ML-DSA-87 or 1.2.840.10045.2.1
+            "cert_key_len": 2592,
+            "cert_sig_algo_oid": "2.16.840.1.101.3.4.3.19",
+        },
+        "child_sa": {
+            "present": True,
+            "proposals": [{
+                "proposal_num": 1,
+                "protocol_id": 3,  # 3 = ESP
+                "transforms": {
+                    "encryption": [{"id": 20, "length": 256}],
+                    "integrity":  [{"id": 0}],
+                    "dh_group":   [{"id": 20}],
+                    "extended_sequence_numbers": [{"id": 1}],
+                },
+            }],
+        },
+        "traffic_selectors": {
+            "initiator": [{"start_address": "10.0.0.0", "end_address": "10.0.0.255"}],
+            "responder": [{"start_address": "10.1.0.0", "end_address": "10.1.0.255"}],
+        },
+    },
+
+    # ── Consolidated Notifications ─────────────────────────────────
+    "notify": {
+        "present": True,
+        "notify_types": [16440, 16443],  # 16440 = Multi-KE, 16443 = Signature Hash Algos, 16435 = USE_PPK
+        "messages": [],
+    },
+}
+```
+
+---
+
+### Parameter 2: `telemetry_dict` (Part 2: Runtime Telemetry — Optional)
+
+Passed over periodic sliding windows or trace completion. If omitted or passed as `None`, Part 2 rules evaluate safely to `NOT_VERIFIABLE` without false positives or false failures.
+
+#### Structure / Keys Expected:
+```python
+telemetry_dict = {
+    "data_plane": {
+        "spi": "0xaabbccdd",
+        "is_natt": False,          # True if UDP-encapsulated (port 4500)
+        "src_ip": "192.168.1.1",
+        "dst_ip": "192.168.1.2",
+        "src_port": None,          # 4500 if NAT-T
+        "dst_port": None,
+        "esn": True,               # Optional: True if ESN negotiated, False for 32-bit
+        "packets": [               # List of observed ESP packet records
+            {"seq_num": 1, "wire_bytes": 128, "timestamp": 100.001},
+            {"seq_num": 2, "wire_bytes": 128, "timestamp": 100.002},
+            {"seq_num": 3, "wire_bytes": 256, "timestamp": 100.003},
+            # ...
+        ],
+    }
+}
+```
+
+> [!NOTE]
+> `telemetry_dict` can also be passed directly as a flat dictionary with `{"packets": [...], "spi": ...}` or embedded inside `session_dict["data_plane"]`. The engine automatically inspects both locations.
+
+---
+
+## 3. Output: The `EngineReport` Object
+
+Calling `engine.evaluate(...)` returns an `EngineReport` dataclass with decoupled fields:
+
+| Field | Type / Enum | Values | Description |
+| :--- | :--- | :--- | :--- |
+| `overall_rfc_status` | `RuleStatus` | `PASS`, `FAIL`, `WARNING`, `NOT_VERIFIABLE` | Overall Boolean / Requirement compliance |
+| `protocol_compliance` | `RuleStatus` | `PASS`, `FAIL`, `WARNING`, `NOT_VERIFIABLE` | Category 1 (IKEv2 protocol compliance) |
+| `cryptographic_compliance` | `RuleStatus` | `PASS`, `FAIL`, `WARNING`, `NOT_VERIFIABLE` | Categories 2–6 (ENCR, PRF, INTEG, DH) |
+| `ipsec_esp_compliance` | `RuleStatus` | `PASS`, `FAIL`, `WARNING`, `NOT_VERIFIABLE` | Categories 8, 10, 12 (ESP, Replay, SPD) |
+| `authentication_compliance` | `RuleStatus` | `PASS`, `FAIL`, `WARNING`, `NOT_VERIFIABLE` | Category 7 (Auth, Certs, Signatures) |
+| `cryptographic_posture` | `SecurityPosture` | `STRONG`, `ACCEPTABLE`, `WEAK`, `BROKEN` | Classical cryptographic security tier |
+| `pqc_classification` | `PqcClassification` | `NONE`, `PQC_KEM`, `PPK`, `PQC_SIG`, `COMPOSITE` | Post-quantum readiness classification |
+| `hybrid_classification` | `HybridClassification` | `HYBRID`, `NOT_HYBRID`, `NOT_VERIFIABLE` | Cryptographic mechanism binding |
+| `critical_failures` | `list[RuleEvaluationResult]` | List of critical failed rules | Any `MUST` violation or `MUST NOT` breach |
+| `warnings` | `list[RuleEvaluationResult]` | List of warning rules | Any `SHOULD NOT` or deprecated usage |
+| `passed_rules` | `list[RuleEvaluationResult]` | List of passed rules | Satisfied RFC requirements |
+| `not_verifiable_rules` | `list[RuleEvaluationResult]` | List of unverified rules | Missing required trace/telemetry inputs |
+| `not_applicable_rules` | `list[RuleEvaluationResult]` | List of N/A rules | Rules not applicable to negotiated mode |
+| `all_results` | `list[RuleEvaluationResult]` | Complete list of all evaluated rules | Every rule evaluation result |
+| `category_summaries` | `dict[str, CategoryComplianceSummary]` | Per-category summaries | Granular category pass/fail/warn counts |
+
+### `RuleEvaluationResult` Schema
+
+Each item in `critical_failures`, `warnings`, `passed_rules`, etc. is a `RuleEvaluationResult` object with:
+
+```python
+@dataclass
+class RuleEvaluationResult:
+    rule_id: str                   # e.g., "IKE-PROTO-VER-001", "ESP-REPLAY-DUP-001"
+    rfc: str                       # e.g., "RFC 7296", "RFC 8247", "RFC 4303"
+    section: str                   # e.g., "§3.1", "§2.1", "§3.4.3"
+    category: str                  # e.g., "IKEv2 Protocol Compliance", "Anti-Replay / ESN"
+    condition: str                 # Human-readable rule condition being evaluated
+    requirement_level: str         # "MUST", "MUST NOT", "SHOULD", "SHOULD NOT", "MAY"
+    applicable_context: str        # "HANDSHAKE", "RUNTIME", "COMMON"
+    status: RuleStatus             # PASS, FAIL, WARNING, NOT_VERIFIABLE, NOT_APPLICABLE
+    severity: Severity             # CRITICAL, HIGH, MEDIUM, LOW, INFORMATIONAL
+    reason: str                    # Detailed diagnostic rationale citing RFC requirements
+    observed_value: Any            # What was found in the input packet/session
+    expected_requirement: str      # What RFC normative text dictates
+    spec_source: str               # "PUBLISHED RFC", "IANA REGISTRY", "FIPS STANDARD"
+```
+
+---
+
+## 4. Integration Code Examples
+
+### Example 1: Evaluating a Completed Handshake Session (Control-Plane Only)
+
+```python
+from rfcRuleEngine import RfcRuleEngine
+
+# Instantiate engine
+engine = RfcRuleEngine()
+
+# Handshake session metadata
+session = {
+    "common": {"ike_version": 2, "src_port": 500, "dst_port": 500},
+    "IKE_SA_INIT": {
+        "proposals": [{
+            "proposal_num": 1,
+            "transforms": {
+                "encryption": [{"id": 20, "length": 256}],  # AES-GCM-256
+                "prf":        [{"id": 6}],                   # SHA-384
+                "integrity":  [{"id": 0}],                   # NONE (valid for AEAD)
+                "dh_group":   [{"id": 20}],                  # P-384
+                "extended_sequence_numbers": [{"id": 1}],
+                "additional_key_exchange_1": [{"id": 37}],   # ML-KEM-1024
+            },
+        }],
+        "key_exchange": {"group_id": 20, "key_data_len": 96},
+    },
+    "IKE_AUTH": {
+        "authentication": {"present": True, "auth_type": 14},
+        "certificate": {
+            "present": True,
+            "cert_key_type_oid": "2.16.840.1.101.3.4.3.19",  # ML-DSA-87
+            "cert_key_len": 2592,
+            "cert_sig_algo_oid": "2.16.840.1.101.3.4.3.19",
+        },
+        "child_sa": {
+            "present": True,
+            "proposals": [{
+                "transforms": {
+                    "encryption": [{"id": 20, "length": 256}],
+                    "integrity":  [{"id": 0}],
+                    "dh_group":   [{"id": 37}],
+                }
+            }]
+        },
+    },
+    "notify": {
+        "present": True,
+        "notify_types": [16440, 16443],
+        "messages": [],
+    },
+}
+
+# Run evaluation
+report = engine.evaluate(session)
+
+# Export as dictionary or formatted text report
+report_dict = report.to_dict()
+report_text = report.to_text_report()
+
+print(report_text)
+```
+
+---
+
+### Example 2: Continuous Runtime Telemetry (ESP Sliding Window)
+
+```python
+from rfcRuleEngine import RfcRuleEngine
+
+engine = RfcRuleEngine(replay_window_size=128)
+
+# Telemetry sliding window of observed packets
+telemetry = {
+    "data_plane": {
+        "spi": "0x12345678",
+        "is_natt": True,
+        "src_port": 4500,
+        "dst_port": 4500,
+        "esn": True,
+        "packets": [
+            {"seq_num": 100, "wire_bytes": 140, "timestamp": 12.01},
+            {"seq_num": 101, "wire_bytes": 140, "timestamp": 12.02},
+            {"seq_num": 102, "wire_bytes": 140, "timestamp": 12.03},
+            {"seq_num": 101, "wire_bytes": 140, "timestamp": 12.04},  # Replay!
+        ],
+    }
+}
+
+# Evaluate telemetry (can be run with or without handshake session)
+report = engine.evaluate({}, telemetry_dict=telemetry)
+
+if report.critical_failures:
+    print("Security Violations Detected:")
+    for failure in report.critical_failures:
+        print(f"[{failure.severity.value}] {failure.rule_id}: {failure.reason}")
+```
+
+---
+
+### Example 3: Pipeline Integration with `metadataExtractor.py` and `vectorEngine.py`
+
+```python
+from metadataExtractor import extract_ikeV2_metadata, extract_esp_metadata
+from vectorEngine import merge_session_metadata
+from rfcRuleEngine import RfcRuleEngine
+
+# 1. Parse packets from PyShark or PCAP
+session_packets = []
+# for pkt in pyshark_capture:
+#     meta = extract_ikeV2_metadata(pkt)
+#     if meta: session_packets.append(meta)
+
+# 2. Merge multi-packet handshake
+session_dict = merge_session_metadata(*session_packets)
+
+# 3. Evaluate compliance
+engine = RfcRuleEngine()
+report = engine.evaluate(session_dict)
+
+# 4. Integrate into database, logging, or alerting
+if report.overall_rfc_status.value == "FAIL":
+    # Trigger alert for non-compliant VPN negotiation
+    pass
+```
+
+---
+
+### Example 4: Streaming ESP Packets One by One (Real-Time Live Capture)
+
+Yes! You can feed ESP packets **one by one** directly as they arrive from Scapy, PyShark, or a socket stream using `engine.process_esp_packet(packet_dict)`:
+
+```python
+from scapy.all import sniff
+from metadataExtractor import extract_esp_metadata
+from rfcRuleEngine import RfcRuleEngine
+
+# 1. Instantiate the engine (the sliding window persists across calls)
+engine = RfcRuleEngine(replay_window_size=64)
+
+# Optional: pass the previously evaluated handshake session dict
+# so the engine knows if ESN or specific Traffic Selectors were negotiated
+handshake_session = session_dict  # or None
+
+def on_packet_received(pkt):
+    # 2. Extract ESP packet metadata using metadataExtractor
+    esp_meta = extract_esp_metadata(pkt)
+    if not esp_meta:
+        return
+
+    # 3. Feed the single packet to the engine
+    findings = engine.process_esp_packet(esp_meta, session_dict=handshake_session)
+
+    # 4. Check findings for this specific packet
+    for r in findings:
+        if r.status.value == "FAIL":
+            print(f"🚨 [CRITICAL ALERT] {r.rule_id} violated on packet seq={esp_meta['seq_num']}: {r.reason}")
+        elif r.status.value == "WARNING":
+            print(f"⚠️ [WARNING] {r.rule_id}: {r.reason}")
+
+# Example: Sniff live ESP traffic and evaluate each packet on the fly
+# sniff(filter="ip proto 50 or udp port 4500", prn=on_packet_received)
+```
+
+#### What `process_esp_packet()` checks per packet:
+1. **Anti-Replay Sliding Window (RFC 4303 §3.4.3)**:
+   - Immediately detects **duplicate sequence numbers** (`ESP-REPLAY-DUP-001`, `CRITICAL`).
+   - Immediately detects **packets falling behind the sliding window trailing edge** (`ESP-REPLAY-WINDOW-001`, `HIGH`).
+   - Advances the window right edge when higher sequence numbers arrive.
+2. **Sequence Number Rollover (RFC 4303 §3.3.3)**:
+   - Detects if 32-bit sequence number wraps or approaches $2^{32}-1$ without ESN.
+3. **Encapsulation & Ports (RFC 3948)**:
+   - Validates UDP 4500 NAT-T mapping or Protocol 50 native ESP.
+4. **SPD Traffic Selector Bounds (RFC 4301 §4.4.1)**:
+   - Validates inner headers against negotiated TS (if inner headers are available).
+
+#### Resetting Sliding Windows on Rekeying or SA Expiration:
+
+When an SA is rekeyed or torn down, reset its replay window to restart sequence tracking fresh:
+
+```python
+# Reset window for a specific Child SA SPI:
+engine.reset_telemetry_windows(spi="0x12345678")
+
+# Or reset all active telemetry windows:
+engine.reset_telemetry_windows()
+```
+
+---
+
+### Example 5: Dual-Engine Real-Time Live Capture (RFC Compliance + ML Flow Classification)
+
+The platform supports two distinct, complementary sliding windows operating on real-time ESP traffic:
+
+1. **RFC Anti-Replay Sliding Window (`RfcRuleEngine.process_esp_packet`)**:
+   - **RFC 4303 §3.4.3** deterministic sequence number bitmask over $[H - 64 + 1, H]$.
+   - Keyed per **SPI** (Child SA direction).
+   - Validates anti-replay integrity, sequence rollover, and port mappings.
+2. **ML Flow Feature Extraction Sliding Window (`FlowEngine.process_packet`)**:
+   - Circular FIFO queue of length $N$ (default 200 packets) with stride step $S$ (default 25) and 5.0s idle timeout.
+   - Keyed per **Bidirectional IP Pair** `(min(src, dst), max(src, dst))`.
+   - Computes 25 statistical flow metrics (IAT, packet/byte ratios, throughput) for ML traffic classification models.
+
+#### Unified Live Capture with `RealtimePacketDispatcher`:
+
+```python
+from FlowEngine import FlowEngine, RealtimePacketDispatcher
+from metadataExtractor import extract_esp_metadata
+from rfcRuleEngine import RfcRuleEngine
+
+# 1. Initialize engines and dispatcher (optionally load your trained ML classifier)
+# import joblib
+# ml_model = joblib.load("traffic_classifier.pkl")
+ml_model = None
+
+dispatcher = RealtimePacketDispatcher(
+    rfc_engine=RfcRuleEngine(replay_window_size=64),
+    flow_engine=FlowEngine(window_size=200, stride=25, idle_timeout=5.0),
+    ml_model=ml_model,
+)
+
+def on_packet_sniffed(pkt):
+    esp_meta = extract_esp_metadata(pkt)
+    if not esp_meta:
+        return
+
+    # Dispatch to BOTH engines simultaneously in a single call
+    rfc_results, flow_verdicts = dispatcher.dispatch(esp_meta)
+
+    # 1. Inspect RFC Compliance Findings
+    for r in rfc_results:
+        if r.status.value == "FAIL":
+            print(f"🚨 [RFC ALERT] {r.rule_id} violated: {r.reason}")
+
+    # 2. Inspect Machine Learning Flow Classification Verdicts
+    for v in flow_verdicts:
+        print(f"📊 [ML VERDICT] Flow {v.flow_key} ({v.trigger_type}): {v.verdict}")
+        print(f"   Metrics: {v.packet_count} pkts, {v.duration_seconds:.2f}s duration")
+```
+
+---
+
+## 6. Dedicated PKI & Certificate Health Engine (`certHealthEngine.py`)
+
+Because `IKE_AUTH` inner payloads (Identity, Certificates, Authentication) are **always encrypted on the wire** (RFC 7296 §3.8), passive packet sniffing cannot observe raw X.509 chains without session keys. 
+
+The **`certHealthEngine`** runs as a dedicated, decoupled engine that ingests parsed credentials from daemon management APIs (such as strongSwan VICI / `swanctl` or Libreswan):
+
+### Core Capabilities
+* **Target Encoding**: Dedicated to **Encoding 4 (`X.509 Certificate - Signature`)**. Non-standard encodings are gracefully bypassed with an informative notice.
+* **Full Chain Auditing**: Audits both **Initiator** and **Responder** certificate chains (Leaf + Intermediate CAs).
+* **Operational Health**: Detects expired certificates (`not_after < now`), not-yet-valid certificates (`not_before > now`), and emits early warnings for certificates expiring within 30 days or 7 days.
+* **Standards-Based Rating**: Classifies each certificate into **CNSA 2.0 (Post-Quantum 256-bit)**, **NIST Modern (128/192-bit)**, **RFC 8247 Acceptable (112-bit)**, or **Deprecated/Broken**.
+* **Hardcoded Reasons & Remediation**: Every single check outputs an exact reason and administrative recommendation (e.g. `swanctl --load-creds`, target algorithms like ML-DSA-87 / ECDSA P-384).
+
+### API Usage Example
+
+```python
+from certHealthEngine import evaluate_auth_health, CertHealthStatus
+
+# 1. Ingest credentials from daemon API or test fixture
+auth_metadata = {
+    "source": "vici",
+    "daemon_type": "strongswan",
+    "initiator": {
+        "identity": "client.example.com",
+        "auth_method": 14,
+        "certificates": [
+            {
+                "encoding": 4,
+                "type": "end_entity",
+                "subject": "CN=client.example.com",
+                "issuer": "CN=Acme Intermediate CA",
+                "cert_key_type_oid": "1.2.840.10045.2.1",       # ECDSA P-384
+                "cert_key_len": 384,
+                "cert_sig_algo_oid": "1.2.840.10045.4.3.3",     # SHA-384
+                "not_before": 1700000000,
+                "not_after": 1731550000,
+                "is_ca": False,
+                "san": ["client.example.com"],
+                "key_usage": ["digitalSignature"],
+            }
+        ]
+    },
+    "responder": {
+        "identity": "198.51.100.1",
+        "auth_method": 14,
+        "certificates": [
+            {
+                "encoding": 4,
+                "type": "end_entity",
+                "subject": "CN=vpn-gw.example.com",
+                "issuer": "CN=Acme Intermediate CA",
+                "cert_key_type_oid": "1.2.840.113549.1.1.1",   # RSA-2048
+                "cert_key_len": 2048,
+                "cert_sig_algo_oid": "1.2.840.113549.1.1.11",  # SHA-256
+                "not_before": 1700000000,
+                "not_after": 1731550000,
+                "is_ca": False,
+                "san": ["198.51.100.1"],
+                "key_usage": ["digitalSignature"],
+            }
+        ]
+    }
+}
+
+# 2. Evaluate certificate health
+report = evaluate_auth_health(auth_metadata)
+
+# 3. Access structured results or formatted text report
+print(f"Overall Health: {report.overall_health_status.value}")
+print(f"Compliant:      {report.is_compliant}")
+
+# Format for terminal CLI / log alerts:
+print(report.generate_summary())
+
+# Format as JSON dictionary for web dashboard / SIEM:
+json_report = report.to_dict()
+```
+
+---
+
+## 7. 19-Dimensional Wire Cryptographic Vector Engine (`vectorEngine.py`)
+
+The vector engine projects wire-level IKEv2 session parameters into a normalized **19-dimensional score vector** ($D=19$). All dimensions are normalized to $[0.0, 1.0]$:
+
+| Index | Feature Dimension | Description | Standard Reference |
+| :---: | :--- | :--- | :--- |
+| **$d[0]$** | `INIT_KEM_CLASSICAL_ALGO` | Classical Diffie-Hellman / ECDH score | RFC 8247 §2.4 |
+| **$d[1]$** | `INIT_KEM_CLASSICAL_KEY_LEN` | Classical DH security bit strength / 256 | NIST SP 800-131A |
+| **$d[2]$** | `INIT_KEM_PQC_PRESENCE` | Post-Quantum KEM algorithm score | NIST FIPS 203 (ML-KEM) |
+| **$d[3]$** | `INIT_KEM_PQC_KEY_LEN` | PQC security bit strength / 256 | NIST Category 1–5 |
+| **$d[4]$** | `INIT_KEM_PQC_HYBRID_BINDING` | Multi-KE hybrid binding status | RFC 9370 |
+| **$d[5]$** | `INIT_KEM_MULTI_KE_ROUNDS` | Additional Key Exchange rounds ($\min(rounds, 3)/3$) | RFC 9370 |
+| **$d[6]$** | `INIT_KEM_PFS_STATUS` | Perfect Forward Secrecy in Child SA | RFC 7296 §1.3 |
+| **$d[7]$** | `INIT_SA_ENCR_ALGO` | Encryption algorithm score | RFC 8247 §2.1 |
+| **$d[8]$** | `INIT_SA_ENCR_KEY_LEN` | Encryption key length / 256 | RFC 8221 |
+| **$d[9]$** | `INIT_SA_PRF_ALGO` | Pseudo-Random Function score | RFC 8247 §2.2 |
+| **$d[10]$** | `INIT_SA_INTEG_ALGO` | Integrity algorithm score (AEAD + NONE = 1.0) | RFC 8247 §2.3 |
+| **$d[11]$** | `INIT_SA_ESN_CAPABILITY` | Extended Sequence Numbers (64-bit = 1.0, 32-bit = 0.0) | RFC 7296 |
+| **$d[12]$** | `AUTH_SIG_CLASSICAL_ALGO` | Authentication method score (Digital Sig = 1.0) | RFC 7427 |
+| **$d[13]$** | `AUTH_SIG_CLASSICAL_KEY_LEN` | Signature key length / 256 | NIST SP 800-52r2 |
+| **$d[14]$** | `AUTH_SIG_PQC_ALGO` | PQC signature score (ML-DSA) | NIST FIPS 204 |
+| **$d[15]$** | `AUTH_HASH_DIGEST_ALGO` | Hash digest score (via Notify 16431 data) | RFC 7427 |
+| **$d[16]$** | `PROTO_IKE_VERSION` | IKE protocol version (1.0 for IKEv2) | RFC 7296 / RFC 9395 |
+| **$d[17]$** | `PROTO_NOTIFY_16443_EXPLICIT`| Notify 16443 (SIGNATURE_HASH_ALGORITHMS) present | RFC 7427 |
+| **$d[18]$** | `PROTO_NAT_TRAVERSAL` | NAT-T UDP-4500 (0.5) vs native ESP UDP-500 (1.0) | RFC 3948 |
+
+### Vector Extraction & Cosine Similarity Example
+
+```python
+from vectorEngine import build_vector
+from cosineSimilarity import classify_session
+
+# 1. Generate 19-D vector from session dictionary
+vector_19d = build_vector(session_dict)
+print("19-D Vector:", vector_19d)
+
+# 2. Classify session against CNSA 2.0, NIST PQC, and RFC 8247 policy anchors
+classification = classify_session(vector_19d)
+print(f"Matched Policy Profile: {classification['closest_profile']}")
+print(f"Cosine Similarity:      {classification['highest_similarity']:.4f}")
+```
+
+
+
+

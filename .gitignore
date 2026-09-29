@@ -1,0 +1,114 @@
+# ==========================================
+# IPsec Testbed & Sentinel - Root .gitignore
+# ==========================================
+
+# ------------------------------------------
+# Docker & Deployment (Explicitly Preserved)
+# ------------------------------------------
+!Dockerfile*
+!docker-compose*.yml
+!.dockerignore
+!*.bat
+!*.sh
+
+# ------------------------------------------
+# Testbed PKI & Certificates (Explicitly Preserved)
+# strongSwan testbed requires moon/sun certs and pkcs8 keys
+# ------------------------------------------
+!/certs/**
+!certs/**
+
+# ------------------------------------------
+# Node.js & Frontend Artifacts (Next.js)
+# ------------------------------------------
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+out/
+build/
+dist/
+.vercel
+.turbo
+*.tsbuildinfo
+next-env.d.ts.bak
+
+# Node debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ------------------------------------------
+# Python & Bytecode
+# ------------------------------------------
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ------------------------------------------
+# Python Virtual Environments
+# ------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+**/.venv/
+**/venv/
+**/*.venv/
+env.bak/
+venv.bak/
+
+# ------------------------------------------
+# Runtime Captures & Output Dumps
+# Keep directories via .gitkeep, ignore runtime dumps
+# ------------------------------------------
+*.pcap
+*.pcapng
+*.tmp
+*.log
+scratch/
+**/scratch/
+tmp/
+
+# Whitelist .gitkeep in placeholders
+!captures/.gitkeep
+!output/.gitkeep
+!pipeline/.gitkeep
+
+# ------------------------------------------
+# Environment Secrets & Local Configs
+# ------------------------------------------
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example
+
+# ------------------------------------------
+# Operating System & Editor Files
+# ------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# IDE files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
+*.sublime-workspace

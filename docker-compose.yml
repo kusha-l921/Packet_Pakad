@@ -1,0 +1,77 @@
+networks:
+  ipsec-wan:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+services:
+  gw-hq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: strongswan-node:latest
+    container_name: gw-hq
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    networks:
+      ipsec-wan:
+        ipv4_address: 172.28.0.2
+    volumes:
+      - ./hq/swanctl.conf:/etc/swanctl/swanctl.conf
+      - ./certs:/etc/swanctl/x509
+      - ./certs/pkcs8:/etc/swanctl/pkcs8
+      - ./captures:/captures
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "swanctl", "--stats"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+      start_period: 2s
+
+  gw-branch:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: strongswan-node:latest
+    container_name: gw-branch
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    networks:
+      ipsec-wan:
+        ipv4_address: 172.28.0.3
+    volumes:
+      - ./branch/swanctl.conf:/etc/swanctl/swanctl.conf
+      - ./certs:/etc/swanctl/x509
+      - ./certs/pkcs8:/etc/swanctl/pkcs8
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "swanctl", "--stats"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+      start_period: 2s
+
+  analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile.analyzer
+    image: ipsec-testbed-analyzer
+    container_name: ipsec-analyzer
+    network_mode: "container:gw-hq"
+    depends_on:
+      gw-hq:
+        condition: service_healthy
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    volumes:
+      - "./SIH-160 Rule Engine:/workspace"
+      - ./assessment_output:/workspace/output
+      - ./certs:/certs:ro
+    working_dir: /workspace
+    restart: unless-stopped
+
