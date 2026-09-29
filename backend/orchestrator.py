@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-SIH_DIR = ROOT / "SIH-160 Rule Engine"
+SIH_DIR = ROOT / "Rule Engine" if (ROOT / "Rule Engine").exists() else ROOT / "SIH-160 Rule Engine"
 if SIH_DIR.exists() and str(SIH_DIR) not in sys.path:
     sys.path.insert(0, str(SIH_DIR))
 
@@ -412,7 +412,7 @@ def create_synthetic_session(config: Dict[str, Any]) -> str:
     #   • Traffic Flow Telemetry (flow_engine)
     #   • Unified RAG Payload Exporter (pipeline.ragExporter)
     try:
-        sih_dir = ROOT / "SIH-160 Rule Engine"
+        sih_dir = ROOT / "Rule Engine" if (ROOT / "Rule Engine").exists() else ROOT / "SIH-160 Rule Engine"
         if str(sih_dir) not in sys.path:
             sys.path.insert(0, str(sih_dir))
 

@@ -21,7 +21,7 @@ ROOT_DIR = ROOT
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-SIH_DIR = ROOT / "SIH-160 Rule Engine"
+SIH_DIR = ROOT / "Rule Engine" if (ROOT / "Rule Engine").exists() else ROOT / "SIH-160 Rule Engine"
 if SIH_DIR.exists() and str(SIH_DIR) not in sys.path:
     sys.path.insert(0, str(SIH_DIR))
 

@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-SIH_DIR = ROOT / "SIH-160 Rule Engine"
+SIH_DIR = ROOT / "Rule Engine" if (ROOT / "Rule Engine").exists() else ROOT / "SIH-160 Rule Engine"
 if str(SIH_DIR) not in sys.path:
     sys.path.insert(0, str(SIH_DIR))
 

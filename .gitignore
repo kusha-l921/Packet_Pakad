@@ -12,6 +12,14 @@
 !*.sh
 
 # ------------------------------------------
+# Rule Engine (Explicitly Preserved)
+# ------------------------------------------
+!/Rule Engine/**
+!Rule Engine/**
+!/SIH-160 Rule Engine/**
+!"SIH-160 Rule Engine"/**
+
+# ------------------------------------------
 # Testbed PKI & Certificates (Explicitly Preserved)
 # strongSwan testbed requires moon/sun certs and pkcs8 keys
 # ------------------------------------------

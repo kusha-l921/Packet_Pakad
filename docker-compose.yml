@@ -69,7 +69,7 @@ services:
       - NET_ADMIN
       - NET_RAW
     volumes:
-      - "./SIH-160 Rule Engine:/workspace"
+      - "./Rule Engine:/workspace"
       - ./assessment_output:/workspace/output
       - ./certs:/certs:ro
     working_dir: /workspace
