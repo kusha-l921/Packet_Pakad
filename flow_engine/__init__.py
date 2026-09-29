@@ -19,6 +19,12 @@ from .mlAdapter import (
     MLModelAdapter,
     TrafficClassifierProtocol,
 )
+from .ml_models import (
+    CovertChannelDetector,
+    SideChannelLeakageEvaluator,
+    UnifiedMLTrafficSuite,
+    ml_suite,
+)
 
 __all__ = [
     "FlowRecord",
@@ -29,4 +35,9 @@ __all__ = [
     "FEATURE_NAMES",
     "MLModelAdapter",
     "TrafficClassifierProtocol",
+    "CovertChannelDetector",
+    "SideChannelLeakageEvaluator",
+    "UnifiedMLTrafficSuite",
+    "ml_suite",
 ]
+

@@ -332,6 +332,79 @@ NIST_SP800_131A_DEPRECATED_VECTOR = baseVector(
 
 
 # =============================================================================
+# 5. RFC 8247 §3 Prohibited Legacy Profile (Hybrid Insecure / Sweet32 CVE-2016-2183)
+# =============================================================================
+
+RFC8247_PROHIBITED_HYBRID_DICT = {
+    "IKE_SA_INIT": {
+        "proposals": [{
+            "transforms": {
+                "encryption": [{"id": 3, "length": 192}],
+                "prf": [{"id": 1}],
+                "integrity": [{"id": 1}],
+                "dh_group": [{"id": 2}],
+                "extended_sequence_numbers": [{"id": 0}],
+            }
+        }]
+    },
+    "IKE_AUTH": {
+        "authentication": {
+            "auth_type": 14,
+        },
+        "certificate": {
+            "cert_key_len": 384,
+        },
+        "child_sa": {
+            "proposals": [{
+                "transforms": {
+                    "encryption": [{"id": 3, "length": 192}],
+                    "integrity": [{"id": 1}],
+                }
+            }]
+        },
+    },
+    "notify": {
+        "present": False,
+        "notify_types": [],
+        "messages": [],
+    },
+    "common": {
+        "src_port": 500,
+        "dst_port": 500,
+    },
+    "hash_algo_id": 3,
+}
+
+RFC8247_PROHIBITED_HYBRID_VECTOR_RAW = [
+    0.00,    # d[ 0]  INIT_KEM_CLASSICAL_ALGO (MODP-1024 / ID 2 - Broken / RFC 8247 MUST NOT)
+    0.3125,  # d[ 1]  INIT_KEM_CLASSICAL_KEY_LEN (80 bits / 256 = 0.3125)
+    0.00,    # d[ 2]  INIT_KEM_PQC_PRESENCE (None)
+    0.00,    # d[ 3]  INIT_KEM_PQC_KEY_LEN (None)
+    0.00,    # d[ 4]  INIT_KEM_PQC_HYBRID_BINDING (None)
+    0.00,    # d[ 5]  INIT_KEM_MULTI_KE_ROUNDS (0 rounds)
+    0.00,    # d[ 6]  INIT_KEM_PFS_STATUS (PFS disabled)
+    0.25,    # d[ 7]  INIT_SA_ENCR_ALGO (3DES-CBC / ID 3 - RFC 8247 Prohibited / Sweet32)
+    0.75,    # d[ 8]  INIT_SA_ENCR_KEY_LEN (192 bits / 256)
+    0.00,    # d[ 9]  INIT_SA_PRF_ALGO (PRF_HMAC_MD5 - Broken)
+    0.00,    # d[10]  INIT_SA_INTEG_ALGO (AUTH_HMAC_MD5_96 - Broken)
+    0.00,    # d[11]  INIT_SA_ESN_CAPABILITY (Standard 32-bit sequence numbers)
+    1.00,    # d[12]  AUTH_SIG_CLASSICAL_ALGO (Digital Signature / RFC 7427 / ECDSA)
+    1.00,    # d[13]  AUTH_SIG_CLASSICAL_KEY_LEN (384 bits / 256 = 1.0)
+    0.00,    # d[14]  AUTH_SIG_PQC_ALGO (None)
+    1.00,    # d[15]  AUTH_HASH_DIGEST_ALGO (SHA2-384 / SHA2-512)
+    1.00,    # d[16]  PROTO_IKE_VERSION (IKEv2)
+    0.00,    # d[17]  PROTO_NOTIFY_16443_EXPLICIT
+    1.00,    # d[18]  PROTO_NAT_TRAVERSAL (Native ESP)
+]
+
+RFC8247_PROHIBITED_HYBRID_VECTOR = baseVector(
+    name="RFC 8247 §3 Prohibited Legacy Profile",
+    vector=RFC8247_PROHIBITED_HYBRID_VECTOR_RAW,
+    dict=RFC8247_PROHIBITED_HYBRID_DICT,
+)
+
+
+# =============================================================================
 # Normalized Numpy Reference Vectors (for Cosine Similarity)
 # =============================================================================
 
@@ -339,11 +412,13 @@ if np is not None:
     CNSA2_NP_NORMALIZED = CNSA2_VECTOR.to_numpy(normalize=True)
     NIST_PQC_TRANSITIONAL_NP_NORMALIZED = NIST_PQC_TRANSITIONAL_VECTOR.to_numpy(normalize=True)
     RFC8247_CLASSICAL_NP_NORMALIZED = RFC8247_CLASSICAL_VECTOR.to_numpy(normalize=True)
+    RFC8247_PROHIBITED_HYBRID_NP_NORMALIZED = RFC8247_PROHIBITED_HYBRID_VECTOR.to_numpy(normalize=True)
     NIST_SP800_131A_DEPRECATED_NP_NORMALIZED = NIST_SP800_131A_DEPRECATED_VECTOR.to_numpy(normalize=True)
 else:
     CNSA2_NP_NORMALIZED = None
     NIST_PQC_TRANSITIONAL_NP_NORMALIZED = None
     RFC8247_CLASSICAL_NP_NORMALIZED = None
+    RFC8247_PROHIBITED_HYBRID_NP_NORMALIZED = None
     NIST_SP800_131A_DEPRECATED_NP_NORMALIZED = None
 
 
@@ -352,5 +427,6 @@ POLICY_ANCHORS: dict[str, baseVector] = {
     "CNSA_2_0": CNSA2_VECTOR,
     "NIST_PQC_TRANSITIONAL": NIST_PQC_TRANSITIONAL_VECTOR,
     "RFC8247_CLASSICAL_BASELINE": RFC8247_CLASSICAL_VECTOR,
+    "RFC8247_PROHIBITED_HYBRID": RFC8247_PROHIBITED_HYBRID_VECTOR,
     "NIST_SP800_131A_DEPRECATED": NIST_SP800_131A_DEPRECATED_VECTOR,
 }

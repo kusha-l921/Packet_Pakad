@@ -20,6 +20,7 @@ from .baseVectors import (
     NIST_SP800_131A_DEPRECATED_VECTOR,
     POLICY_ANCHORS,
     RFC8247_CLASSICAL_VECTOR,
+    RFC8247_PROHIBITED_HYBRID_VECTOR,
 )
 from .cosineSimilarity import (
     classify_session,
@@ -44,6 +45,7 @@ __all__ = [
     "CNSA2_VECTOR",
     "NIST_PQC_TRANSITIONAL_VECTOR",
     "RFC8247_CLASSICAL_VECTOR",
+    "RFC8247_PROHIBITED_HYBRID_VECTOR",
     "NIST_SP800_131A_DEPRECATED_VECTOR",
     "cosine_similarity",
     "cosine_distance",

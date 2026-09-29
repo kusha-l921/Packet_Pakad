@@ -27,6 +27,7 @@ from packet_extractor.metadataExtractor import (
 )
 from pipeline.ragExporter import export_from_memory, export_rag_data
 from session_aggregator.sessionAggregator import SessionAggregator
+from session_aggregator.sessionModels import SessionLifecycleState
 
 logging.basicConfig(
     level=logging.INFO,
@@ -80,7 +81,14 @@ class IntegratedPipeline:
             return None
 
         init_spi = session.initiator_spi
-        if session.is_handshake_complete() and self.auto_export_on_complete:
+        if (
+            session.state == SessionLifecycleState.HANDSHAKE_COMPLETED
+            and not getattr(session, "has_exported_handshake", False)
+            and self.auto_export_on_complete
+        ):
+            session.has_exported_handshake = True
+            if Path("/certs").is_dir():
+                self.ingest_daemon_credentials_from_path(init_spi, "/certs", identity_value="sun.enterprise.net")
             logger.info("Handshake complete for session %s. Exporting reports...", init_spi)
             self.export_session_reports(init_spi)
 

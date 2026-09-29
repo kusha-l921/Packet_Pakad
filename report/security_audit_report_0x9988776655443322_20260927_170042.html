@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IKEv2 / IPsec Cryptographic Audit & Compliance Evaluation | Enterprise Security Audit</title>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Marked.js (Markdown parsing) & Mermaid.js (Diagrams) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.1/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+
+  <style>
+    /* =====================================================================
+       HIGH-CONTRAST DESIGN SYSTEM (LIGHT THEME DEFAULT & DARK THEME TOGGLE)
+       ===================================================================== */
+    :root, html[data-theme="light"] {
+      --bg-page: #f1f5f9;
+      --bg-card: #ffffff;
+      --bg-card-subtle: #f8fafc;
+      --border-strong: #94a3b8;
+      --border-subtle: #cbd5e1;
+      --text-main: #020617;          /* WCAG AAA Max Contrast (Near Black) */
+      --text-sub: #1e293b;           /* Legible Slate-800 */
+      --text-muted: #475569;         /* Slate-600 */
+      
+      --accent-primary: #0284c7;     /* High-Visibility Ocean Blue */
+      --accent-primary-text: #ffffff;
+      --accent-hover: #0369a1;
+      
+      /* Badges & Status */
+      --status-pass-bg: #dcfce7;
+      --status-pass-border: #15803d;
+      --status-pass-text: #14532d;
+      
+      --status-warn-bg: #fef3c7;
+      --status-warn-border: #b45309;
+      --status-warn-text: #78350f;
+      
+      --status-fail-bg: #fee2e2;
+      --status-fail-border: #b91c1c;
+      --status-fail-text: #7f1d1d;
+      
+      --status-blue-bg: #e0f2fe;
+      --status-blue-border: #0369a1;
+      --status-blue-text: #075985;
+
+      --table-header-bg: #0f172a;
+      --table-header-text: #ffffff;
+      --table-row-alt: #f8fafc;
+      --table-border: #cbd5e1;
+      
+      --code-block-bg: #0f172a;
+      --code-block-text: #f8fafc;
+      --inline-code-bg: #e2e8f0;
+      --inline-code-text: #0f172a;
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 4px 12px -2px rgba(0, 0, 0, 0.12), 0 2px 6px -2px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+    }
+
+    html[data-theme="dark"] {
+      --bg-page: #030712;            /* Deep Pitch Black for Pure Contrast */
+      --bg-card: #0f172a;            /* Solid Dark Slate */
+      --bg-card-subtle: #1e293b;
+      --border-strong: #475569;
+      --border-subtle: #334155;
+      --text-main: #ffffff;          /* Pure White */
+      --text-sub: #e2e8f0;           /* Crisp Light Slate */
+      --text-muted: #94a3b8;
+      
+      --accent-primary: #38bdf8;
+      --accent-primary-text: #020617;
+      --accent-hover: #7dd3fc;
+      
+      --status-pass-bg: #064e3b;
+      --status-pass-border: #10b981;
+      --status-pass-text: #ecfdf5;
+      
+      --status-warn-bg: #78350f;
+      --status-warn-border: #f59e0b;
+      --status-warn-text: #fffbeb;
+      
+      --status-fail-bg: #7f1d1d;
+      --status-fail-border: #ef4444;
+      --status-fail-text: #fef2f2;
+      
+      --status-blue-bg: #0c4a6e;
+      --status-blue-border: #38bdf8;
+      --status-blue-text: #e0f2fe;
+
+      --table-header-bg: #1e293b;
+      --table-header-text: #ffffff;
+      --table-row-alt: #0b1120;
+      --table-border: #334155;
+      
+      --code-block-bg: #020617;
+      --code-block-text: #f8fafc;
+      --inline-code-bg: #1e293b;
+      --inline-code-text: #38bdf8;
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+      --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.6);
+      --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.7);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.65;
+      padding: 2rem 1rem;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header Banner */
+    .header-banner {
+      background: var(--bg-card);
+      border: 2px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+
+    .header-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0284c7, #2563eb, #059669);
+      border-radius: 12px 12px 0 0;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .classification-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.85rem;
+      border-radius: 6px;
+      background: var(--status-blue-bg);
+      color: var(--status-blue-text);
+      border: 1.5px solid var(--status-blue-border);
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 0.65rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      border: 1.5px solid var(--border-strong);
+      background: var(--bg-card-subtle);
+      color: var(--text-main);
+    }
+
+    .btn:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary {
+      background: var(--accent-primary);
+      color: var(--accent-primary-text);
+      border: 1.5px solid var(--accent-primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .title-block h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--text-main);
+      margin-bottom: 0.4rem;
+    }
+
+    .title-block p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    /* Metric Grid Cards (High-Contrast) */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-primary);
+      box-shadow: var(--shadow-md);
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+      font-size: 1.7rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-main);
+      display: flex;
+      align-items: baseline;
+      gap: 0.35rem;
+    }
+
+    .metric-subtext {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-sub);
+      margin-top: 0.6rem;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 0.22rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .badge-low { background: var(--status-pass-bg); color: var(--status-pass-text); border: 1.5px solid var(--status-pass-border); }
+    .badge-mod { background: var(--status-warn-bg); color: var(--status-warn-text); border: 1.5px solid var(--status-warn-border); }
+    .badge-high { background: var(--status-warn-bg); color: var(--status-warn-text); border: 1.5px solid var(--status-warn-border); }
+    .badge-crit { background: var(--status-fail-bg); color: var(--status-fail-text); border: 1.5px solid var(--status-fail-border); }
+    .badge-blue { background: var(--status-blue-bg); color: var(--status-blue-text); border: 1.5px solid var(--status-blue-border); }
+
+    /* Report Card & Typography */
+    .report-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 2.75rem;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 {
+      color: var(--text-main);
+      font-weight: 800;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .markdown-body h1 {
+      font-size: 1.85rem;
+      border-bottom: 2px solid var(--border-subtle);
+      padding-bottom: 0.75rem;
+    }
+    .markdown-body h2 {
+      font-size: 1.45rem;
+      border-bottom: 1.5px solid var(--border-subtle);
+      padding-bottom: 0.5rem;
+      color: var(--text-main);
+    }
+    .markdown-body h3 { font-size: 1.2rem; }
+
+    .markdown-body p, .markdown-body li {
+      color: var(--text-sub);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .markdown-body strong {
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    .markdown-body ul, .markdown-body ol {
+      padding-left: 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* High-Contrast Tables */
+    .markdown-body table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.75rem 0;
+      font-size: 0.92rem;
+      background: var(--bg-card);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid var(--table-border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .markdown-body th {
+      background: var(--table-header-bg);
+      color: var(--table-header-text);
+      text-align: left;
+      padding: 0.9rem 1rem;
+      font-weight: 800;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid var(--table-border);
+    }
+
+    .markdown-body td {
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--table-border);
+      color: var(--text-main);
+      vertical-align: middle;
+    }
+
+    .markdown-body tr:nth-child(even) td {
+      background: var(--table-row-alt);
+    }
+
+    .markdown-body tr:hover td {
+      background: rgba(2, 132, 199, 0.08);
+    }
+
+    /* Code Blocks */
+    .markdown-body code {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--inline-code-bg);
+      color: var(--inline-code-text);
+      padding: 0.2rem 0.45rem;
+      border-radius: 5px;
+      font-size: 0.88em;
+      font-weight: 600;
+    }
+
+    .markdown-body pre {
+      background: var(--code-block-bg) !important;
+      border: 2px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      box-shadow: var(--shadow-md);
+    }
+
+    .markdown-body pre code {
+      background: transparent;
+      padding: 0;
+      font-size: 0.9rem;
+      color: var(--code-block-text);
+      font-weight: 500;
+    }
+
+    .markdown-body blockquote {
+      border-left: 5px solid var(--accent-primary);
+      padding: 0.85rem 1.25rem;
+      margin: 1.5rem 0;
+      background: var(--status-blue-bg);
+      color: var(--text-main);
+      border-radius: 0 8px 8px 0;
+      font-weight: 500;
+    }
+
+    /* Mermaid Diagrams */
+    .mermaid {
+      background: var(--bg-card-subtle);
+      border: 2px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin: 2rem 0;
+      display: flex;
+      justify-content: center;
+      overflow-x: auto;
+      box-shadow: var(--shadow-sm);
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 1.5rem;
+    }
+
+    @media print {
+      body { background: white !important; color: black !important; padding: 0; }
+      .header-banner, .metric-card, .report-card {
+        background: white !important;
+        box-shadow: none !important;
+        border: 1px solid #333 !important;
+        color: black !important;
+      }
+      .action-bar { display: none !important; }
+      .markdown-body th { background: #000 !important; color: #fff !important; }
+      .markdown-body td { color: #000 !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header Banner -->
+    <header class="header-banner">
+      <div class="header-top">
+        <span class="classification-tag">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+          Enterprise Cryptographic Audit System
+        </span>
+        <div class="action-bar">
+          <button class="btn" id="theme-toggle-btn" onclick="toggleTheme()">
+            <span id="theme-icon">🌙</span> <span id="theme-text">Dark Theme</span>
+          </button>
+          <button class="btn btn-primary" onclick="window.print()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Print / Save PDF
+          </button>
+          <button class="btn" onclick="copyMarkdown()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy Markdown
+          </button>
+        </div>
+      </div>
+
+      <div class="title-block">
+        <h1>IKEv2 / IPsec Cryptographic Audit & Compliance Evaluation</h1>
+        <p>Session ID: <strong style="color:var(--accent-primary); font-family:'JetBrains Mono'">0x9988776655443322</strong> &bull; Generated: <strong>2026-09-27 17:00:42 UTC+05:30</strong> &bull; Engine Model: <strong>Offline Simulator</strong></p>
+      </div>
+    </header>
+
+    <!-- Executive Metric Cards -->
+    <section class="metric-grid">
+      <!-- Card 1: Risk Score -->
+      <div class="metric-card">
+        <div class="metric-label">Composite Risk Score</div>
+        <div class="metric-value">
+          12<span style="font-size: 0.9rem; color: var(--text-muted); font-weight:600">/100</span>
+        </div>
+        <div class="metric-subtext">
+          <span class="badge badge-low">LOW RISK</span>
+        </div>
+      </div>
+
+      <!-- Card 2: RFC Status -->
+      <div class="metric-card">
+        <div class="metric-label">RFC Compliance Status</div>
+        <div class="metric-value">
+          PASS
+        </div>
+        <div class="metric-subtext">
+          <strong style="color: #15803d">23 Passed</strong> &bull; 
+          <strong style="color: #b91c1c">0 Failures</strong>
+        </div>
+      </div>
+
+      <!-- Card 3: 19-D Vector Alignment -->
+      <div class="metric-card">
+        <div class="metric-label">19-D Vector Alignment</div>
+        <div class="metric-value" style="font-size: 1.4rem;">
+          97.78%
+        </div>
+        <div class="metric-subtext">
+          Anchor: <strong>NIST_PQC_TRANSITIONAL</strong>
+        </div>
+      </div>
+
+      <!-- Card 4: Post-Quantum Status -->
+      <div class="metric-card">
+        <div class="metric-label">PQC & Hybrid Posture</div>
+        <div class="metric-value" style="font-size: 1.4rem;">
+          PQC_KEM
+        </div>
+        <div class="metric-subtext">
+          Hybrid: <span class="badge badge-blue">HYBRID</span>
+        </div>
+      </div>
+
+      <!-- Card 5: PKI Health -->
+      <div class="metric-card">
+        <div class="metric-label">PKI & Certificate Health</div>
+        <div class="metric-value" style="font-size: 1.4rem;">
+          HEALTHY
+        </div>
+        <div class="metric-subtext">
+          Audited: <strong>2 Cert(s)</strong> (CNSA Compliant)
+        </div>
+      </div>
+
+      <!-- Card 6: Flow Telemetry -->
+      <div class="metric-card">
+        <div class="metric-label">ESP Traffic Telemetry</div>
+        <div class="metric-value" style="font-size: 1.4rem;">
+          250 <span style="font-size:0.85rem; color:var(--text-muted)">pkts</span>
+        </div>
+        <div class="metric-subtext">
+          Mean Size: <strong>740.0 B</strong> &bull; Verdict: <strong>None</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Report Body Card -->
+    <main class="report-card">
+      <div id="report-output" class="markdown-body">
+      </div>
+    </main>
+
+    <footer>
+      Autonomous Quantum-Safe IPsec & IKEv2 Cryptographic Engine &bull; Automated Defense Assessment &bull; 2026-09-27 17:00:42 UTC+05:30
+    </footer>
+  </div>
+
+  <script id="raw-markdown-data" type="text/plain">
+"# CONFIDENTIAL // AUDIT EVALUATION REPORT\n**Enterprise Quantum-Safe IPsec & IKEv2 Compliance Engine**\n\n| Parameter | Observed Value |\n| :--- | :--- |\n| **Session SPI** | `0x9988776655443322` |\n| **Initiator Endpoint** | `192.168.10.50` |\n| **Responder Endpoint** | `10.0.0.1` |\n| **Protocol Mode** | IKEv2 (Tunnel Mode) |\n| **Audit Status** | `PASS` |\n| **Cryptographic Posture** | `STRONG` (NIST PQC Transitional IPsec Profile) |\n| **Evaluation Date** | 2026-09-27 17:00:42 |\n\n---\n\n## 1. Executive Summary & C-Suite Briefing\nThis cryptographic security audit evaluates the active IPsec / IKEv2 session `0x9988776655443322` negotiated between `192.168.10.50` and `10.0.0.1`. The target connection has been analyzed across four autonomous analytical layers: control-plane RFC compliance (RFC 7296, RFC 8247, RFC 9395), 19-dimensional cryptographic vector alignment, X.509 PKI health, and sliding-window ESP data-plane telemetry.\n\n> [!NOTE]\n> The assessed session demonstrates an exceptionally robust security posture adhering to modern Post-Quantum Cryptography (PQC) standards and NIST Transitional mandates.\n\n### Key Executive Takeaways:\n- **Quantum Resistance**: The session implements **RFC 9370 Multi-KE** utilizing **ML-KEM-1024** bound with classical P-384 Diffie-Hellman, effectively neutralizing \"Harvest Now, Decrypt Later\" (HNDL) attacks.\n- **Authentication Strength**: Peer identity is authenticated using **ML-DSA-87** (Dilithium5) quantum-resilient signatures, satisfying NSA CNSA 2.0 Category 5 requirements.\n- **Data-Plane Integrity**: The Child SA employs **AES-GCM-256** AEAD encryption with Extended Sequence Numbers (ESN) and an active 64-packet anti-replay window.\n\n---\n\n## 2. Composite Risk Score & Qualitative Risk Meter\n\n**Assessed Risk Score**: **12 / 100** &mdash; `[LOW RISK | 0-25]`\n```text\n[\u2588\u2588\u2588\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591] 12/100 \u2014 Resilient Quantum-Safe Posture\n```\n\n### Domain Risk Breakdown Table\n| Risk Domain | Assessed Score (0-100) | Severity | Primary Contributing Factors |\n| :--- | :--- | :--- | :--- |\n| **Control-Plane RFC Adherence** | 5 / 100 | LOW | 23/23 applicable rules verified passing; zero RFC 9395 deprecated transforms. |\n| **Cryptographic Cipher Strength** | 8 / 100 | LOW | AES-GCM-256 with HMAC-SHA2-384 PRF; aligns 97.78% with NIST PQC Transitional profile. |\n| **Post-Quantum Readiness** | 10 / 100 | LOW | ML-KEM-1024 KEM and ML-DSA-87 signatures deployed; hybrid classical binding active. |\n| **PKI & Identity Trust** | 12 / 100 | LOW | Active leaf certificates with 365 days validity; valid SAN matching client identity. |\n| **Data-Plane Anti-Replay** | 6 / 100 | LOW | ESN negotiated; zero out-of-order sequence packet replay flags observed in ESP flow. |\n\n---\n\n## 3. AI Confidence Score & Diagnostic Telemetry\n\n- **Composite AI Confidence Score**: **98.4%**\n- **Verification Coverage**: 100% of verifiable control-plane and data-plane rules satisfied.\n\n| Analytical Engine | Confidence Rating | Data Completeness | Diagnostic Verdict |\n| :--- | :--- | :--- | :--- |\n| **RFC Compliance Engine** | 99.1% | Complete Handshake Captured | All mandatory transforms present |\n| **19-D Vector Engine** | 98.7% | 19/19 Dimensions Populated | Cosine similarity: 0.9778 |\n| **PKI Health Engine** | 97.9% | End-Entity Chains Validated | CNSA 2.0 compliant (ML-DSA-87) |\n| **Flow Telemetry Engine** | 98.0% | 250 packets / 185 KB | Sliding window anti-replay active |\n\n---\n\n## 4. Comprehensive Multi-Vector Threat Matrix\n\n| Threat ID | Threat Vector / Attack Scenario | Category | Exploitability | Impact | Affected Layer / RFC Reference | Status | Recommended Countermeasure |\n| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n| **THR-001** | Harvest Now, Decrypt Later (HNDL) | Quantum Cryptanalysis | Low | Critical | RFC 9370 / NIST FIPS 203 | **MITIGATED** | Hybrid ML-KEM-1024 + P-384 active |\n| **THR-002** | IKE_SA_INIT Transform Downgrade | Man-in-the-Middle | Low | High | RFC 7296 Section 3.3 | **MITIGATED** | Strict proposal enforcement |\n| **THR-003** | Sequence Number Replay / Injection | Data Plane Replay | Low | High | RFC 4303 / RFC 4304 | **MITIGATED** | ESN 64-bit + 64-packet window |\n| **THR-004** | Rogue Gateway Identity Impersonation | PKI / Spoofing | Very Low | Critical | RFC 7296 / X.509 PKI | **MITIGATED** | ML-DSA-87 leaf cert + SAN match |\n| **THR-005** | Traffic Flow Analysis & Packet Size Leaks| Side-Channel | Medium | Low | ESP Data Plane Telemetry | **MONITORED** | ESP padding / traffic masking |\n\n---\n\n## 5. Deep-Dive Technical Audit\n\n### 5.1 IKEv2 Protocol & Handshake Compliance\nThe control-plane exchange strictly complies with **RFC 7296** and eliminates all legacy constructs deprecated by **RFC 9395**.\n- **Encryption Transform**: AES-GCM with 256-bit key (Transform ID 20, 16-octet ICV).\n- **Pseudo-Random Function (PRF)**: HMAC-SHA2-384 (Transform ID 6).\n- **Integrity Transform**: None explicitly required due to AEAD cipher mode.\n- **Diffie-Hellman Group**: 384-bit random ECP group (Group ID 20).\n- **Additional Key Exchange**: RFC 9370 Additional Key Exchange 1 (Transform ID 37: ML-KEM-1024).\n\n### 5.2 19-Dimensional Cryptographic Vector Analysis\nThe vector engine scored the session across 19 orthogonal cryptographic dimensions.\n- **Closest Anchor**: `NIST_PQC_TRANSITIONAL` (Cosine Distance: `0.0222`, Similarity: `97.78%`)\n- **Secondary Anchor**: `CNSA_2_0` (Cosine Distance: `0.0287`, Similarity: `97.13%`)\n- **Classical Baseline**: `RFC8247_CLASSICAL_BASELINE` (Cosine Distance: `0.2071`, Similarity: `79.29%`)\n- **Deprecated Profile**: `NIST_SP800_131A_DEPRECATED` (Cosine Distance: `0.5694`, Similarity: `43.06%`)\n\n### 5.3 X.509 PKI Health Audit\nBoth Initiator and Responder identities were validated through X.509 credentials:\n- **Leaf Signature Algorithm**: `ML-DSA-87` (OID `2.16.840.1.101.3.4.3.19`), 2592 bits key length.\n- **Validity Window**: Active, 365 days remaining until expiration.\n- **Identity SAN**: Successfully matched peer FQDN `client.quantum.enterprise.net`.\n\n---\n\n## 6. Threat Mechanics: How Identified Vectors Can Become Active Exploits\n\n### 6.1 \"Harvest Now, Decrypt Later\" (HNDL)\n* **The Attacker's Perspective**: Nation-state or sophisticated threat actors passively record encrypted IPsec ciphertext over transit networks and store it until cryptanalytically relevant quantum computers (CRQCs) running Shor's algorithm become viable.\n* **The Weaponization Chain**: An adversary intercepting classical Diffie-Hellman exchanges (e.g. Group 14 MODP or P-256) could retroactively solve the discrete logarithm problem, derive the session key `SKEYSEED`, decrypt all historical ESP traffic, and extract classified application data.\n* **Mitigation Evaluated**: The session successfully mitigates this attack via **ML-KEM-1024**, which is based on the Module Learning with Errors (M-LWE) lattice problem, impenetrable to both classical and quantum algorithms.\n\n---\n\n## 7. Architectural, Sequence & Threat Model Diagrams\n\n### Diagram 1: IKEv2 Hybrid Post-Quantum Handshake Sequence\n```mermaid\nsequenceDiagram\n    autonumber\n    participant Init as Initiator (192.168.10.50)\n    participant Resp as Responder (10.0.0.1)\n\n    Note over Init,Resp: IKE_SA_INIT (Exchange 34)\n    Init->>Resp: HDR, SAi1 (AES-GCM-256, PRF-SHA384, DH-P384, ESN), Ni, KEi (P-384)\n    Resp->>Init: HDR, SAr1 (Selected Transforms), Nr, KEr (P-384), CERTREQ\n\n    Note over Init,Resp: IKE_INTERMEDIATE (RFC 9370 Multi-KE)\n    Init->>Resp: HDR, SK { KEi1 (ML-KEM-1024 Public Key) }\n    Resp->>Init: HDR, SK { KEr1 (ML-KEM-1024 Ciphertext) }\n\n    Note over Init,Resp: SKEYSEED Derived with Hybrid Classical + PQC Binding\n    Note over Init,Resp: IKE_AUTH (Exchange 35)\n    Init->>Resp: HDR, SK { IDi, CERT (ML-DSA-87), AUTH, SAi2 (ESP AES-GCM-256) }\n    Resp->>Init: HDR, SK { IDr, CERT (ML-DSA-87), AUTH, SAr2 (ESP AES-GCM-256) }\n\n    Note over Init,Resp: ESP IPsec Tunnel Established (Anti-Replay Window: 64 pkts)\n```\n\n### Diagram 2: PKI Hierarchy & Quantum Verification Chain\n```mermaid\ngraph TD\n    RootCA[\"Enterprise Post-Quantum Root CA<br/>(ML-DSA-87 / NIST Category 5)\"]\n    InterCA[\"Quantum Enterprise Intermediate CA<br/>(ML-DSA-87 / Valid)\"]\n    LeafInit[\"Initiator Leaf Cert<br/>CN=client.quantum.enterprise.net<br/>ML-DSA-87 (2592-bit)\"]\n    LeafResp[\"Responder Leaf Cert<br/>CN=gateway.quantum.enterprise.net<br/>ML-DSA-87 (2592-bit)\"]\n\n    RootCA --> InterCA\n    InterCA --> LeafInit\n    InterCA --> LeafResp\n\n    classDef healthy fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#ecfdf5;\n    class RootCA,InterCA,LeafInit,LeafResp healthy;\n```\n\n### Diagram 3: Threat Surface & Defense-in-Depth Model\n```mermaid\nflowchart LR\n    subgraph Untrusted Network\n        ATTACKER[\"Adversary Position<br/>(Man-in-the-Middle / Tap)\"]\n    end\n\n    subgraph Defense Boundaries\n        PQC[\"RFC 9370 Multi-KE<br/>ML-KEM-1024<br/>(HNDL Defense)\"]\n        AEAD[\"AES-GCM-256<br/>AEAD Encryption<br/>(Tamper Proof)\"]\n        AUTH[\"ML-DSA-87<br/>Digital Signature<br/>(Anti-Impersonation)\"]\n        ESN[\"64-bit ESN<br/>64-packet Window<br/>(Anti-Replay)\"]\n    end\n\n    ATTACKER -.->|HNDL Recording| PQC\n    ATTACKER -.->|Packet Injection| AEAD\n    ATTACKER -.->|Rogue Handshake| AUTH\n    ATTACKER -.->|Replayed ESP| ESN\n```\n\n---\n\n## 8. Prioritized Remediation Roadmap & Hardening Guidelines\n\n### Phase 1: Immediate Verification (P0 - Next 24-48 Hours)\n- Validate that all strongSwan endpoints enforce `ike = aes256gcm16-prfsha384-ecp384-mlkem1024!`.\n- Ensure anti-replay windows are active on all security gateways.\n\n### Phase 2: Configuration Hardening (P1 - 30 Days)\n- Prune legacy fallback transform proposals to prevent downgrade attempts.\n- Enforce mandatory Subject Alternative Name (SAN) validation in peer configuration.\n\n### Phase 3: Strategic CNSA 2.0 Full Migration (P2 - 6-12 Months)\n- Complete migration of intermediate CAs to ML-DSA-87 in accordance with the NSA CNSA 2.0 timeline.\n\n### Hardened strongSwan `swanctl.conf` Snippet\n```ini\nconnections {\n    pqc-enterprise-tunnel {\n        version = 2\n        local_addrs = 192.168.10.50\n        remote_addrs = 10.0.0.1\n        proposals = aes256gcm16-prfsha384-ecp384-mlkem1024\n        \n        local {\n            auth = pubkey\n            certs = client-mldsa87.crt\n            id = client.quantum.enterprise.net\n        }\n        remote {\n            auth = pubkey\n            id = gateway.quantum.enterprise.net\n        }\n        \n        children {\n            net-tunnel {\n                esp_proposals = aes256gcm16-esn\n                mode = tunnel\n                rekey_time = 1h\n            }\n        }\n    }\n}\n```\n"
+  </script>
+
+  <script>
+    // Theme Toggle Logic (Light / Dark)
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      const icon = document.getElementById('theme-icon');
+      const text = document.getElementById('theme-text');
+      if (theme === 'dark') {
+        icon.textContent = '☀️';
+        text.textContent = 'Light Theme';
+      } else {
+        icon.textContent = '🌙';
+        text.textContent = 'Dark Theme';
+      }
+      localStorage.setItem('audit_report_theme', theme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      // Re-render mermaid with appropriate theme
+      initMermaid(next);
+      mermaid.run();
+    }
+
+    function initMermaid(theme) {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: theme === 'dark' ? 'dark' : 'neutral',
+        themeVariables: theme === 'dark' ? {
+          primaryColor: '#1e293b',
+          primaryTextColor: '#f8fafc',
+          primaryBorderColor: '#38bdf8',
+          lineColor: '#94a3b8',
+          fontFamily: 'Inter, sans-serif'
+        } : {
+          primaryColor: '#f1f5f9',
+          primaryTextColor: '#0f172a',
+          primaryBorderColor: '#0284c7',
+          lineColor: '#334155',
+          fontFamily: 'Inter, sans-serif'
+        }
+      });
+    }
+
+    // Check saved theme
+    const savedTheme = localStorage.getItem('audit_report_theme') || 'light';
+    applyTheme(savedTheme);
+    initMermaid(savedTheme);
+
+    // Parse Markdown using Marked.js
+    const rawJsonStr = document.getElementById('raw-markdown-data').textContent.trim();
+    let rawMarkdown = "";
+    try {
+      rawMarkdown = JSON.parse(rawJsonStr);
+    } catch (e) {
+      rawMarkdown = rawJsonStr;
+    }
+
+    const parsedHtml = marked.parse(rawMarkdown);
+    const container = document.getElementById('report-output');
+    container.innerHTML = parsedHtml;
+
+    // Convert language-mermaid blocks to mermaid divs
+    document.querySelectorAll('pre code.language-mermaid').forEach((block) => {
+      const pre = block.parentElement;
+      const mermaidDiv = document.createElement('div');
+      mermaidDiv.className = 'mermaid';
+      mermaidDiv.textContent = block.textContent;
+      pre.replaceWith(mermaidDiv);
+    });
+
+    mermaid.run();
+
+    function copyMarkdown() {
+      navigator.clipboard.writeText(rawMarkdown).then(() => {
+        alert("Markdown report successfully copied to clipboard!");
+      }).catch(err => {
+        console.error("Failed to copy: ", err);
+      });
+    }
+  </script>
+</body>
+</html>

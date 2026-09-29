@@ -266,6 +266,11 @@ def build_vector(session: dict) -> list[float]:
 
     # ── d[8]: INIT_SA_ENCR_KEY_LEN ───────────────────────────────────
     encr_key_len: int | None = _first(tx.get("encryption", []), "length")
+    if encr_key_len is None:
+        if encr_id == 3:
+            encr_key_len = 192
+        elif encr_id == 2:
+            encr_key_len = 64
     if encr_key_len is not None:
         d[8] = min(encr_key_len, 256) / 256.0
 
@@ -301,6 +306,7 @@ def build_vector(session: dict) -> list[float]:
     sig_bits = (
         IKEV2_SIG_ALGO_KEY_BITS.get(sig_pqc_id)
         or IKEV2_AUTH_KEY_BITS.get(auth_type, 0)
+        or session.get("IKE_AUTH", {}).get("certificate", {}).get("cert_key_len", 0)
     )
     d[13] = min(sig_bits, 256) / 256.0
 

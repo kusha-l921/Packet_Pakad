@@ -130,6 +130,7 @@ class SessionState:
     # Timestamps
     created_at: float = field(default_factory=time.time)
     completed_at: float | None = None
+    has_exported_handshake: bool = False
 
     # Thread synchronization lock for safe concurrent packet ingestion
     lock: threading.RLock = field(default_factory=threading.RLock)
