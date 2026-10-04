@@ -2,7 +2,6 @@
 
 # 🛡️ PACKET PAKAD (IPsec Sentinel)
 ### Autonomous IPsec VPN Protocol Analyzer, RFC Compliance Auditor & Post-Quantum Cryptographic Testbed
-*Engineered for Smart India Hackathon Problem Statement 26160 (SIH-160) — National Technical Research Organisation (NTRO)*
 
 [![Docker](https://img.shields.io/badge/Docker-Compose_v2-2496ED?style=for-the-badge&logo=docker&logoColor=white)](file:///c:/ipsec-testbed/docker-compose.yml)
 [![strongSwan](https://img.shields.io/badge/strongSwan-6.0.2_PQC_Native-00599C?style=for-the-badge)](file:///c:/ipsec-testbed/Dockerfile)
